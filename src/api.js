@@ -1,19 +1,19 @@
-const BASE_URL = 'https://mybook-7a9s.onrender.com';
+const BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
-export const registerUser = async (data) => {
+export const registerUsuario = async (email, password) => {
   const res = await fetch(`${BASE_URL}/auth/register`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
   });
   return res.json();
 };
 
-export const loginUser = async (data) => {
+export const loginUsuario = async (email, password) => {
   const res = await fetch(`${BASE_URL}/auth/login`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
   });
   return res.json();
 };
