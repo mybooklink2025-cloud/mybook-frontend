@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-const backendUrl = process.env.REACT_APP_BACKEND_URL;
+import { loginUsuario } from "./api"; // ajusta la ruta si lo pones en src/
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -12,16 +11,11 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(`${backendUrl}/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await res.json();
-      if (res.ok) {
-        setMessage("✅ Login exitoso");
+      const data = await loginUsuario({ email, password });
+      if (data.token) {
+        setMessage("✅ Inicio de sesión exitoso");
         localStorage.setItem("token", data.token);
+        setTimeout(() => navigate("/"), 1000);
       } else {
         setMessage(`❌ ${data.message}`);
       }
@@ -33,28 +27,12 @@ function Login() {
   return (
     <div style={{ textAlign: "center", marginTop: "100px" }}>
       <h1 style={{ color: "blue" }}>MyBook</h1>
-      <h2>Iniciar Sesión</h2>
+      <h2>Iniciar sesión</h2>
       <form onSubmit={handleLogin}>
-        <input
-          type="email"
-          placeholder="Correo"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        /><br />
-        <input
-          type="password"
-          placeholder="Contraseña"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        /><br />
-        <button type="submit">Entrar</button>
+        <input type="email" placeholder="Correo" value={email} onChange={e => setEmail(e.target.value)} required /><br />
+        <input type="password" placeholder="Contraseña" value={password} onChange={e => setPassword(e.target.value)} required /><br />
+        <button type="submit">Iniciar sesión</button>
       </form>
-      <p>
-        ¿No tienes cuenta?{" "}
-        <button onClick={() => navigate("/register")}>Regístrate aquí</button>
-      </p>
       <p style={{ color: "blue" }}>{message}</p>
     </div>
   );

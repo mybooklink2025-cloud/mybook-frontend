@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-const backendUrl = process.env.REACT_APP_BACKEND_URL;
+import { registrarUsuario } from "./api"; // ajusta la ruta si lo pones en src/
 
 function Register() {
   const [email, setEmail] = useState("");
@@ -12,14 +11,8 @@ function Register() {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(`${backendUrl}/auth/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await res.json();
-      if (res.ok) {
+      const data = await registrarUsuario({ email, password });
+      if (data._id) {
         setMessage("✅ Registro exitoso, ahora inicia sesión");
         setTimeout(() => navigate("/"), 1500);
       } else {
@@ -35,20 +28,8 @@ function Register() {
       <h1 style={{ color: "blue" }}>MyBook</h1>
       <h2>Registro</h2>
       <form onSubmit={handleRegister}>
-        <input
-          type="email"
-          placeholder="Correo"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        /><br />
-        <input
-          type="password"
-          placeholder="Contraseña"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        /><br />
+        <input type="email" placeholder="Correo" value={email} onChange={e => setEmail(e.target.value)} required /><br />
+        <input type="password" placeholder="Contraseña" value={password} onChange={e => setPassword(e.target.value)} required /><br />
         <button type="submit">Registrarse</button>
       </form>
       <p style={{ color: "blue" }}>{message}</p>
