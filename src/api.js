@@ -1,19 +1,19 @@
-const backendUrl = process.env.REACT_APP_BACKEND_URL;
+const BASE_URL = 'https://mybook-7a9s.onrender.com';
 
-export const registrarUsuario = async (usuarioData) => {
-  const res = await fetch(`${backendUrl}/api/usuarios/registro`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(usuarioData)
+export const registerUser = async (data) => {
+  const res = await fetch(`${BASE_URL}/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
   });
   return res.json();
 };
 
-export const loginUsuario = async (loginData) => {
-  const res = await fetch(`${backendUrl}/api/usuarios/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(loginData)
+export const loginUser = async (data) => {
+  const res = await fetch(`${BASE_URL}/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
   });
   return res.json();
 };
