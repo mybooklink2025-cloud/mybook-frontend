@@ -11,9 +11,13 @@ function Register() {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const data = await registrarUsuario(email, password);
-      setMessage("✅ Registro exitoso, ahora inicia sesión");
-      setTimeout(() => navigate("/"), 1500);
+      const data = await registrarUsuario({ email, password });
+      if (data._id) {
+        setMessage("✅ Registro exitoso, ahora inicia sesión");
+        setTimeout(() => navigate("/"), 1500);
+      } else {
+        setMessage(`❌ ${data.message}`);
+      }
     } catch (error) {
       setMessage("❌ Error al conectar con el servidor");
     }

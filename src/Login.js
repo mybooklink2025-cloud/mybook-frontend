@@ -11,7 +11,7 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const data = await loginUsuario(email, password);
+      const data = await loginUsuario({ email, password });
       if (data.token) {
         setMessage("✅ Inicio de sesión exitoso");
         localStorage.setItem("token", data.token);
