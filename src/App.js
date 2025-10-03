@@ -1,21 +1,16 @@
-import React, { useState } from 'react';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Login from "./Login";
+import Register from "./Register";
 
 function App() {
-  const [loggedIn, setLoggedIn] = useState(false);
-
-  const handleLogin = () => {
-    setLoggedIn(true);
-  };
-
   return (
-    <div style={{textAlign: 'center', marginTop: '50px'}}>
-      <h1>MyBook</h1>
-      {!loggedIn ? (
-        <button onClick={handleLogin}>Login</button>
-      ) : (
-        <p>Login exitoso</p>
-      )}
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
+    </Router>
   );
 }
 
