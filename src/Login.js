@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginUsuario } from "./api"; // ajusta la ruta si lo pones en src/
+import { loginUsuario } from "./api";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -11,7 +11,7 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const data = await loginUsuario({ email, password });
+      const data = await loginUsuario(email, password);
       if (data.token) {
         setMessage("✅ Inicio de sesión exitoso");
         localStorage.setItem("token", data.token);

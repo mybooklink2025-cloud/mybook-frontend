@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { registrarUsuario } from "./api"; // ajusta la ruta si lo pones en src/
+import { registrarUsuario } from "./api";
 
 function Register() {
   const [email, setEmail] = useState("");
@@ -11,13 +11,9 @@ function Register() {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const data = await registrarUsuario({ email, password });
-      if (data._id) {
-        setMessage("✅ Registro exitoso, ahora inicia sesión");
-        setTimeout(() => navigate("/"), 1500);
-      } else {
-        setMessage(`❌ ${data.message}`);
-      }
+      const data = await registrarUsuario(email, password);
+      setMessage("✅ Registro exitoso, ahora inicia sesión");
+      setTimeout(() => navigate("/"), 1500);
     } catch (error) {
       setMessage("❌ Error al conectar con el servidor");
     }
