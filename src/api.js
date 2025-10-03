@@ -1,7 +1,7 @@
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
 export const registrarUsuario = async (usuarioData) => {
-  const res = await fetch(`${backendUrl}/api/users/registro`, {
+  const res = await fetch(`${backendUrl}/api/usuarios/registro`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(usuarioData)
@@ -10,7 +10,7 @@ export const registrarUsuario = async (usuarioData) => {
 };
 
 export const loginUsuario = async (loginData) => {
-  const res = await fetch(`${backendUrl}/api/users/login`, {
+  const res = await fetch(`${backendUrl}/api/usuarios/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(loginData)
