@@ -52,8 +52,10 @@ function Profile({ token }) {
   };
 
   return (
-    <div style={{ textAlign: "left", margin: "50px" }}>
-      <h2>Perfil de usuario</h2>
+    <div style={{ margin: "20px" }}>
+      <h1 style={{ color: "blue", textAlign: "left" }}>MyBook</h1>
+      <h2 style={{ textAlign: "left" }}>Perfil de usuario</h2>
+
       {profilePicture && (
         <div style={{ marginTop: "20px" }}>
           <img
@@ -64,10 +66,12 @@ function Profile({ token }) {
           />
         </div>
       )}
+
       <form onSubmit={handleUpload} style={{ marginTop: "20px" }}>
         <input type="file" accept="image/*" onChange={handleFileChange} /><br />
         <button type="submit" style={{ marginTop: "10px" }}>Subir foto</button>
       </form>
+
       <p style={{ color: "blue", marginTop: "10px" }}>{message}</p>
     </div>
   );
