@@ -1,54 +1,73 @@
 import React, { useState, useEffect } from "react";
-import { uploadProfilePicture } from "./api";
 
 function Profile({ token }) {
-  const [profilePicture, setProfilePicture] = useState("");
-  const [message, setMessage] = useState("");
   const [file, setFile] = useState(null);
+  const [message, setMessage] = useState("");
+  const [profilePicture, setProfilePicture] = useState("");
 
-  // Manejar la selección del archivo
+  const BASE_URL = process.env.REACT_APP_BACKEND_URL;
+
+  useEffect(() => {
+    const savedPicture = localStorage.getItem("profilePicture");
+    if (savedPicture) setProfilePicture(savedPicture);
+  }, []);
+
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
 
-  // Subir la foto al backend
-  const handleUpload = async () => {
-    if (!file) {
-      setMessage("❌ Selecciona una foto primero");
-      return;
-    }
+  const handleUpload = async (e) => {
+    e.preventDefault();
+    if (!file) return setMessage("❌ Selecciona un archivo");
+
+    const formData = new FormData();
+    formData.append("profilePicture", file);
+    formData.append("email", parseJwt(token).email);
 
     try {
-      const data = await uploadProfilePicture(file, token);
-      if (data.filename) {
+      const res = await fetch(`${BASE_URL}/auth/upload-profile-picture`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body: formData,
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setMessage("✅ Foto subida correctamente");
         setProfilePicture(data.filename);
-        setMessage("✅ Foto de perfil subida correctamente");
+        localStorage.setItem("profilePicture", data.filename);
       } else {
         setMessage(`❌ ${data.message}`);
       }
     } catch (error) {
-      setMessage("❌ Error al subir la foto");
+      setMessage("❌ Error al conectar con el servidor");
+    }
+  };
+
+  const parseJwt = (token) => {
+    try {
+      return JSON.parse(atob(token.split(".")[1]));
+    } catch {
+      return {};
     }
   };
 
   return (
     <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <h1 style={{ color: "blue" }}>Perfil Vacío</h1>
-
-      <div style={{ margin: "20px" }}>
-        {profilePicture ? (
+      <h2>Perfil de usuario</h2>
+      {profilePicture && (
+        <div>
           <img
-            src={`http://localhost:5000/uploads/${profilePicture}`}
-            alt="Foto de perfil"
-            width="150"
+            src={`${BASE_URL}/uploads/${profilePicture}`}
+            alt="Perfil"
+            width={150}
+            style={{ borderRadius: "50%" }}
           />
-        ) : (
-          <p>No hay foto de perfil aún</p>
-        )}
-      </div>
-
-      <input type="file" onChange={handleFileChange} /><br /><br />
-      <button onClick={handleUpload}>Subir foto</button>
+        </div>
+      )}
+      <form onSubmit={handleUpload}>
+        <input type="file" accept="image/*" onChange={handleFileChange} /><br />
+        <button type="submit">Subir foto</button>
+      </form>
       <p style={{ color: "blue" }}>{message}</p>
     </div>
   );
