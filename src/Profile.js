@@ -12,9 +12,7 @@ function Profile({ token }) {
     if (savedPicture) setProfilePicture(savedPicture);
   }, []);
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-  };
+  const handleFileChange = (e) => setFile(e.target.files[0]);
 
   const handleUpload = async (e) => {
     e.preventDefault();
@@ -38,7 +36,7 @@ function Profile({ token }) {
       } else {
         setMessage(`❌ ${data.message}`);
       }
-    } catch (error) {
+    } catch {
       setMessage("❌ Error al conectar con el servidor");
     }
   };
@@ -52,12 +50,11 @@ function Profile({ token }) {
   };
 
   return (
-    <div style={{ margin: "20px", textAlign: "left" }}>
+    <div style={{ textAlign: "left", marginTop: "20px", marginLeft: "20px" }}>
       <h1 style={{ color: "blue" }}>MyBook</h1>
       <h2>Perfil de usuario</h2>
-
       {profilePicture && (
-        <div style={{ marginTop: "10px" }}>
+        <div>
           <img
             src={`${BASE_URL}/uploads/${profilePicture}`}
             alt="Perfil"
@@ -66,7 +63,6 @@ function Profile({ token }) {
           />
         </div>
       )}
-
       <form onSubmit={handleUpload} style={{ marginTop: "10px" }}>
         <input type="file" accept="image/*" onChange={handleFileChange} /><br />
         <button type="submit">Subir foto</button>
