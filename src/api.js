@@ -17,18 +17,3 @@ export const loginUsuario = async ({ email, password }) => {
   });
   return res.json();
 };
-
-export const uploadProfilePicture = async (file, token) => {
-  const formData = new FormData();
-  formData.append("profilePicture", file);
-
-  const res = await fetch(`${BASE_URL}/auth/upload-profile-picture`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    body: formData,
-  });
-
-  return res.json();
-};

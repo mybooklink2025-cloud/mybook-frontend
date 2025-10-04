@@ -1,21 +1,17 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { registrarUsuario } from "./api";
 
-function Register({ onRegister }) {
+function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-  const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
       const data = await registrarUsuario({ email, password });
-      if (data.token) {
+      if (data.token || data.message === "Usuario registrado correctamente ✅") {
         setMessage("✅ Registro exitoso");
-        onRegister(data.token); // Guardar token en App.js
-        setTimeout(() => navigate("/profile"), 500); // Redirigir al perfil
       } else {
         setMessage(`❌ ${data.message}`);
       }
@@ -29,20 +25,8 @@ function Register({ onRegister }) {
       <h1 style={{ color: "blue" }}>MyBook</h1>
       <h2>Registro</h2>
       <form onSubmit={handleRegister}>
-        <input
-          type="email"
-          placeholder="Correo"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          required
-        /><br />
-        <input
-          type="password"
-          placeholder="Contraseña"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-          required
-        /><br />
+        <input type="email" placeholder="Correo" value={email} onChange={e => setEmail(e.target.value)} required /><br />
+        <input type="password" placeholder="Contraseña" value={password} onChange={e => setPassword(e.target.value)} required /><br />
         <button type="submit">Registrarse</button>
       </form>
       <p style={{ color: "blue" }}>{message}</p>

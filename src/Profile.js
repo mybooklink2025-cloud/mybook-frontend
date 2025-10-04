@@ -12,9 +12,7 @@ function Profile({ token }) {
     if (savedPicture) setProfilePicture(savedPicture);
   }, []);
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-  };
+  const handleFileChange = (e) => setFile(e.target.files[0]);
 
   const handleUpload = async (e) => {
     e.preventDefault();
@@ -44,11 +42,7 @@ function Profile({ token }) {
   };
 
   const parseJwt = (token) => {
-    try {
-      return JSON.parse(atob(token.split(".")[1]));
-    } catch {
-      return {};
-    }
+    try { return JSON.parse(atob(token.split(".")[1])); } catch { return {}; }
   };
 
   return (

@@ -14,8 +14,9 @@ function Login({ onLogin }) {
       const data = await loginUsuario({ email, password });
       if (data.token) {
         setMessage("✅ Inicio de sesión exitoso");
-        onLogin(data.token); // Guardar token en App.js
-        setTimeout(() => navigate("/profile"), 500); // Redirigir al perfil
+        localStorage.setItem("token", data.token);
+        onLogin(data.token);
+        setTimeout(() => navigate("/profile"), 1000);
       } else {
         setMessage(`❌ ${data.message}`);
       }
@@ -29,20 +30,8 @@ function Login({ onLogin }) {
       <h1 style={{ color: "blue" }}>MyBook</h1>
       <h2>Iniciar sesión</h2>
       <form onSubmit={handleLogin}>
-        <input
-          type="email"
-          placeholder="Correo"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          required
-        /><br />
-        <input
-          type="password"
-          placeholder="Contraseña"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-          required
-        /><br />
+        <input type="email" placeholder="Correo" value={email} onChange={e => setEmail(e.target.value)} required /><br />
+        <input type="password" placeholder="Contraseña" value={password} onChange={e => setPassword(e.target.value)} required /><br />
         <button type="submit">Iniciar sesión</button>
       </form>
       <p style={{ color: "blue" }}>{message}</p>
