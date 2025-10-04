@@ -1,9 +1,17 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import React, { useState } from "react";
+import { BrowserRouter as Router, Routes, Route, Link, Navigate } from "react-router-dom";
 import Login from "./Login";
 import Register from "./Register";
+import Profile from "./Profile"; // Nueva pantalla de perfil vacío
 
 function App() {
+  const [token, setToken] = useState(localStorage.getItem("token") || "");
+
+  const handleLogin = (newToken) => {
+    setToken(newToken);
+    localStorage.setItem("token", newToken);
+  };
+
   return (
     <Router>
       <div style={{ textAlign: "center", marginTop: "50px" }}>
@@ -14,8 +22,12 @@ function App() {
         </nav>
 
         <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/" element={<Login onLogin={handleLogin} />} />
+          <Route path="/register" element={<Register onRegister={handleLogin} />} />
+          <Route
+            path="/profile"
+            element={token ? <Profile token={token} /> : <Navigate to="/" />}
+          />
         </Routes>
       </div>
     </Router>
