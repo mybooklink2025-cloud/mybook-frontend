@@ -12,7 +12,9 @@ function Profile({ token }) {
     if (savedPicture) setProfilePicture(savedPicture);
   }, []);
 
-  const handleFileChange = (e) => setFile(e.target.files[0]);
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
 
   const handleUpload = async (e) => {
     e.preventDefault();
@@ -42,14 +44,18 @@ function Profile({ token }) {
   };
 
   const parseJwt = (token) => {
-    try { return JSON.parse(atob(token.split(".")[1])); } catch { return {}; }
+    try {
+      return JSON.parse(atob(token.split(".")[1]));
+    } catch {
+      return {};
+    }
   };
 
   return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
+    <div style={{ textAlign: "left", margin: "50px" }}>
       <h2>Perfil de usuario</h2>
       {profilePicture && (
-        <div>
+        <div style={{ marginTop: "20px" }}>
           <img
             src={`${BASE_URL}/uploads/${profilePicture}`}
             alt="Perfil"
@@ -58,11 +64,11 @@ function Profile({ token }) {
           />
         </div>
       )}
-      <form onSubmit={handleUpload}>
+      <form onSubmit={handleUpload} style={{ marginTop: "20px" }}>
         <input type="file" accept="image/*" onChange={handleFileChange} /><br />
-        <button type="submit">Subir foto</button>
+        <button type="submit" style={{ marginTop: "10px" }}>Subir foto</button>
       </form>
-      <p style={{ color: "blue" }}>{message}</p>
+      <p style={{ color: "blue", marginTop: "10px" }}>{message}</p>
     </div>
   );
 }
