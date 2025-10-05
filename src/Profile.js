@@ -4,17 +4,20 @@ function Profile({ token }) {
   const [file, setFile] = useState(null);
   const [message, setMessage] = useState("");
   const [profilePicture, setProfilePicture] = useState("");
+  const [email, setEmail] = useState("");
 
   const BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
   useEffect(() => {
-    const savedPicture = localStorage.getItem("profilePicture");
-    if (savedPicture) setProfilePicture(savedPicture);
-  }, []);
+    const decoded = parseJwt(token);
+    if (decoded.email) {
+      setEmail(decoded.email);
+      const savedPicture = localStorage.getItem(`profilePicture_${decoded.email}`);
+      if (savedPicture) setProfilePicture(savedPicture);
+    }
+  }, [token]);
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-  };
+  const handleFileChange = (e) => setFile(e.target.files[0]);
 
   const handleUpload = async (e) => {
     e.preventDefault();
@@ -22,7 +25,7 @@ function Profile({ token }) {
 
     const formData = new FormData();
     formData.append("profilePicture", file);
-    formData.append("email", parseJwt(token).email);
+    formData.append("email", email);
 
     try {
       const res = await fetch(`${BASE_URL}/auth/upload-profile-picture`, {
@@ -34,11 +37,11 @@ function Profile({ token }) {
       if (res.ok) {
         setMessage("✅ Foto subida correctamente");
         setProfilePicture(data.filename);
-        localStorage.setItem("profilePicture", data.filename);
+        localStorage.setItem(`profilePicture_${email}`, data.filename);
       } else {
         setMessage(`❌ ${data.message}`);
       }
-    } catch (error) {
+    } catch {
       setMessage("❌ Error al conectar con el servidor");
     }
   };
@@ -52,10 +55,12 @@ function Profile({ token }) {
   };
 
   return (
-    <div style={{ textAlign: "left", margin: "50px" }}>
+    <div style={{ textAlign: "left", marginTop: "20px", marginLeft: "20px", minHeight: "80vh", position: "relative" }}>
+      <h1 style={{ color: "blue" }}>MyBook</h1>
       <h2>Perfil de usuario</h2>
+
       {profilePicture && (
-        <div style={{ marginTop: "20px" }}>
+        <div>
           <img
             src={`${BASE_URL}/uploads/${profilePicture}`}
             alt="Perfil"
@@ -64,11 +69,19 @@ function Profile({ token }) {
           />
         </div>
       )}
-      <form onSubmit={handleUpload} style={{ marginTop: "20px" }}>
+
+      <form onSubmit={handleUpload} style={{ marginTop: "10px" }}>
         <input type="file" accept="image/*" onChange={handleFileChange} /><br />
-        <button type="submit" style={{ marginTop: "10px" }}>Subir foto</button>
+        <button type="submit">Subir foto</button>
       </form>
-      <p style={{ color: "blue", marginTop: "10px" }}>{message}</p>
+
+      <p style={{ color: "blue" }}>{message}</p>
+
+      <div style={{ position: "absolute", bottom: "20px", width: "100%", display: "flex", justifyContent: "center" }}>
+        <a href="/contactanos" style={{ color: "blue", fontWeight: "bold", textDecoration: "underline" }}>
+          Contáctanos
+        </a>
+      </div>
     </div>
   );
 }
