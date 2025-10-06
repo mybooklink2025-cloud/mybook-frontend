@@ -1,53 +1,64 @@
 import React, { useState } from "react";
 
-function Contactanos() {
-  const [nombre, setNombre] = useState("");
-  const [email, setEmail] = useState("");
-  const [mensaje, setMensaje] = useState("");
+export default function Contactanos() {
+  const [form, setForm] = useState({ nombre: "", email: "", mensaje: "" });
   const [status, setStatus] = useState("");
 
-  const BASE_URL = process.env.REACT_APP_BACKEND_URL;
+  const BASE_URL = process.env.REACT_APP_BACKEND_URL || "https://mybook-7a9s.onrender.com";
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setStatus("Enviando...");
+
     try {
       const res = await fetch(`${BASE_URL}/contact`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nombre, email, mensaje }),
+        body: JSON.stringify(form),
       });
+
       const data = await res.json();
       if (res.ok) {
-        setStatus(data.message);
-        setNombre("");
-        setEmail("");
-        setMensaje("");
+        setStatus("✅ Mensaje enviado con éxito");
+        setForm({ nombre: "", email: "", mensaje: "" });
       } else {
-        setStatus(`❌ ${data.message}`);
+        setStatus(`❌ Error: ${data.message || "No se pudo enviar el mensaje"}`);
       }
-    } catch {
+    } catch (error) {
+      console.error(error);
       setStatus("❌ Error al conectar con el servidor");
     }
   };
 
   return (
     <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <h1 style={{ color: "blue" }}>MyBook - Contáctanos</h1>
+      <h1 style={{ color: "blue" }}>MyBook</h1>
+      <nav style={{ marginBottom: "20px" }}>
+        <a href="/">Iniciar sesión</a> | <a href="/register">Registrarse</a> | <a href="/contactanos">Contáctanos</a>
+      </nav>
+
+      <h2>Contáctanos</h2>
       <form onSubmit={handleSubmit} style={{ display: "inline-block", textAlign: "left" }}>
-        <label>Nombre:</label><br />
-        <input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} required /><br /><br />
-        
-        <label>Correo:</label><br />
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required /><br /><br />
-
-        <label>Mensaje:</label><br />
-        <textarea value={mensaje} onChange={(e) => setMensaje(e.target.value)} rows={4} cols={30} required /><br /><br />
-
+        <div style={{ marginBottom: "10px" }}>
+          <label>Nombre:</label><br />
+          <input type="text" name="nombre" value={form.nombre} onChange={handleChange} required />
+        </div>
+        <div style={{ marginBottom: "10px" }}>
+          <label>Email:</label><br />
+          <input type="email" name="email" value={form.email} onChange={handleChange} required />
+        </div>
+        <div style={{ marginBottom: "10px" }}>
+          <label>Mensaje:</label><br />
+          <textarea name="mensaje" value={form.mensaje} onChange={handleChange} required />
+        </div>
         <button type="submit">Enviar</button>
       </form>
-      <p style={{ color: "blue", marginTop: "10px" }}>{status}</p>
+
+      {status && <p style={{ marginTop: "20px" }}>{status}</p>}
     </div>
   );
 }
-
-export default Contactanos;
