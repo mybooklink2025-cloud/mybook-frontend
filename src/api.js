@@ -1,4 +1,7 @@
-const BASE_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000";
+// src/api.js
+
+// URL del backend desplegado en Render
+const BASE_URL = process.env.REACT_APP_BACKEND_URL || "https://mybook-7a9s.onrender.com/api";
 
 export const registrarUsuario = async ({ email, password }) => {
   const res = await fetch(`${BASE_URL}/auth/register`, {
