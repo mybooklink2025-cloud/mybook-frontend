@@ -1,4 +1,3 @@
-// api.js
 const BASE_URL = process.env.REACT_APP_BACKEND_URL || "https://mybook-7a9s.onrender.com";
 
 export const registrarUsuario = async ({ email, password }) => {
@@ -20,7 +19,7 @@ export const loginUsuario = async ({ email, password }) => {
 };
 
 export const enviarContacto = async ({ nombre, email, mensaje }) => {
-  const res = await fetch(`${BASE_URL}/api/contact`, {
+  const res = await fetch(`${BASE_URL}/contact`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ nombre, email, mensaje }),
