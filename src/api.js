@@ -1,4 +1,4 @@
-const BASE_URL = process.env.REACT_APP_BACKEND_URL;
+const BASE_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000";
 
 export const registrarUsuario = async ({ email, password }) => {
   const res = await fetch(`${BASE_URL}/auth/register`, {
@@ -14,6 +14,15 @@ export const loginUsuario = async ({ email, password }) => {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
+  });
+  return res.json();
+};
+
+export const enviarContacto = async ({ nombre, email, mensaje }) => {
+  const res = await fetch(`${BASE_URL}/contact`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ nombre, email, mensaje }),
   });
   return res.json();
 };
