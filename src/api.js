@@ -19,10 +19,18 @@ export const loginUsuario = async ({ email, password }) => {
 };
 
 export const enviarContacto = async ({ nombre, email, mensaje }) => {
-  const res = await fetch(`${BASE_URL}/contact`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ nombre, email, mensaje }),
-  });
-  return res.json();
+  try {
+    const res = await fetch(`${BASE_URL}/contact`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ nombre, email, mensaje }),
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || "Error al enviar el mensaje");
+    return data;
+  } catch (error) {
+    console.error("Error en enviarContacto:", error);
+    return { message: "❌ Error al conectar con el servidor" };
+  }
 };
