@@ -79,10 +79,21 @@ function Profile({ token }) {
 
       <p style={{ color: "blue" }}>{message}</p>
 
-      <div style={{ position: "absolute", bottom: "20px", width: "100%", display: "flex", justifyContent: "center" }}>
+      <div style={{ position: "absolute", bottom: "70px", width: "100%", display: "flex", justifyContent: "center" }}>
         <a href="/contactanos" style={{ color: "blue", fontWeight: "bold", textDecoration: "underline" }}>
           Contáctanos
         </a>
+      </div>
+
+      {/* Redes sociales */}
+      <div style={{ position: "absolute", bottom: "20px", width: "100%", textAlign: "center" }}>
+        <h3>Síguenos en redes sociales</h3>
+        <div style={{ display: "flex", justifyContent: "center", gap: "20px", marginTop: "10px" }}>
+          <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" style={{ color: "blue" }}>Facebook</a>
+          <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" style={{ color: "blue" }}>Instagram</a>
+          <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer" style={{ color: "blue" }}>TikTok</a>
+          <a href="https://x.com" target="_blank" rel="noopener noreferrer" style={{ color: "blue" }}>X (Twitter)</a>
+        </div>
       </div>
     </div>
   );
