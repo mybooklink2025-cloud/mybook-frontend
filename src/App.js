@@ -20,7 +20,9 @@ function App() {
           path="/" 
           element={
             <div style={{ textAlign: "center", marginTop: "50px" }}>
-              <h1 style={{ color: "blue" }}>MyBook</h1>
+              <h1>
+                <a href="/" style={{ color: "blue", textDecoration: "none" }}>MyBook</a>
+              </h1>
               <nav style={{ marginBottom: "20px" }}>
                 <a href="/">Iniciar sesión</a> | <a href="/register">Registrarse</a> | <a href="/contactanos">Contáctanos</a>
               </nav>
@@ -32,7 +34,9 @@ function App() {
           path="/register" 
           element={
             <div style={{ textAlign: "center", marginTop: "50px" }}>
-              <h1 style={{ color: "blue" }}>MyBook</h1>
+              <h1>
+                <a href="/" style={{ color: "blue", textDecoration: "none" }}>MyBook</a>
+              </h1>
               <nav style={{ marginBottom: "20px" }}>
                 <a href="/">Iniciar sesión</a> | <a href="/register">Registrarse</a> | <a href="/contactanos">Contáctanos</a>
               </nav>

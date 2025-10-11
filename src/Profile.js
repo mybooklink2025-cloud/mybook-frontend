@@ -56,7 +56,9 @@ function Profile({ token }) {
 
   return (
     <div style={{ textAlign: "left", marginTop: "20px", marginLeft: "20px", minHeight: "80vh", position: "relative" }}>
-      <h1 style={{ color: "blue" }}>MyBook</h1>
+      <h1>
+        <a href="/" style={{ color: "blue", textDecoration: "none" }}>MyBook</a>
+      </h1>
       <h2>Perfil de usuario</h2>
 
       {profilePicture && (

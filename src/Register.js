@@ -22,7 +22,9 @@ function Register() {
 
   return (
     <div style={{ textAlign: "center", marginTop: "100px" }}>
-      <h1 style={{ color: "blue" }}>MyBook</h1>
+      <h1>
+        <a href="/" style={{ color: "blue", textDecoration: "none" }}>MyBook</a>
+      </h1>
       <h2>Registro</h2>
       <form onSubmit={handleRegister}>
         <input type="email" placeholder="Correo" value={email} onChange={e => setEmail(e.target.value)} required /><br />

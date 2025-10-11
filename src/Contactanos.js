@@ -33,7 +33,9 @@ function Contactanos() {
 
   return (
     <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <h1 style={{ color: "blue" }}>MyBook - Contáctanos</h1>
+      <h1>
+        <a href="/" style={{ color: "blue", textDecoration: "none" }}>MyBook - Contáctanos</a>
+      </h1>
       <form onSubmit={handleSubmit} style={{ display: "inline-block", textAlign: "left" }}>
         <label>Nombre:</label><br />
         <input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} required /><br /><br />
