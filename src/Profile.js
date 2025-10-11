@@ -79,21 +79,27 @@ function Profile({ token }) {
 
       <p style={{ color: "blue" }}>{message}</p>
 
-      <div style={{ position: "absolute", bottom: "70px", width: "100%", display: "flex", justifyContent: "center" }}>
-        <a href="/contactanos" style={{ color: "blue", fontWeight: "bold", textDecoration: "underline" }}>
+      {/* Enlace Contáctanos con cursor restaurado */}
+      <div style={{ position: "absolute", bottom: "80px", width: "100%", display: "flex", justifyContent: "center" }}>
+        <a
+          href="/contactanos"
+          style={{
+            color: "blue",
+            fontWeight: "bold",
+            textDecoration: "underline",
+            cursor: "pointer"
+          }}
+        >
           Contáctanos
         </a>
       </div>
 
-      {/* Redes sociales */}
+      {/* Redes sociales más abajo */}
       <div style={{ position: "absolute", bottom: "20px", width: "100%", textAlign: "center" }}>
-        <h3>Síguenos en redes sociales</h3>
-        <div style={{ display: "flex", justifyContent: "center", gap: "20px", marginTop: "10px" }}>
-          <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" style={{ color: "blue" }}>Facebook</a>
-          <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" style={{ color: "blue" }}>Instagram</a>
-          <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer" style={{ color: "blue" }}>TikTok</a>
-          <a href="https://x.com" target="_blank" rel="noopener noreferrer" style={{ color: "blue" }}>X (Twitter)</a>
-        </div>
+        <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" style={{ color: "blue", margin: "0 10px" }}>Facebook</a>
+        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" style={{ color: "blue", margin: "0 10px" }}>Instagram</a>
+        <a href="https://x.com" target="_blank" rel="noopener noreferrer" style={{ color: "blue", margin: "0 10px" }}>X</a>
+        <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" style={{ color: "blue", margin: "0 10px" }}>TikTok</a>
       </div>
     </div>
   );
