@@ -61,22 +61,13 @@ function Profile({ token }) {
     navigate(tokenStored ? "/muro" : "/");
   };
 
-  // ✅ Nueva función para cerrar sesión
-  const handleLogout = () => {
+  const handleCerrarSesion = () => {
     localStorage.removeItem("token");
     navigate("/");
   };
 
   return (
-    <div
-      style={{
-        textAlign: "left",
-        marginTop: "20px",
-        marginLeft: "20px",
-        minHeight: "80vh",
-        position: "relative",
-      }}
-    >
+    <div style={{ textAlign: "left", marginTop: "20px", marginLeft: "20px", minHeight: "80vh", position: "relative" }}>
       <h1>
         <span
           onClick={logoClick}
@@ -99,17 +90,30 @@ function Profile({ token }) {
       )}
 
       <form onSubmit={handleUpload} style={{ marginTop: "10px" }}>
-        <input type="file" accept="image/*" onChange={handleFileChange} />
-        <br />
+        <input type="file" accept="image/*" onChange={handleFileChange} /><br />
         <button type="submit">Subir foto</button>
       </form>
 
       <p style={{ color: "blue" }}>{message}</p>
 
-      {/* ✅ Botón de cerrar sesión */}
       <div style={{ marginTop: "20px" }}>
         <button
-          onClick={handleLogout}
+          onClick={() => navigate("/chat")}
+          style={{
+            backgroundColor: "green",
+            color: "white",
+            border: "none",
+            padding: "10px 20px",
+            borderRadius: "5px",
+            cursor: "pointer",
+            marginRight: "10px",
+          }}
+        >
+          Ir al Chat
+        </button>
+
+        <button
+          onClick={handleCerrarSesion}
           style={{
             backgroundColor: "red",
             color: "white",
@@ -123,77 +127,20 @@ function Profile({ token }) {
         </button>
       </div>
 
-      <div
-        style={{
-          position: "absolute",
-          bottom: "70px",
-          width: "100%",
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
-        <a
-          href="/contactanos"
-          style={{
-            color: "blue",
-            fontWeight: "bold",
-            textDecoration: "underline",
-          }}
-        >
+      <div style={{ position: "absolute", bottom: "70px", width: "100%", display: "flex", justifyContent: "center" }}>
+        <a href="/contactanos" style={{ color: "blue", fontWeight: "bold", textDecoration: "underline" }}>
           Contáctanos
         </a>
       </div>
 
       {/* Redes sociales */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: "20px",
-          width: "100%",
-          textAlign: "center",
-        }}
-      >
+      <div style={{ position: "absolute", bottom: "20px", width: "100%", textAlign: "center" }}>
         <h3>Síguenos en redes sociales</h3>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            gap: "20px",
-            marginTop: "10px",
-          }}
-        >
-          <a
-            href="https://www.facebook.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: "blue" }}
-          >
-            Facebook
-          </a>
-          <a
-            href="https://www.instagram.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: "blue" }}
-          >
-            Instagram
-          </a>
-          <a
-            href="https://www.tiktok.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: "blue" }}
-          >
-            TikTok
-          </a>
-          <a
-            href="https://x.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: "blue" }}
-          >
-            X (Twitter)
-          </a>
+        <div style={{ display: "flex", justifyContent: "center", gap: "20px", marginTop: "10px" }}>
+          <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" style={{ color: "blue" }}>Facebook</a>
+          <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" style={{ color: "blue" }}>Instagram</a>
+          <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer" style={{ color: "blue" }}>TikTok</a>
+          <a href="https://x.com" target="_blank" rel="noopener noreferrer" style={{ color: "blue" }}>X (Twitter)</a>
         </div>
       </div>
     </div>

@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 
 function Muro() {
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
 
   const redes = [
     { nombre: "Facebook", url: "https://facebook.com", color: "blue" },
@@ -18,12 +17,8 @@ function Muro() {
     { id: 3, autor: "MyBook Team", texto: "Próximamente podrás publicar, comentar y reaccionar 🚀" },
   ];
 
-  const handleLogoClick = () => {
-    if (token) {
-      navigate("/muro");
-    } else {
-      navigate("/");
-    }
+  const logoClick = () => {
+    navigate("/muro");
   };
 
   return (
@@ -31,7 +26,7 @@ function Muro() {
       {/* Logo principal */}
       <h1>
         <span
-          onClick={handleLogoClick}
+          onClick={logoClick}
           style={{ color: "blue", textDecoration: "none", cursor: "pointer" }}
         >
           MyBook
@@ -64,6 +59,19 @@ function Muro() {
         >
           Contáctanos
         </a>
+        |
+        <span
+          onClick={() => navigate("/chat")}
+          style={{
+            color: "green",
+            textDecoration: "underline",
+            fontWeight: "bold",
+            marginLeft: "10px",
+            cursor: "pointer",
+          }}
+        >
+          Chat
+        </span>
       </div>
 
       {/* Publicaciones simuladas */}

@@ -5,6 +5,7 @@ import Register from "./Register";
 import Profile from "./Profile";
 import Contactanos from "./Contactanos";
 import Muro from "./Muro";
+import Chat from "./Chat"; // ✅ Importamos el chat
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token") || "");
@@ -59,6 +60,12 @@ function App() {
         <Route 
           path="/muro"
           element={token ? <Muro /> : <Navigate to="/" />}
+        />
+
+        {/* ✅ Chat entre usuarios: protegido */}
+        <Route
+          path="/chat"
+          element={token ? <Chat /> : <Navigate to="/" />}
         />
 
         {/* ✅ Contacto */}
