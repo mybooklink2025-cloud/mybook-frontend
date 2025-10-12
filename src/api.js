@@ -26,6 +26,3 @@ export const enviarContacto = async ({ nombre, email, mensaje }) => {
   });
   return res.json();
 };
-
-// ✅ Exportar todo explícitamente para evitar problemas de build
-export { registrarUsuario, iniciarSesion, enviarContacto };
