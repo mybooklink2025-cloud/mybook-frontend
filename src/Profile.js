@@ -61,7 +61,7 @@ function Profile({ token }) {
     navigate(tokenStored ? "/muro" : "/");
   };
 
-  // ✅ Nueva función para cerrar sesión
+  // Función para cerrar sesión
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/");
@@ -106,7 +106,7 @@ function Profile({ token }) {
 
       <p style={{ color: "blue" }}>{message}</p>
 
-      {/* ✅ Botón de cerrar sesión */}
+      {/* Botón de cerrar sesión */}
       <div style={{ marginTop: "20px" }}>
         <button
           onClick={handleLogout}
@@ -123,10 +123,11 @@ function Profile({ token }) {
         </button>
       </div>
 
+      {/* Enlace Contáctanos dentro del perfil */}
       <div
         style={{
           position: "absolute",
-          bottom: "70px",
+          bottom: "100px",
           width: "100%",
           display: "flex",
           justifyContent: "center",
@@ -134,21 +135,17 @@ function Profile({ token }) {
       >
         <a
           href="/contactanos"
-          style={{
-            color: "blue",
-            fontWeight: "bold",
-            textDecoration: "underline",
-          }}
+          style={{ color: "blue", fontWeight: "bold", textDecoration: "underline" }}
         >
           Contáctanos
         </a>
       </div>
 
-      {/* Redes sociales */}
+      {/* Redes sociales un poco más abajo */}
       <div
         style={{
           position: "absolute",
-          bottom: "20px",
+          bottom: "30px",
           width: "100%",
           textAlign: "center",
         }}
