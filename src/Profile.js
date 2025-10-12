@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Profile({ token }) {
+  const navigate = useNavigate();
   const [file, setFile] = useState(null);
   const [message, setMessage] = useState("");
   const [profilePicture, setProfilePicture] = useState("");
@@ -54,10 +56,20 @@ function Profile({ token }) {
     }
   };
 
+  const logoClick = () => {
+    const tokenStored = localStorage.getItem("token");
+    navigate(tokenStored ? "/muro" : "/");
+  };
+
   return (
     <div style={{ textAlign: "left", marginTop: "20px", marginLeft: "20px", minHeight: "80vh", position: "relative" }}>
       <h1>
-        <a href="/" style={{ color: "blue", textDecoration: "none" }}>MyBook</a>
+        <span
+          onClick={logoClick}
+          style={{ color: "blue", textDecoration: "none", cursor: "pointer" }}
+        >
+          MyBook
+        </span>
       </h1>
       <h2>Perfil de usuario</h2>
 
@@ -79,15 +91,14 @@ function Profile({ token }) {
 
       <p style={{ color: "blue" }}>{message}</p>
 
-      {/* Enlace Contáctanos */}
-      <div style={{ position: "absolute", bottom: "100px", width: "100%", display: "flex", justifyContent: "center" }}>
+      <div style={{ position: "absolute", bottom: "70px", width: "100%", display: "flex", justifyContent: "center" }}>
         <a href="/contactanos" style={{ color: "blue", fontWeight: "bold", textDecoration: "underline" }}>
           Contáctanos
         </a>
       </div>
 
       {/* Redes sociales */}
-      <div style={{ position: "absolute", bottom: "30px", width: "100%", textAlign: "center" }}>
+      <div style={{ position: "absolute", bottom: "20px", width: "100%", textAlign: "center" }}>
         <h3>Síguenos en redes sociales</h3>
         <div style={{ display: "flex", justifyContent: "center", gap: "20px", marginTop: "10px" }}>
           <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" style={{ color: "blue" }}>Facebook</a>

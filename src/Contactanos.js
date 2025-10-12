@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import { enviarContacto } from "./api";
+import { useNavigate } from "react-router-dom";
 
 function Contactanos() {
+  const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
   const [mensaje, setMensaje] = useState("");
@@ -31,12 +35,19 @@ function Contactanos() {
     }
   };
 
+  const logoClick = () => {
+    navigate(token ? "/muro" : "/");
+  };
+
   return (
     <div style={{ textAlign: "center", marginTop: "50px" }}>
       <h1>
-        <a href="/" style={{ color: "blue", textDecoration: "none" }}>
+        <span
+          onClick={logoClick}
+          style={{ color: "blue", textDecoration: "none", cursor: "pointer" }}
+        >
           MyBook - Contáctanos
-        </a>
+        </span>
       </h1>
       <form
         onSubmit={handleSubmit}
@@ -50,8 +61,7 @@ function Contactanos() {
           onChange={(e) => setNombre(e.target.value)}
           required
         />
-        <br />
-        <br />
+        <br /><br />
 
         <label>Correo:</label>
         <br />
@@ -61,8 +71,7 @@ function Contactanos() {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-        <br />
-        <br />
+        <br /><br />
 
         <label>Mensaje:</label>
         <br />
@@ -73,15 +82,14 @@ function Contactanos() {
           cols={30}
           required
         />
-        <br />
-        <br />
+        <br /><br />
 
         <button type="submit">Enviar</button>
       </form>
 
       <p style={{ color: "blue", marginTop: "10px" }}>{status}</p>
 
-      {/* 📱 Enlace directo a WhatsApp */}
+      {/* Enlace directo a WhatsApp */}
       <p style={{ marginTop: "20px" }}>
         <a
           href="https://wa.me/573233694655"
