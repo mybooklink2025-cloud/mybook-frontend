@@ -1,106 +1,75 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import "./Muro.css"; // ✅ Importa los estilos sin alterar nada más
+import "./Muro.css";
 
 function Muro() {
-  const navigate = useNavigate();
-  const BASE_URL = process.env.REACT_APP_BACKEND_URL;
-
-  const [publicaciones, setPublicaciones] = useState([
-    { id: 1, autor: "Alejo", foto: "/default-avatar.png", texto: "¡Bienvenidos al nuevo muro de MyBook!" },
-    { id: 2, autor: "Martin", foto: "/default-avatar.png", texto: "Este es el primer paso hacia la versión real 💙" },
-    { id: 3, autor: "MyBook Team", foto: "/default-avatar.png", texto: "Próximamente podrás publicar, comentar y reaccionar 🚀" },
-  ]);
-
-  const [nuevoPost, setNuevoPost] = useState("");
-  const [usuario, setUsuario] = useState({ nombre: "", foto: "" });
+  const [posts, setPosts] = useState([]);
+  const [newPost, setNewPost] = useState("");
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) return;
-
-    try {
-      const decoded = JSON.parse(atob(token.split(".")[1]));
-      const email = decoded.email || "Usuario";
-      const savedPic = localStorage.getItem(`profilePicture_${email}`);
-      setUsuario({
-        nombre: email.split("@")[0],
-        foto: savedPic ? `${BASE_URL}/uploads/${savedPic}` : "/default-avatar.png",
-      });
-    } catch (err) {
-      console.error("Error al decodificar token:", err);
+    const userData = localStorage.getItem("userData");
+    if (userData) {
+      setUser(JSON.parse(userData));
     }
-  }, [BASE_URL]);
+  }, []);
 
-  const publicar = (e) => {
-    e.preventDefault();
-    if (!nuevoPost.trim()) return;
-
-    const nuevaPublicacion = {
-      id: publicaciones.length + 1,
-      autor: usuario.nombre || "Usuario actual",
-      foto: usuario.foto || "/default-avatar.png",
-      texto: nuevoPost,
+  const handlePost = () => {
+    if (!newPost.trim()) return;
+    const nuevoPost = {
+      id: Date.now(),
+      content: newPost,
+      userName: user?.email?.split("@")[0] || "Usuario",
+      userPhoto: user?.profilePicture
+        ? `${process.env.REACT_APP_BACKEND_URL}/uploads/${user.profilePicture}`
+        : "/default-profile.png",
     };
-
-    setPublicaciones([nuevaPublicacion, ...publicaciones]);
-    setNuevoPost("");
+    setPosts([nuevoPost, ...posts]);
+    setNewPost("");
   };
-
-  const redes = [
-    { nombre: "Facebook", url: "https://facebook.com", icono: "https://cdn-icons-png.flaticon.com/512/733/733547.png" },
-    { nombre: "Instagram", url: "https://instagram.com", icono: "https://cdn-icons-png.flaticon.com/512/2111/2111463.png" },
-    { nombre: "X (Twitter)", url: "https://x.com", icono: "https://cdn-icons-png.flaticon.com/512/733/733579.png" },
-    { nombre: "TikTok", url: "https://www.tiktok.com", icono: "https://cdn-icons-png.flaticon.com/512/3046/3046121.png" },
-    { nombre: "WhatsApp", url: "https://wa.me/573024502105", icono: "https://cdn-icons-png.flaticon.com/512/733/733585.png" },
-  ];
-
-  const logoClick = () => navigate("/muro");
 
   return (
     <div className="muro-container">
-      <h1 className="muro-logo" onClick={logoClick}>MyBook</h1>
-      <h2 className="muro-subtitulo">🌎 Muro general</h2>
+      <h2>Publicaciones</h2>
 
-      <div className="muro-nav">
-        <a href="/profile">Perfil</a> | <a href="/contactanos">Contáctanos</a> |{" "}
-        <span onClick={() => navigate("/chat")}>Chat</span>
-      </div>
-
-      {/* Formulario de publicación */}
-      <form className="post-form" onSubmit={publicar}>
+      <div className="post-box">
         <textarea
           placeholder="¿Qué estás pensando?"
-          value={nuevoPost}
-          onChange={(e) => setNuevoPost(e.target.value)}
-          rows="3"
+          value={newPost}
+          onChange={(e) => setNewPost(e.target.value)}
         />
-        <br />
-        <button type="submit">Publicar</button>
-      </form>
-
-      {/* Publicaciones */}
-      {publicaciones.map((post) => (
-        <div key={post.id} className="post-card">
-          <div className="post-header">
-            <img src={post.foto} alt="Usuario" />
-            <p className="post-author">{post.autor}</p>
-          </div>
-          <p>{post.texto}</p>
-        </div>
-      ))}
-
-      {/* Redes sociales */}
-      <div className="redes-container">
-        <h3>Síguenos en redes sociales</h3>
-        <div className="redes-links">
-          {redes.map((r) => (
-            <a key={r.nombre} href={r.url} target="_blank" rel="noopener noreferrer">
-              <img src={r.icono} alt={r.nombre} /> {r.nombre}
-            </a>
-          ))}
-        </div>
+        <button onClick={handlePost}>Publicar</button>
       </div>
+
+      <div className="posts-list">
+        {posts.map((post) => (
+          <div key={post.id} className="post">
+            <div className="post-header">
+              <img
+                src={post.userPhoto}
+                alt="Foto de usuario"
+                className="post-user-photo"
+              />
+              <span className="post-user-name">{post.userName}</span>
+            </div>
+            <p>{post.content}</p>
+          </div>
+        ))}
+      </div>
+
+      <footer className="social-footer">
+        <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">
+          <i className="fab fa-facebook"></i> Facebook
+        </a>
+        <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer">
+          <i className="fab fa-twitter"></i> Twitter
+        </a>
+        <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">
+          <i className="fab fa-instagram"></i> Instagram
+        </a>
+        <a href="https://web.whatsapp.com/send?phone=573024502105" target="_blank" rel="noopener noreferrer">
+          <i className="fab fa-whatsapp"></i> WhatsApp 3024502105
+        </a>
+      </footer>
     </div>
   );
 }

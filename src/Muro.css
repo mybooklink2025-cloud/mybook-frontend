@@ -1,135 +1,100 @@
-/* 🎨 Estilo general del muro */
 .muro-container {
-  text-align: center;
+  max-width: 700px;
+  margin: 40px auto;
   padding: 20px;
-  background-color: #f5f9ff;
-  min-height: 100vh;
-  font-family: Arial, sans-serif;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
 
-/* Logo principal */
-.muro-logo {
-  color: blue;
-  text-decoration: none;
-  cursor: pointer;
-  font-size: 2.2em;
-  font-weight: bold;
-}
-
-/* Subtítulo */
-.muro-subtitulo {
+.muro-container h2 {
+  text-align: center;
   color: #333;
-  margin-top: 5px;
-}
-
-/* Enlaces superiores */
-.muro-nav {
   margin-bottom: 20px;
 }
 
-.muro-nav a,
-.muro-nav span {
-  color: blue;
-  text-decoration: underline;
-  font-weight: bold;
-  margin: 0 10px;
-  cursor: pointer;
+.post-box {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
 }
 
-/* Caja de publicación */
-.post-form {
-  background: #e8f0ff;
-  border-radius: 10px;
-  padding: 15px;
-  width: 60%;
-  margin: 0 auto 30px auto;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.post-form textarea {
-  width: 100%;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  padding: 10px;
+.post-box textarea {
   resize: none;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  min-height: 80px;
+  margin-bottom: 10px;
+  font-size: 15px;
 }
 
-.post-form button {
-  margin-top: 10px;
-  background-color: blue;
+.post-box button {
+  align-self: flex-end;
+  background: #007bff;
   color: white;
   border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
+  padding: 8px 15px;
+  border-radius: 8px;
   cursor: pointer;
 }
 
-.post-form button:hover {
-  background-color: #0044cc;
+.post-box button:hover {
+  background: #0056b3;
 }
 
-/* Publicaciones */
-.post-card {
-  border: 1px solid #ccc;
-  border-radius: 10px;
+.posts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.post {
+  background: #f8f8f8;
+  border-radius: 15px;
   padding: 15px;
-  margin: 10px auto;
-  width: 60%;
-  text-align: left;
-  background-color: #f9f9f9;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
 }
 
 .post-header {
   display: flex;
   align-items: center;
   gap: 10px;
+  margin-bottom: 10px;
 }
 
-.post-header img {
-  width: 45px;
-  height: 45px;
+.post-user-photo {
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  border: 2px solid #ccc;
+  object-fit: cover;
 }
 
-.post-author {
+.post-user-name {
   font-weight: bold;
-  color: blue;
-}
-
-/* Redes sociales */
-.redes-container {
-  margin-top: 50px;
-}
-
-.redes-container h3 {
   color: #333;
 }
 
-.redes-links {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-  margin-top: 10px;
+.social-footer {
+  margin-top: 30px;
+  text-align: center;
+  border-top: 1px solid #eee;
+  padding-top: 15px;
 }
 
-.redes-links a {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #333;
+.social-footer a {
+  display: inline-block;
+  margin: 8px 12px;
   text-decoration: none;
-  font-weight: bold;
+  color: #333;
+  font-size: 15px;
+  transition: color 0.3s ease;
 }
 
-.redes-links a:hover {
-  text-decoration: underline;
+.social-footer a i {
+  margin-right: 6px;
 }
 
-/* Íconos */
-.redes-links img {
-  width: 24px;
-  height: 24px;
+.social-footer a:hover {
+  color: #007bff;
 }
