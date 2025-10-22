@@ -1,252 +1,104 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import "./Muro.css"; // ✅ Importa los estilos sin alterar nada más
 
 function Muro() {
   const navigate = useNavigate();
+  const BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
-  // Publicaciones iniciales
   const [publicaciones, setPublicaciones] = useState([
-    { id: 1, autor: "Alejo", texto: "¡Bienvenidos al nuevo muro de MyBook!", foto: "https://cdn-icons-png.flaticon.com/512/194/194938.png" },
-    { id: 2, autor: "Martin", texto: "Este es el primer paso hacia la versión real 💙", foto: "https://cdn-icons-png.flaticon.com/512/2922/2922510.png" },
-    { id: 3, autor: "MyBook Team", texto: "Próximamente podrás publicar, comentar y reaccionar 🚀", foto: "https://cdn-icons-png.flaticon.com/512/1077/1077012.png" },
+    { id: 1, autor: "Alejo", foto: "/default-avatar.png", texto: "¡Bienvenidos al nuevo muro de MyBook!" },
+    { id: 2, autor: "Martin", foto: "/default-avatar.png", texto: "Este es el primer paso hacia la versión real 💙" },
+    { id: 3, autor: "MyBook Team", foto: "/default-avatar.png", texto: "Próximamente podrás publicar, comentar y reaccionar 🚀" },
   ]);
 
   const [nuevoPost, setNuevoPost] = useState("");
-  const [nombreUsuario, setNombreUsuario] = useState("Usuario Actual");
-  const [fotoUsuario, setFotoUsuario] = useState("https://cdn-icons-png.flaticon.com/512/847/847969.png");
+  const [usuario, setUsuario] = useState({ nombre: "", foto: "" });
 
-  const handlePublicar = (e) => {
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    try {
+      const decoded = JSON.parse(atob(token.split(".")[1]));
+      const email = decoded.email || "Usuario";
+      const savedPic = localStorage.getItem(`profilePicture_${email}`);
+      setUsuario({
+        nombre: email.split("@")[0],
+        foto: savedPic ? `${BASE_URL}/uploads/${savedPic}` : "/default-avatar.png",
+      });
+    } catch (err) {
+      console.error("Error al decodificar token:", err);
+    }
+  }, [BASE_URL]);
+
+  const publicar = (e) => {
     e.preventDefault();
     if (!nuevoPost.trim()) return;
-    const nuevo = {
+
+    const nuevaPublicacion = {
       id: publicaciones.length + 1,
-      autor: nombreUsuario,
+      autor: usuario.nombre || "Usuario actual",
+      foto: usuario.foto || "/default-avatar.png",
       texto: nuevoPost,
-      foto: fotoUsuario,
     };
-    setPublicaciones([nuevo, ...publicaciones]);
+
+    setPublicaciones([nuevaPublicacion, ...publicaciones]);
     setNuevoPost("");
   };
 
-  const logoClick = () => {
-    navigate("/muro");
-  };
+  const redes = [
+    { nombre: "Facebook", url: "https://facebook.com", icono: "https://cdn-icons-png.flaticon.com/512/733/733547.png" },
+    { nombre: "Instagram", url: "https://instagram.com", icono: "https://cdn-icons-png.flaticon.com/512/2111/2111463.png" },
+    { nombre: "X (Twitter)", url: "https://x.com", icono: "https://cdn-icons-png.flaticon.com/512/733/733579.png" },
+    { nombre: "TikTok", url: "https://www.tiktok.com", icono: "https://cdn-icons-png.flaticon.com/512/3046/3046121.png" },
+    { nombre: "WhatsApp", url: "https://wa.me/573024502105", icono: "https://cdn-icons-png.flaticon.com/512/733/733585.png" },
+  ];
+
+  const logoClick = () => navigate("/muro");
 
   return (
-    <div style={{ textAlign: "center", padding: "20px" }}>
-      {/* Logo principal */}
-      <h1>
-        <span
-          onClick={logoClick}
-          style={{ color: "blue", textDecoration: "none", cursor: "pointer" }}
-        >
-          MyBook
-        </span>
-      </h1>
+    <div className="muro-container">
+      <h1 className="muro-logo" onClick={logoClick}>MyBook</h1>
+      <h2 className="muro-subtitulo">🌎 Muro general</h2>
 
-      <h2>🌎 Muro general</h2>
-
-      {/* Navegación superior */}
-      <div style={{ marginBottom: "20px" }}>
-        <a
-          href="/profile"
-          style={{
-            color: "blue",
-            textDecoration: "underline",
-            fontWeight: "bold",
-            marginRight: "10px",
-          }}
-        >
-          Perfil
-        </a>
-        |
-        <a
-          href="/contactanos"
-          style={{
-            color: "blue",
-            textDecoration: "underline",
-            fontWeight: "bold",
-            marginLeft: "10px",
-          }}
-        >
-          Contáctanos
-        </a>
-        |
-        <span
-          onClick={() => navigate("/chat")}
-          style={{
-            color: "green",
-            textDecoration: "underline",
-            fontWeight: "bold",
-            marginLeft: "10px",
-            cursor: "pointer",
-          }}
-        >
-          Chat
-        </span>
+      <div className="muro-nav">
+        <a href="/profile">Perfil</a> | <a href="/contactanos">Contáctanos</a> |{" "}
+        <span onClick={() => navigate("/chat")}>Chat</span>
       </div>
 
-      {/* Nueva publicación */}
-      <form onSubmit={handlePublicar} style={{ marginBottom: "30px" }}>
+      {/* Formulario de publicación */}
+      <form className="post-form" onSubmit={publicar}>
         <textarea
+          placeholder="¿Qué estás pensando?"
           value={nuevoPost}
           onChange={(e) => setNuevoPost(e.target.value)}
-          placeholder="¿Qué estás pensando?"
-          rows={3}
-          cols={60}
-          style={{
-            borderRadius: "10px",
-            border: "1px solid #ccc",
-            padding: "10px",
-            resize: "none",
-          }}
+          rows="3"
         />
         <br />
-        <button
-          type="submit"
-          style={{
-            marginTop: "10px",
-            padding: "8px 16px",
-            backgroundColor: "blue",
-            color: "white",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-          }}
-        >
-          Publicar
-        </button>
+        <button type="submit">Publicar</button>
       </form>
 
-      {/* Lista de publicaciones */}
-      <div style={{ marginTop: "20px" }}>
-        {publicaciones.map((post) => (
-          <div
-            key={post.id}
-            style={{
-              border: "1px solid #ccc",
-              borderRadius: "10px",
-              padding: "15px",
-              margin: "10px auto",
-              width: "60%",
-              textAlign: "left",
-              backgroundColor: "#f9f9f9",
-            }}
-          >
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <img
-                src={post.foto}
-                alt="foto autor"
-                width={40}
-                height={40}
-                style={{ borderRadius: "50%", marginRight: "10px" }}
-              />
-              <p style={{ fontWeight: "bold", color: "blue", margin: 0 }}>
-                {post.autor}
-              </p>
-            </div>
-            <p style={{ marginTop: "10px" }}>{post.texto}</p>
+      {/* Publicaciones */}
+      {publicaciones.map((post) => (
+        <div key={post.id} className="post-card">
+          <div className="post-header">
+            <img src={post.foto} alt="Usuario" />
+            <p className="post-author">{post.autor}</p>
           </div>
-        ))}
-      </div>
+          <p>{post.texto}</p>
+        </div>
+      ))}
 
-      {/* Redes sociales al pie */}
-      <div style={{ marginTop: "50px" }}>
+      {/* Redes sociales */}
+      <div className="redes-container">
         <h3>Síguenos en redes sociales</h3>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            gap: "25px",
-            marginTop: "15px",
-          }}
-        >
-          <a
-            href="https://facebook.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ textDecoration: "none", color: "blue", fontWeight: "bold" }}
-          >
-            <img
-              src="https://cdn-icons-png.flaticon.com/512/733/733547.png"
-              alt="Facebook"
-              width={24}
-              style={{ verticalAlign: "middle", marginRight: "5px" }}
-            />
-            Facebook
-          </a>
-          <a
-            href="https://instagram.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              textDecoration: "none",
-              color: "purple",
-              fontWeight: "bold",
-            }}
-          >
-            <img
-              src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png"
-              alt="Instagram"
-              width={24}
-              style={{ verticalAlign: "middle", marginRight: "5px" }}
-            />
-            Instagram
-          </a>
-          <a
-            href="https://www.tiktok.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              textDecoration: "none",
-              color: "black",
-              fontWeight: "bold",
-            }}
-          >
-            <img
-              src="https://cdn-icons-png.flaticon.com/512/3046/3046121.png"
-              alt="TikTok"
-              width={24}
-              style={{ verticalAlign: "middle", marginRight: "5px" }}
-            />
-            TikTok
-          </a>
-          <a
-            href="https://x.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              textDecoration: "none",
-              color: "black",
-              fontWeight: "bold",
-            }}
-          >
-            <img
-              src="https://cdn-icons-png.flaticon.com/512/733/733579.png"
-              alt="Twitter"
-              width={24}
-              style={{ verticalAlign: "middle", marginRight: "5px" }}
-            />
-            X (Twitter)
-          </a>
-          <a
-            href="https://wa.me/573024502105"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              textDecoration: "none",
-              color: "green",
-              fontWeight: "bold",
-            }}
-          >
-            <img
-              src="https://cdn-icons-png.flaticon.com/512/733/733585.png"
-              alt="WhatsApp"
-              width={24}
-              style={{ verticalAlign: "middle", marginRight: "5px" }}
-            />
-            WhatsApp (3024502105)
-          </a>
+        <div className="redes-links">
+          {redes.map((r) => (
+            <a key={r.nombre} href={r.url} target="_blank" rel="noopener noreferrer">
+              <img src={r.icono} alt={r.nombre} /> {r.nombre}
+            </a>
+          ))}
         </div>
       </div>
     </div>
