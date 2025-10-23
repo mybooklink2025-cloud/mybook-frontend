@@ -1,16 +1,48 @@
-.muro-container {
-  max-width: 700px;
-  margin: 40px auto;
-  padding: 20px;
-  background: #ffffff;
-  border-radius: 20px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+.muro-page {
+  display: flex;
 }
 
-.muro-container h2 {
-  text-align: center;
-  color: #333;
-  margin-bottom: 20px;
+/* Ventana izquierda fija */
+.sidebar {
+  width: 200px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  background-color: #f0f0f0;
+  padding: 20px;
+  border-right: 1px solid #ddd;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.sidebar h3 {
+  margin-bottom: 15px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  margin-bottom: 10px;
+}
+
+.sidebar ul li a {
+  text-decoration: none;
+  color: #007bff;
+}
+
+.sidebar ul li a:hover {
+  text-decoration: underline;
+}
+
+/* Contenido principal desplazable */
+.main-content {
+  margin-left: 220px; /* deja espacio para la sidebar */
+  padding: 20px;
+  width: calc(100% - 220px);
 }
 
 .post-box {
@@ -89,10 +121,6 @@
   color: #333;
   font-size: 15px;
   transition: color 0.3s ease;
-}
-
-.social-footer a i {
-  margin-right: 6px;
 }
 
 .social-footer a:hover {
