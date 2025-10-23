@@ -13,6 +13,14 @@ function Chat() {
     return null;
   }
 
+  const logoClick = () => {
+    if (token) {
+      navigate("/muro");
+    } else {
+      navigate("/");
+    }
+  };
+
   const handleEnviar = () => {
     if (!mensaje.trim()) return;
     // Agregamos mensaje al estado local
@@ -22,7 +30,22 @@ function Chat() {
 
   return (
     <div style={{ textAlign: "center", padding: "20px" }}>
-      <h1>Chat de MyBook</h1>
+      {/* Logo MyBook azul centrado */}
+      <h1>
+        <span
+          onClick={logoClick}
+          style={{
+            color: "blue",
+            cursor: "pointer",
+            textDecoration: "none",
+            fontSize: "36px",
+          }}
+        >
+          MyBook
+        </span>
+      </h1>
+
+      <h2>Chat de MyBook</h2>
 
       <div
         style={{
@@ -40,8 +63,7 @@ function Chat() {
         {mensajes.length === 0 && <p style={{ color: "#999" }}>No hay mensajes aún...</p>}
         {mensajes.map((msg, index) => (
           <p key={index}>
-            <strong style={{ color: "blue" }}>{msg.autor}: </strong>
-            {msg.texto}
+            <strong style={{ color: "blue" }}>{msg.autor}: </strong> {msg.texto}
           </p>
         ))}
       </div>
