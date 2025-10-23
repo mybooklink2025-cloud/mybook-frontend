@@ -22,6 +22,24 @@ function Profile({ token }) {
     }
   }, [token]);
 
+  const parseJwt = (token) => {
+    try {
+      return JSON.parse(atob(token.split(".")[1]));
+    } catch {
+      return {};
+    }
+  };
+
+  const logoClick = () => {
+    const tokenStored = localStorage.getItem("token");
+    navigate(tokenStored ? "/muro" : "/");
+  };
+
+  const handleCerrarSesion = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  };
+
   const handleFileChange = (e) => setFile(e.target.files[0]);
 
   const handleUpload = async (e) => {
@@ -50,147 +68,105 @@ function Profile({ token }) {
     }
   };
 
-  const parseJwt = (token) => {
-    try {
-      return JSON.parse(atob(token.split(".")[1]));
-    } catch {
-      return {};
-    }
-  };
-
-  const logoClick = () => {
-    const tokenStored = localStorage.getItem("token");
-    navigate(tokenStored ? "/muro" : "/");
-  };
-
-  const handleCerrarSesion = () => {
-    localStorage.removeItem("token");
-    navigate("/");
-  };
-
-  const handlePostSubmit = (e) => {
+  const handlePost = (e) => {
     e.preventDefault();
     if (!postContent.trim()) return;
-    setPosts((prev) => [
-      { autor: email, avatar: profilePicture, contenido: postContent },
-      ...prev,
-    ]);
+    const newPost = {
+      id: Date.now(),
+      autor: email.split("@")[0],
+      texto: postContent,
+      avatar: profilePicture ? `${BASE_URL}/uploads/${profilePicture}` : null,
+    };
+    setPosts([newPost, ...posts]);
     setPostContent("");
   };
 
   return (
-    <div className="profile-container">
-      {/* Logo en esquina superior izquierda */}
-      <h1>
-        <span onClick={logoClick} className="profile-logo">
-          MyBook
-        </span>
-      </h1>
+    <div className="profile-page">
 
-      <h2>Perfil de usuario</h2>
+      {/* Zona superior izquierda */}
+      <div className="profile-top-left">
+        <h1>
+          <span onClick={logoClick} className="profile-logo">MyBook</span>
+        </h1>
+        <h2>Perfil de usuario</h2>
 
-      {/* Foto de perfil */}
-      {profilePicture && (
-        <div>
-          <img
-            src={`${BASE_URL}/uploads/${profilePicture}`}
-            alt="Perfil"
-            width={150}
-            style={{ borderRadius: "50%" }}
-          />
-        </div>
-      )}
+        <form onSubmit={handleUpload} style={{ marginTop: "10px" }}>
+          <input type="file" accept="image/*" onChange={handleFileChange} />
+          <br />
+          <button type="submit">Subir foto</button>
+        </form>
 
-      {/* Formulario para subir foto */}
-      <form onSubmit={handleUpload} style={{ marginTop: "10px" }}>
-        <input type="file" accept="image/*" onChange={handleFileChange} />
-        <br />
-        <button type="submit">Subir foto</button>
-      </form>
-      <p style={{ color: "blue" }}>{message}</p>
-
-      {/* Caja de publicación (al centro, entre foto y botones) */}
-      <form className="post-form" onSubmit={handlePostSubmit}>
-        <textarea
-          placeholder="Escribe un post..."
-          value={postContent}
-          onChange={(e) => setPostContent(e.target.value)}
-        />
-        <button type="submit">Publicar</button>
-      </form>
-
-      {/* Botones de chat y cerrar sesión */}
-      <div style={{ marginTop: "20px" }}>
-        <button onClick={() => navigate("/chat")} className="btn-green">
-          Ir al Chat
-        </button>
-        <button onClick={handleCerrarSesion} className="btn-red">
-          Cerrar sesión
-        </button>
-      </div>
-
-      {/* Contáctanos con hipervínculo */}
-      <div className="contact-link">
-        <a
-          href="/contactanos"
-          style={{
-            color: "blue",
-            fontWeight: "bold",
-            textDecoration: "underline",
-          }}
-        >
-          Contáctanos
-        </a>
-      </div>
-
-      {/* Redes sociales más abajo */}
-      <div className="social-links">
-        <h3>Síguenos en redes sociales</h3>
-        <div className="social-icons">
-          <a
-            href="https://www.facebook.com"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            📘 Facebook
-          </a>
-          <a
-            href="https://www.instagram.com"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            📸 Instagram
-          </a>
-          <a
-            href="https://www.tiktok.com"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            🎵 TikTok
-          </a>
-          <a href="https://x.com" target="_blank" rel="noopener noreferrer">
-            🐦 X (Twitter)
-          </a>
-        </div>
-      </div>
-
-      {/* Posts publicados */}
-      <div className="posts-list">
-        {posts.map((post, idx) => (
-          <div className="post" key={idx}>
-            <div className="post-header">
-              {post.avatar && (
-                <img
-                  src={`${BASE_URL}/uploads/${post.avatar}`}
-                  alt="avatar"
-                  className="post-avatar"
-                />
-              )}
-              <span className="post-author">{post.autor}</span>
-            </div>
-            <p>{post.contenido}</p>
+        {profilePicture && (
+          <div style={{ marginTop: "10px" }}>
+            <img
+              src={`${BASE_URL}/uploads/${profilePicture}`}
+              alt="Perfil"
+              width={150}
+              style={{ borderRadius: "50%" }}
+            />
           </div>
-        ))}
+        )}
+        <p style={{ color: "blue" }}>{message}</p>
+
+        <div style={{ marginTop: "20px" }}>
+          <button onClick={() => navigate("/chat")} className="btn-green">
+            Ir al Chat
+          </button>
+          <button onClick={handleCerrarSesion} className="btn-red">
+            Cerrar sesión
+          </button>
+        </div>
+      </div>
+
+      {/* Zona central: cuadro de post y publicaciones */}
+      <div className="profile-center-post">
+        <form className="post-form" onSubmit={handlePost}>
+          <textarea
+            value={postContent}
+            onChange={(e) => setPostContent(e.target.value)}
+            placeholder="Escribe tu publicación..."
+          />
+          <button type="submit">Publicar</button>
+        </form>
+
+        <div className="posts-list">
+          {posts.map((post) => (
+            <div key={post.id} className="post">
+              <div className="post-header">
+                {post.avatar && <img src={post.avatar} alt="Avatar" className="post-avatar" />}
+                <span className="post-author">{post.autor}</span>
+              </div>
+              <p>{post.texto}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Zona inferior-central: Contáctanos y redes */}
+      <div className="profile-bottom">
+        <div className="contact-link">
+          <a
+            href="/contactanos"
+            style={{
+              color: "blue",
+              fontWeight: "bold",
+              textDecoration: "underline",
+            }}
+          >
+            Contáctanos
+          </a>
+        </div>
+
+        <div className="social-links">
+          <h3>Síguenos en redes sociales</h3>
+          <div className="social-icons">
+            <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">📘 Facebook</a>
+            <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer">📸 Instagram</a>
+            <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer">🎵 TikTok</a>
+            <a href="https://x.com" target="_blank" rel="noopener noreferrer">🐦 X (Twitter)</a>
+          </div>
+        </div>
       </div>
     </div>
   );
