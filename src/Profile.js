@@ -8,6 +8,9 @@ function Profile({ token }) {
   const [message, setMessage] = useState("");
   const [profilePicture, setProfilePicture] = useState("");
   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [postContent, setPostContent] = useState("");
+  const [posts, setPosts] = useState([]);
 
   const BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -15,10 +18,19 @@ function Profile({ token }) {
     const decoded = parseJwt(token);
     if (decoded.email) {
       setEmail(decoded.email);
+      setUsername(decoded.email.split("@")[0]); // nombre de usuario simple
       const savedPicture = localStorage.getItem(`profilePicture_${decoded.email}`);
       if (savedPicture) setProfilePicture(savedPicture);
     }
   }, [token]);
+
+  const parseJwt = (token) => {
+    try {
+      return JSON.parse(atob(token.split(".")[1]));
+    } catch {
+      return {};
+    }
+  };
 
   const handleFileChange = (e) => setFile(e.target.files[0]);
 
@@ -48,28 +60,41 @@ function Profile({ token }) {
     }
   };
 
-  const parseJwt = (token) => {
-    try {
-      return JSON.parse(atob(token.split(".")[1]));
-    } catch {
-      return {};
-    }
-  };
-
-  const logoClick = () => {
-    const tokenStored = localStorage.getItem("token");
-    navigate(tokenStored ? "/muro" : "/");
-  };
-
   const handleCerrarSesion = () => {
     localStorage.removeItem("token");
     navigate("/");
   };
 
+  const handlePost = async () => {
+    if (!postContent.trim()) return;
+    try {
+      const res = await fetch(`${BASE_URL}/posts`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ content: postContent }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setPosts((prev) => [data, ...prev]);
+        setPostContent("");
+      } else {
+        alert(data.message || "Error al publicar");
+      }
+    } catch {
+      alert("❌ Error al conectar con el servidor");
+    }
+  };
+
   return (
     <div className="profile-container">
       <h1>
-        <span onClick={logoClick} className="profile-logo">
+        <span
+          className="logo"
+          onClick={() => navigate(token ? "/muro" : "/")}
+        >
           MyBook
         </span>
       </h1>
@@ -81,57 +106,58 @@ function Profile({ token }) {
           <img
             src={`${BASE_URL}/uploads/${profilePicture}`}
             alt="Perfil"
-            width={150}
-            style={{ borderRadius: "50%" }}
+            className="profile-picture"
           />
         </div>
       )}
 
       <form onSubmit={handleUpload} style={{ marginTop: "10px" }}>
-        <input type="file" accept="image/*" onChange={handleFileChange} />
-        <br />
+        <input type="file" accept="image/*" onChange={handleFileChange} /><br />
         <button type="submit">Subir foto</button>
       </form>
       <p style={{ color: "blue" }}>{message}</p>
 
-      <div style={{ marginTop: "20px" }}>
-        <button
-          onClick={() => navigate("/chat")}
-          className="btn-green"
-        >
-          Ir al Chat
-        </button>
-        <button
-          onClick={handleCerrarSesion}
-          className="btn-red"
-        >
-          Cerrar sesión
-        </button>
+      <div className="profile-buttons">
+        <button onClick={() => navigate("/chat")}>Ir al Chat</button>
+        <button onClick={handleCerrarSesion}>Cerrar sesión</button>
       </div>
 
-      {/* Contáctanos con hipervínculo */}
-      <div className="contact-link">
-        <a
-          href="/contactanos"
-          style={{
-            color: "blue",
-            fontWeight: "bold",
-            textDecoration: "underline",
-          }}
-        >
-          Contáctanos
-        </a>
+      {/* Caja de publicación central */}
+      <div className="post-form">
+        <textarea
+          placeholder="Escribe tu publicación..."
+          value={postContent}
+          onChange={(e) => setPostContent(e.target.value)}
+          rows={4}
+        />
+        <button onClick={handlePost}>Publicar</button>
       </div>
 
-      {/* Redes sociales más abajo */}
-      <div className="social-links">
-        <h3>Síguenos en redes sociales</h3>
-        <div className="social-icons">
-          <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">📘 Facebook</a>
-          <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer">📸 Instagram</a>
-          <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer">🎵 TikTok</a>
-          <a href="https://x.com" target="_blank" rel="noopener noreferrer">🐦 X (Twitter)</a>
-        </div>
+      {/* Posts del usuario */}
+      <div className="posts-list">
+        {posts.map((post) => (
+          <div key={post._id} className="post">
+            <div className="post-header">
+              {profilePicture && (
+                <img src={`${BASE_URL}/uploads/${profilePicture}`} className="post-avatar" alt="Avatar" />
+              )}
+              <span className="post-author">{username}</span>
+            </div>
+            <p>{post.content}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="contact-footer">
+        <a href="/contactanos">Contáctanos</a>
+      </div>
+
+      <div className="redes-footer">
+        <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">Facebook</a>
+        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
+        <a href="https://x.com" target="_blank" rel="noopener noreferrer">X (Twitter)</a>
+        <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer">TikTok</a>
+        <a href="https://wa.me/573024502105" target="_blank" rel="noopener noreferrer">WhatsApp</a>
       </div>
     </div>
   );
