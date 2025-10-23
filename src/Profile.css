@@ -1,48 +1,59 @@
 .profile-container {
-  text-align: center;
+  text-align: left;
   padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
-.logo {
+.profile-logo {
   color: blue;
   cursor: pointer;
   text-decoration: none;
-  font-size: 32px;
-  font-weight: bold;
 }
 
-.profile-picture {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  margin-top: 10px;
-}
-
-.profile-buttons {
-  margin: 15px 0;
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-}
-
-.profile-buttons button {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 5px;
-  background-color: blue;
+.btn-green {
+  background-color: green;
   color: white;
+  border: none;
+  padding: 8px 15px;
+  margin-right: 10px;
+  border-radius: 5px;
   cursor: pointer;
 }
 
+.btn-red {
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.contact-link {
+  margin-top: 20px;
+}
+
+.social-links {
+  margin-top: 20px;
+}
+
+.social-icons {
+  display: flex;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+/* CAJA DE PUBLICACIÓN */
 .post-form {
-  margin: 30px auto;
-  width: 60%;
+  margin: 30px 0;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
 .post-form textarea {
+  width: 100%;
   padding: 10px;
   border-radius: 5px;
   border: 1px solid #ccc;
@@ -59,17 +70,16 @@
   cursor: pointer;
 }
 
+/* LISTA DE POSTS */
 .posts-list {
-  margin-top: 30px;
+  margin-top: 20px;
 }
 
 .post {
   border: 1px solid #ccc;
   border-radius: 10px;
   padding: 15px;
-  margin: 10px auto;
-  width: 60%;
-  text-align: left;
+  margin-bottom: 15px;
   background-color: #f9f9f9;
 }
 
@@ -89,27 +99,4 @@
 .post-author {
   font-weight: bold;
   color: blue;
-}
-
-.contact-footer {
-  margin-top: 40px;
-}
-
-.contact-footer a {
-  text-decoration: underline;
-  color: blue;
-  font-weight: bold;
-}
-
-.redes-footer {
-  margin-top: 15px;
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-}
-
-.redes-footer a {
-  color: blue;
-  text-decoration: none;
-  font-weight: bold;
 }

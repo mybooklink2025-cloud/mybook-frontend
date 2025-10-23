@@ -8,7 +8,7 @@ function Profile({ token }) {
   const [message, setMessage] = useState("");
   const [profilePicture, setProfilePicture] = useState("");
   const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
+
   const [postContent, setPostContent] = useState("");
   const [posts, setPosts] = useState([]);
 
@@ -18,7 +18,6 @@ function Profile({ token }) {
     const decoded = parseJwt(token);
     if (decoded.email) {
       setEmail(decoded.email);
-      setUsername(decoded.email.split("@")[0]); // nombre de usuario simple
       const savedPicture = localStorage.getItem(`profilePicture_${decoded.email}`);
       if (savedPicture) setProfilePicture(savedPicture);
     }
@@ -60,41 +59,30 @@ function Profile({ token }) {
     }
   };
 
+  const handlePostSubmit = (e) => {
+    e.preventDefault();
+    if (!postContent.trim()) return;
+    setPosts((prev) => [
+      { autor: email, avatar: profilePicture, texto: postContent },
+      ...prev,
+    ]);
+    setPostContent("");
+  };
+
+  const logoClick = () => {
+    const tokenStored = localStorage.getItem("token");
+    navigate(tokenStored ? "/muro" : "/");
+  };
+
   const handleCerrarSesion = () => {
     localStorage.removeItem("token");
     navigate("/");
   };
 
-  const handlePost = async () => {
-    if (!postContent.trim()) return;
-    try {
-      const res = await fetch(`${BASE_URL}/posts`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ content: postContent }),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        setPosts((prev) => [data, ...prev]);
-        setPostContent("");
-      } else {
-        alert(data.message || "Error al publicar");
-      }
-    } catch {
-      alert("❌ Error al conectar con el servidor");
-    }
-  };
-
   return (
     <div className="profile-container">
       <h1>
-        <span
-          className="logo"
-          onClick={() => navigate(token ? "/muro" : "/")}
-        >
+        <span onClick={logoClick} className="profile-logo">
           MyBook
         </span>
       </h1>
@@ -106,58 +94,81 @@ function Profile({ token }) {
           <img
             src={`${BASE_URL}/uploads/${profilePicture}`}
             alt="Perfil"
-            className="profile-picture"
+            width={150}
+            style={{ borderRadius: "50%" }}
           />
         </div>
       )}
 
       <form onSubmit={handleUpload} style={{ marginTop: "10px" }}>
-        <input type="file" accept="image/*" onChange={handleFileChange} /><br />
+        <input type="file" accept="image/*" onChange={handleFileChange} />
+        <br />
         <button type="submit">Subir foto</button>
       </form>
       <p style={{ color: "blue" }}>{message}</p>
 
-      <div className="profile-buttons">
-        <button onClick={() => navigate("/chat")}>Ir al Chat</button>
-        <button onClick={handleCerrarSesion}>Cerrar sesión</button>
+      <div style={{ marginTop: "20px" }}>
+        <button onClick={() => navigate("/chat")} className="btn-green">
+          Ir al Chat
+        </button>
+        <button onClick={handleCerrarSesion} className="btn-red">
+          Cerrar sesión
+        </button>
       </div>
 
-      {/* Caja de publicación central */}
-      <div className="post-form">
+      {/* Contáctanos con hipervínculo */}
+      <div className="contact-link">
+        <a
+          href="/contactanos"
+          style={{
+            color: "blue",
+            fontWeight: "bold",
+            textDecoration: "underline",
+          }}
+        >
+          Contáctanos
+        </a>
+      </div>
+
+      {/* Redes sociales más abajo */}
+      <div className="social-links">
+        <h3>Síguenos en redes sociales</h3>
+        <div className="social-icons">
+          <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">📘 Facebook</a>
+          <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer">📸 Instagram</a>
+          <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer">🎵 TikTok</a>
+          <a href="https://x.com" target="_blank" rel="noopener noreferrer">🐦 X (Twitter)</a>
+        </div>
+      </div>
+
+      {/* CAJA DE PUBLICACIÓN CENTRAL */}
+      <form className="post-form" onSubmit={handlePostSubmit}>
         <textarea
-          placeholder="Escribe tu publicación..."
           value={postContent}
           onChange={(e) => setPostContent(e.target.value)}
+          placeholder="¿Qué quieres compartir?"
           rows={4}
         />
-        <button onClick={handlePost}>Publicar</button>
-      </div>
+        <button type="submit">Publicar</button>
+      </form>
 
-      {/* Posts del usuario */}
+      {/* LISTA DE POSTS */}
       <div className="posts-list">
-        {posts.map((post) => (
-          <div key={post._id} className="post">
+        {posts.map((post, index) => (
+          <div key={index} className="post">
             <div className="post-header">
-              {profilePicture && (
-                <img src={`${BASE_URL}/uploads/${profilePicture}`} className="post-avatar" alt="Avatar" />
+              {post.avatar && (
+                <img
+                  src={`${BASE_URL}/uploads/${post.avatar}`}
+                  alt="avatar"
+                  className="post-avatar"
+                />
               )}
-              <span className="post-author">{username}</span>
+              <span className="post-author">{post.autor}</span>
             </div>
-            <p>{post.content}</p>
+            <p>{post.texto}</p>
           </div>
         ))}
-      </div>
-
-      <div className="contact-footer">
-        <a href="/contactanos">Contáctanos</a>
-      </div>
-
-      <div className="redes-footer">
-        <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">Facebook</a>
-        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
-        <a href="https://x.com" target="_blank" rel="noopener noreferrer">X (Twitter)</a>
-        <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer">TikTok</a>
-        <a href="https://wa.me/573024502105" target="_blank" rel="noopener noreferrer">WhatsApp</a>
       </div>
     </div>
   );
