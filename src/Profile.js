@@ -22,24 +22,6 @@ function Profile({ token }) {
     }
   }, [token]);
 
-  const parseJwt = (token) => {
-    try {
-      return JSON.parse(atob(token.split(".")[1]));
-    } catch {
-      return {};
-    }
-  };
-
-  const logoClick = () => {
-    const tokenStored = localStorage.getItem("token");
-    navigate(tokenStored ? "/muro" : "/");
-  };
-
-  const handleCerrarSesion = () => {
-    localStorage.removeItem("token");
-    navigate("/");
-  };
-
   const handleFileChange = (e) => setFile(e.target.files[0]);
 
   const handleUpload = async (e) => {
@@ -68,22 +50,37 @@ function Profile({ token }) {
     }
   };
 
-  // Función para agregar post
-  const handlePost = (e) => {
+  const parseJwt = (token) => {
+    try {
+      return JSON.parse(atob(token.split(".")[1]));
+    } catch {
+      return {};
+    }
+  };
+
+  const logoClick = () => {
+    const tokenStored = localStorage.getItem("token");
+    navigate(tokenStored ? "/muro" : "/");
+  };
+
+  const handleCerrarSesion = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  };
+
+  const handlePostSubmit = (e) => {
     e.preventDefault();
     if (!postContent.trim()) return;
-    const newPost = {
-      id: Date.now(),
-      autor: email.split("@")[0], // nombre de usuario basado en email
-      texto: postContent,
-      avatar: profilePicture ? `${BASE_URL}/uploads/${profilePicture}` : null,
-    };
-    setPosts([newPost, ...posts]);
+    setPosts((prev) => [
+      { autor: email, avatar: profilePicture, contenido: postContent },
+      ...prev,
+    ]);
     setPostContent("");
   };
 
   return (
     <div className="profile-container">
+      {/* Logo en esquina superior izquierda */}
       <h1>
         <span onClick={logoClick} className="profile-logo">
           MyBook
@@ -92,6 +89,7 @@ function Profile({ token }) {
 
       <h2>Perfil de usuario</h2>
 
+      {/* Foto de perfil */}
       {profilePicture && (
         <div>
           <img
@@ -103,6 +101,7 @@ function Profile({ token }) {
         </div>
       )}
 
+      {/* Formulario para subir foto */}
       <form onSubmit={handleUpload} style={{ marginTop: "10px" }}>
         <input type="file" accept="image/*" onChange={handleFileChange} />
         <br />
@@ -110,6 +109,17 @@ function Profile({ token }) {
       </form>
       <p style={{ color: "blue" }}>{message}</p>
 
+      {/* Caja de publicación (al centro, entre foto y botones) */}
+      <form className="post-form" onSubmit={handlePostSubmit}>
+        <textarea
+          placeholder="Escribe un post..."
+          value={postContent}
+          onChange={(e) => setPostContent(e.target.value)}
+        />
+        <button type="submit">Publicar</button>
+      </form>
+
+      {/* Botones de chat y cerrar sesión */}
       <div style={{ marginTop: "20px" }}>
         <button onClick={() => navigate("/chat")} className="btn-green">
           Ir al Chat
@@ -137,32 +147,48 @@ function Profile({ token }) {
       <div className="social-links">
         <h3>Síguenos en redes sociales</h3>
         <div className="social-icons">
-          <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">📘 Facebook</a>
-          <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer">📸 Instagram</a>
-          <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer">🎵 TikTok</a>
-          <a href="https://x.com" target="_blank" rel="noopener noreferrer">🐦 X (Twitter)</a>
+          <a
+            href="https://www.facebook.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            📘 Facebook
+          </a>
+          <a
+            href="https://www.instagram.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            📸 Instagram
+          </a>
+          <a
+            href="https://www.tiktok.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            🎵 TikTok
+          </a>
+          <a href="https://x.com" target="_blank" rel="noopener noreferrer">
+            🐦 X (Twitter)
+          </a>
         </div>
       </div>
 
-      {/* Caja de publicación central */}
-      <form className="post-form" onSubmit={handlePost}>
-        <textarea
-          value={postContent}
-          onChange={(e) => setPostContent(e.target.value)}
-          placeholder="Escribe tu publicación..."
-        />
-        <button type="submit">Publicar</button>
-      </form>
-
-      {/* Lista de posts */}
+      {/* Posts publicados */}
       <div className="posts-list">
-        {posts.map((post) => (
-          <div key={post.id} className="post">
+        {posts.map((post, idx) => (
+          <div className="post" key={idx}>
             <div className="post-header">
-              {post.avatar && <img src={post.avatar} alt="Avatar" className="post-avatar" />}
+              {post.avatar && (
+                <img
+                  src={`${BASE_URL}/uploads/${post.avatar}`}
+                  alt="avatar"
+                  className="post-avatar"
+                />
+              )}
               <span className="post-author">{post.autor}</span>
             </div>
-            <p>{post.texto}</p>
+            <p>{post.contenido}</p>
           </div>
         ))}
       </div>
