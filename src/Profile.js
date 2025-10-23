@@ -1,122 +1,138 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Profile.css";
 
-function Profile() {
-  const [user, setUser] = useState(null);
-  const [profilePic, setProfilePic] = useState(null);
-  const [preview, setPreview] = useState(null);
-  const [newPost, setNewPost] = useState("");
-  const [posts, setPosts] = useState([]);
+function Profile({ token }) {
+  const navigate = useNavigate();
+  const [file, setFile] = useState(null);
+  const [message, setMessage] = useState("");
+  const [profilePicture, setProfilePicture] = useState("");
+  const [email, setEmail] = useState("");
+
+  const BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
   useEffect(() => {
-    const userData = localStorage.getItem("userData");
-    if (userData) {
-      setUser(JSON.parse(userData));
+    const decoded = parseJwt(token);
+    if (decoded.email) {
+      setEmail(decoded.email);
+      const savedPicture = localStorage.getItem(`profilePicture_${decoded.email}`);
+      if (savedPicture) setProfilePicture(savedPicture);
     }
-  }, []);
+  }, [token]);
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setProfilePic(file);
-    setPreview(URL.createObjectURL(file));
-  };
+  const handleFileChange = (e) => setFile(e.target.files[0]);
 
-  const handleUpload = async () => {
-    if (!profilePic || !user) return;
+  const handleUpload = async (e) => {
+    e.preventDefault();
+    if (!file) return setMessage("❌ Selecciona un archivo");
     const formData = new FormData();
-    formData.append("profilePicture", profilePic);
-    formData.append("email", user.email);
+    formData.append("profilePicture", file);
+    formData.append("email", email);
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/auth/upload-profile-picture`, {
+      const res = await fetch(`${BASE_URL}/auth/upload-profile-picture`, {
         method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
         body: formData,
       });
-      const data = await response.json();
-      if (data.filename) {
-        const updatedUser = { ...user, profilePicture: data.filename };
-        localStorage.setItem("userData", JSON.stringify(updatedUser));
-        setUser(updatedUser);
+      const data = await res.json();
+      if (res.ok) {
+        setMessage("✅ Foto subida correctamente");
+        setProfilePicture(data.filename);
+        localStorage.setItem(`profilePicture_${email}`, data.filename);
+      } else {
+        setMessage(`❌ ${data.message}`);
       }
-    } catch (error) {
-      console.error("Error al subir la foto:", error);
+    } catch {
+      setMessage("❌ Error al conectar con el servidor");
     }
   };
 
-  const handlePost = () => {
-    if (!newPost.trim()) return;
-    const nuevoPost = {
-      id: Date.now(),
-      content: newPost,
-      userName: user?.email?.split("@")[0] || "Usuario",
-      userPhoto: user?.profilePicture
-        ? `${process.env.REACT_APP_BACKEND_URL}/uploads/${user.profilePicture}`
-        : "/default-profile.png",
-    };
-    setPosts([nuevoPost, ...posts]);
-    setNewPost("");
+  const parseJwt = (token) => {
+    try {
+      return JSON.parse(atob(token.split(".")[1]));
+    } catch {
+      return {};
+    }
+  };
+
+  const logoClick = () => {
+    const tokenStored = localStorage.getItem("token");
+    navigate(tokenStored ? "/muro" : "/");
+  };
+
+  const handleCerrarSesion = () => {
+    localStorage.removeItem("token");
+    navigate("/");
   };
 
   return (
     <div className="profile-container">
-      <div className="profile-header">
-        <div className="profile-left">
+      <h1>
+        <span onClick={logoClick} className="profile-logo">
+          MyBook
+        </span>
+      </h1>
+
+      <h2>Perfil de usuario</h2>
+
+      {profilePicture && (
+        <div>
           <img
-            src={
-              user?.profilePicture
-                ? `${process.env.REACT_APP_BACKEND_URL}/uploads/${user.profilePicture}`
-                : preview || "/default-profile.png"
-            }
-            alt="Foto de perfil"
-            className="profile-pic"
+            src={`${BASE_URL}/uploads/${profilePicture}`}
+            alt="Perfil"
+            width={150}
+            style={{ borderRadius: "50%" }}
           />
-          <input type="file" onChange={handleFileChange} />
-          <button onClick={handleUpload}>Subir foto</button>
         </div>
+      )}
 
-        <div className="profile-info">
-          <h2>{user?.email?.split("@")[0]}</h2>
-        </div>
+      <form onSubmit={handleUpload} style={{ marginTop: "10px" }}>
+        <input type="file" accept="image/*" onChange={handleFileChange} />
+        <br />
+        <button type="submit">Subir foto</button>
+      </form>
+      <p style={{ color: "blue" }}>{message}</p>
+
+      <div style={{ marginTop: "20px" }}>
+        <button
+          onClick={() => navigate("/chat")}
+          className="btn-green"
+        >
+          Ir al Chat
+        </button>
+        <button
+          onClick={handleCerrarSesion}
+          className="btn-red"
+        >
+          Cerrar sesión
+        </button>
       </div>
 
-      <div className="post-section">
-        <textarea
-          placeholder="¿Qué estás pensando?"
-          value={newPost}
-          onChange={(e) => setNewPost(e.target.value)}
-        />
-        <button onClick={handlePost}>Publicar</button>
+      {/* Contáctanos con hipervínculo */}
+      <div className="contact-link">
+        <a
+          href="/contactanos"
+          style={{
+            color: "blue",
+            fontWeight: "bold",
+            textDecoration: "underline",
+          }}
+        >
+          Contáctanos
+        </a>
       </div>
 
-      <div className="posts-list">
-        {posts.map((post) => (
-          <div key={post.id} className="post">
-            <div className="post-header">
-              <img src={post.userPhoto} alt="Foto de usuario" className="post-user-photo" />
-              <span className="post-user-name">{post.userName}</span>
-            </div>
-            <p>{post.content}</p>
-          </div>
-        ))}
-      </div>
-
-      <footer className="social-footer">
-        <a href="/contacto" className="contact-link">Contáctanos</a>
-        <div className="social-links">
-          <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">
-            <i className="fab fa-facebook"></i> Facebook
-          </a>
-          <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer">
-            <i className="fab fa-twitter"></i> Twitter
-          </a>
-          <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">
-            <i className="fab fa-instagram"></i> Instagram
-          </a>
-          <a href="https://web.whatsapp.com/send?phone=573024502105" target="_blank" rel="noopener noreferrer">
-            <i className="fab fa-whatsapp"></i> WhatsApp 3024502105
-          </a>
+      {/* Redes sociales más abajo */}
+      <div className="social-links">
+        <h3>Síguenos en redes sociales</h3>
+        <div className="social-icons">
+          <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">📘 Facebook</a>
+          <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer">📸 Instagram</a>
+          <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer">🎵 TikTok</a>
+          <a href="https://x.com" target="_blank" rel="noopener noreferrer">🐦 X (Twitter)</a>
         </div>
-      </footer>
+      </div>
     </div>
   );
 }
