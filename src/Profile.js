@@ -8,7 +8,6 @@ function Profile({ token }) {
   const [message, setMessage] = useState("");
   const [profilePicture, setProfilePicture] = useState("");
   const [email, setEmail] = useState("");
-
   const [postContent, setPostContent] = useState("");
   const [posts, setPosts] = useState([]);
 
@@ -29,6 +28,16 @@ function Profile({ token }) {
     } catch {
       return {};
     }
+  };
+
+  const logoClick = () => {
+    const tokenStored = localStorage.getItem("token");
+    navigate(tokenStored ? "/muro" : "/");
+  };
+
+  const handleCerrarSesion = () => {
+    localStorage.removeItem("token");
+    navigate("/");
   };
 
   const handleFileChange = (e) => setFile(e.target.files[0]);
@@ -59,24 +68,18 @@ function Profile({ token }) {
     }
   };
 
-  const handlePostSubmit = (e) => {
+  // Función para agregar post
+  const handlePost = (e) => {
     e.preventDefault();
     if (!postContent.trim()) return;
-    setPosts((prev) => [
-      { autor: email, avatar: profilePicture, texto: postContent },
-      ...prev,
-    ]);
+    const newPost = {
+      id: Date.now(),
+      autor: email.split("@")[0], // nombre de usuario basado en email
+      texto: postContent,
+      avatar: profilePicture ? `${BASE_URL}/uploads/${profilePicture}` : null,
+    };
+    setPosts([newPost, ...posts]);
     setPostContent("");
-  };
-
-  const logoClick = () => {
-    const tokenStored = localStorage.getItem("token");
-    navigate(tokenStored ? "/muro" : "/");
-  };
-
-  const handleCerrarSesion = () => {
-    localStorage.removeItem("token");
-    navigate("/");
   };
 
   return (
@@ -141,29 +144,22 @@ function Profile({ token }) {
         </div>
       </div>
 
-      {/* CAJA DE PUBLICACIÓN CENTRAL */}
-      <form className="post-form" onSubmit={handlePostSubmit}>
+      {/* Caja de publicación central */}
+      <form className="post-form" onSubmit={handlePost}>
         <textarea
           value={postContent}
           onChange={(e) => setPostContent(e.target.value)}
-          placeholder="¿Qué quieres compartir?"
-          rows={4}
+          placeholder="Escribe tu publicación..."
         />
         <button type="submit">Publicar</button>
       </form>
 
-      {/* LISTA DE POSTS */}
+      {/* Lista de posts */}
       <div className="posts-list">
-        {posts.map((post, index) => (
-          <div key={index} className="post">
+        {posts.map((post) => (
+          <div key={post.id} className="post">
             <div className="post-header">
-              {post.avatar && (
-                <img
-                  src={`${BASE_URL}/uploads/${post.avatar}`}
-                  alt="avatar"
-                  className="post-avatar"
-                />
-              )}
+              {post.avatar && <img src={post.avatar} alt="Avatar" className="post-avatar" />}
               <span className="post-author">{post.autor}</span>
             </div>
             <p>{post.texto}</p>
