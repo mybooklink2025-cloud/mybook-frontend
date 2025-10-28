@@ -1,96 +1,136 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState, useRef } from "react";
+import io from "socket.io-client";
+import "./Chat.css";
 
-function Chat() {
-  const navigate = useNavigate();
-  const token = localStorage.getItem("token");
+const Chat = () => {
+  const [socket, setSocket] = useState(null);
+  const [usuariosActivos, setUsuariosActivos] = useState([]);
+  const [usuarioSeleccionado, setUsuarioSeleccionado] = useState(null);
   const [mensaje, setMensaje] = useState("");
   const [mensajes, setMensajes] = useState([]);
+  const [notificaciones, setNotificaciones] = useState({});
+  const chatEndRef = useRef(null);
 
-  if (!token) {
-    // Redirige a inicio si no hay token
-    navigate("/");
-    return null;
-  }
+  const emailUsuario = localStorage.getItem("email");
 
-  const logoClick = () => {
-    if (token) {
-      navigate("/muro");
-    } else {
-      navigate("/");
+  // 🔹 Conectar socket al backend
+  useEffect(() => {
+    const newSocket = io("https://mybook-backend.onrender.com", {
+      withCredentials: true,
+    });
+    setSocket(newSocket);
+
+    if (emailUsuario) {
+      newSocket.emit("usuarioConectado", emailUsuario);
+    }
+
+    // Escucha lista de usuarios activos
+    newSocket.on("usuariosActivos", (usuarios) => {
+      setUsuariosActivos(usuarios.filter((u) => u.name !== emailUsuario));
+    });
+
+    // Escucha mensajes recibidos
+    newSocket.on("recibirMensaje", (data) => {
+      if (data.remitente === usuarioSeleccionado) {
+        setMensajes((prev) => [...prev, data]);
+      } else {
+        setNotificaciones((prev) => ({
+          ...prev,
+          [data.remitente]: (prev[data.remitente] || 0) + 1,
+        }));
+      }
+    });
+
+    return () => newSocket.disconnect();
+  }, [emailUsuario, usuarioSeleccionado]);
+
+  // 🔹 Scroll automático al final del chat
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [mensajes]);
+
+  // 🔹 Enviar mensaje
+  const enviarMensaje = () => {
+    if (mensaje.trim() && usuarioSeleccionado && socket) {
+      const data = {
+        remitente: emailUsuario,
+        receptor: usuarioSeleccionado,
+        texto: mensaje,
+      };
+      socket.emit("enviarMensaje", data);
+      setMensajes((prev) => [...prev, data]);
+      setMensaje("");
     }
   };
 
-  const handleEnviar = () => {
-    if (!mensaje.trim()) return;
-    // Agregamos mensaje al estado local
-    setMensajes((prev) => [...prev, { autor: "Yo", texto: mensaje }]);
-    setMensaje("");
+  // 🔹 Seleccionar usuario para chatear
+  const seleccionarUsuario = (usuario) => {
+    setUsuarioSeleccionado(usuario);
+    setMensajes([]);
+    setNotificaciones((prev) => ({ ...prev, [usuario]: 0 }));
   };
 
   return (
-    <div style={{ textAlign: "center", padding: "20px" }}>
-      {/* Logo MyBook azul centrado */}
-      <h1>
-        <span
-          onClick={logoClick}
-          style={{
-            color: "blue",
-            cursor: "pointer",
-            textDecoration: "none",
-            fontSize: "36px",
-          }}
-        >
-          MyBook
-        </span>
-      </h1>
-
-      <h2>Chat de MyBook</h2>
-
-      <div
-        style={{
-          border: "1px solid #ccc",
-          borderRadius: "10px",
-          padding: "10px",
-          height: "300px",
-          width: "60%",
-          margin: "20px auto",
-          overflowY: "auto",
-          textAlign: "left",
-          backgroundColor: "#f9f9f9",
-        }}
-      >
-        {mensajes.length === 0 && <p style={{ color: "#999" }}>No hay mensajes aún...</p>}
-        {mensajes.map((msg, index) => (
-          <p key={index}>
-            <strong style={{ color: "blue" }}>{msg.autor}: </strong> {msg.texto}
-          </p>
-        ))}
+    <div className="chat-container">
+      <div className="sidebar">
+        <h3>Usuarios Activos</h3>
+        <ul>
+          {usuariosActivos.length === 0 && <p>No hay usuarios conectados 😢</p>}
+          {usuariosActivos.map((u) => (
+            <li
+              key={u.id}
+              className={usuarioSeleccionado === u.name ? "active" : ""}
+              onClick={() => seleccionarUsuario(u.name)}
+            >
+              {u.name}
+              {notificaciones[u.name] > 0 && (
+                <span className="notif-badge">{notificaciones[u.name]}</span>
+              )}
+            </li>
+          ))}
+        </ul>
       </div>
 
-      <input
-        type="text"
-        value={mensaje}
-        placeholder="Escribe un mensaje..."
-        onChange={(e) => setMensaje(e.target.value)}
-        style={{ width: "60%", padding: "8px" }}
-      />
-      <button
-        onClick={handleEnviar}
-        style={{
-          marginLeft: "10px",
-          padding: "8px 16px",
-          cursor: "pointer",
-          backgroundColor: "blue",
-          color: "white",
-          border: "none",
-          borderRadius: "5px",
-        }}
-      >
-        Enviar
-      </button>
+      <div className="chat-box">
+        {usuarioSeleccionado ? (
+          <>
+            <div className="chat-header">
+              <h4>Chat con {usuarioSeleccionado}</h4>
+            </div>
+            <div className="chat-messages">
+              {mensajes.map((m, i) => (
+                <div
+                  key={i}
+                  className={
+                    m.remitente === emailUsuario
+                      ? "mensaje propio"
+                      : "mensaje recibido"
+                  }
+                >
+                  <p>{m.texto}</p>
+                </div>
+              ))}
+              <div ref={chatEndRef} />
+            </div>
+            <div className="chat-input">
+              <input
+                type="text"
+                placeholder="Escribe tu mensaje..."
+                value={mensaje}
+                onChange={(e) => setMensaje(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && enviarMensaje()}
+              />
+              <button onClick={enviarMensaje}>Enviar</button>
+            </div>
+          </>
+        ) : (
+          <div className="no-chat">
+            <p>Selecciona un usuario para comenzar a chatear 💬</p>
+          </div>
+        )}
+      </div>
     </div>
   );
-}
+};
 
 export default Chat;
