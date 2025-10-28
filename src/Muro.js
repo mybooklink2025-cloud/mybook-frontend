@@ -7,14 +7,31 @@ function Muro() {
 
   // Publicaciones iniciales
   const [publicaciones, setPublicaciones] = useState([
-    { id: 1, autor: "Alejo", texto: "¡Bienvenidos al nuevo muro de MyBook!", foto: "https://cdn-icons-png.flaticon.com/512/194/194938.png" },
-    { id: 2, autor: "Martin", texto: "Este es el primer paso hacia la versión real 💙", foto: "https://cdn-icons-png.flaticon.com/512/2922/2922510.png" },
-    { id: 3, autor: "MyBook Team", texto: "Próximamente podrás publicar, comentar y reaccionar 🚀", foto: "https://cdn-icons-png.flaticon.com/512/1077/1077012.png" },
+    {
+      id: 1,
+      autor: "Alejo",
+      texto: "¡Bienvenidos al nuevo muro de MyBook!",
+      foto: "https://cdn-icons-png.flaticon.com/512/194/194938.png",
+    },
+    {
+      id: 2,
+      autor: "Martin",
+      texto: "Este es el primer paso hacia la versión real 💙",
+      foto: "https://cdn-icons-png.flaticon.com/512/2922/2922510.png",
+    },
+    {
+      id: 3,
+      autor: "MyBook Team",
+      texto: "Próximamente podrás publicar, comentar y reaccionar 🚀",
+      foto: "https://cdn-icons-png.flaticon.com/512/1077/1077012.png",
+    },
   ]);
 
   const [nuevoPost, setNuevoPost] = useState("");
   const [nombreUsuario, setNombreUsuario] = useState("Usuario Actual");
-  const [fotoUsuario, setFotoUsuario] = useState("https://cdn-icons-png.flaticon.com/512/847/847969.png");
+  const [fotoUsuario, setFotoUsuario] = useState(
+    "https://cdn-icons-png.flaticon.com/512/847/847969.png"
+  );
 
   const handlePublicar = (e) => {
     e.preventDefault();
@@ -45,13 +62,25 @@ function Muro() {
 
   return (
     <div className="muro-page">
+      {/* 🔘 Botón para mostrar/ocultar la barra lateral en móvil */}
+      <button
+        className="toggle-btn"
+        onClick={() =>
+          document.querySelector(".sidebar").classList.toggle("open")
+        }
+      >
+        ☰
+      </button>
+
       {/* Ventana izquierda fija */}
       <div className="sidebar">
         <h3>Enlaces rápidos</h3>
         <ul>
           {linksFijos.map((link) => (
             <li key={link.nombre}>
-              <a href={link.url} target="_blank" rel="noopener noreferrer">{link.nombre}</a>
+              <a href={link.url} target="_blank" rel="noopener noreferrer">
+                {link.nombre}
+              </a>
             </li>
           ))}
         </ul>
@@ -63,12 +92,15 @@ function Muro() {
         <h1>
           <span
             onClick={logoClick}
-            style={{ color: "blue", textDecoration: "none", cursor: "pointer" }}
+            style={{
+              color: "blue",
+              textDecoration: "none",
+              cursor: "pointer",
+            }}
           >
             MyBook
           </span>
         </h1>
-
         <h2>🌎 Muro general</h2>
 
         {/* Navegación superior */}
@@ -83,8 +115,8 @@ function Muro() {
             }}
           >
             Perfil
-          </a>
-          |
+          </a>{" "}
+          |{" "}
           <a
             href="/contactanos"
             style={{
@@ -95,8 +127,8 @@ function Muro() {
             }}
           >
             Contáctanos
-          </a>
-          |
+          </a>{" "}
+          |{" "}
           <span
             onClick={() => navigate("/chat")}
             style={{
@@ -128,7 +160,11 @@ function Muro() {
           {publicaciones.map((post) => (
             <div key={post.id} className="post">
               <div className="post-header">
-                <img src={post.foto} alt="foto autor" className="post-user-photo" />
+                <img
+                  src={post.foto}
+                  alt="foto autor"
+                  className="post-user-photo"
+                />
                 <p className="post-user-name">{post.autor}</p>
               </div>
               <p>{post.texto}</p>
@@ -138,19 +174,35 @@ function Muro() {
 
         {/* Redes sociales al pie */}
         <div className="social-footer">
-          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+          <a
+            href="https://facebook.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             📘 Facebook
           </a>
-          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+          <a
+            href="https://instagram.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             📸 Instagram
           </a>
-          <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer">
+          <a
+            href="https://www.tiktok.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             🎵 TikTok
           </a>
           <a href="https://x.com" target="_blank" rel="noopener noreferrer">
             🐦 X (Twitter)
           </a>
-          <a href="https://wa.me/573024502105" target="_blank" rel="noopener noreferrer">
+          <a
+            href="https://wa.me/573024502105"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             💬 WhatsApp
           </a>
         </div>
