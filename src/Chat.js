@@ -57,6 +57,22 @@ export default function Chat() {
     setMensajes((prev) => [...prev, { ...data, tipo: "enviado" }]);
     setMensaje("");
   };
+  
+  const logoClick = () => {
+    navigate("/muro");
+  };
+
+  return (
+    <div style={{ textAlign: "center", padding: "20px" }}>
+      {/* Logo principal */}
+      <h1>
+        <span
+          onClick={logoClick}
+          style={{ color: "blue", textDecoration: "none", cursor: "pointer" }}
+        >
+          MyBook
+        </span>
+      </h1>
 
   return (
     <div style={styles.container}>
