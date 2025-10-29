@@ -82,7 +82,11 @@ function Muro() {
         <h1>
           <span
             onClick={logoClick}
-            style={{ color: "blue", textDecoration: "none", cursor: "pointer" }}
+            style={{
+              color: "blue",
+              textDecoration: "none",
+              cursor: "pointer",
+            }}
           >
             MyBook
           </span>
