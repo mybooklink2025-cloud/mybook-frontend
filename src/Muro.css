@@ -1,97 +1,48 @@
-.muro-page {
-  display: flex;
-  min-height: 100vh;
-  background-color: #f5f7fb;
-  font-family: Arial, sans-serif;
-}
-
-/* Ventana lateral fija */
-.sidebar {
-  width: 250px;
-  background-color: #ffffff;
-  border-right: 2px solid #e0e0e0;
+.muro-container {
+  max-width: 700px;
+  margin: 40px auto;
   padding: 20px;
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  overflow-y: auto;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
 
-.sidebar h3 {
-  color: #444;
-  margin-bottom: 10px;
-  font-size: 18px;
-}
-
-.sidebar ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
-
-.sidebar li {
-  margin-bottom: 8px;
-}
-
-.sidebar a {
-  color: #007bff;
-  text-decoration: none;
-}
-
-.sidebar a:hover {
-  text-decoration: underline;
-}
-
-/* Contenido principal */
-.main-content {
-  flex: 1;
-  margin-left: 270px;
-  padding: 20px;
-  overflow-y: auto;
-}
-
-.main-content h1 {
-  margin-bottom: 5px;
-}
-
-.main-content h2 {
+.muro-container h2 {
+  text-align: center;
   color: #333;
-  margin-top: 0;
+  margin-bottom: 20px;
 }
 
-/* Caja de publicación */
 .post-box {
-  margin: 20px 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  margin-bottom: 20px;
 }
 
 .post-box textarea {
   resize: none;
-  border: 1px solid #ccc;
-  border-radius: 5px;
   padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  min-height: 80px;
+  margin-bottom: 10px;
   font-size: 15px;
 }
 
 .post-box button {
-  align-self: flex-start;
-  background-color: #007bff;
+  align-self: flex-end;
+  background: #007bff;
   color: white;
   border: none;
-  border-radius: 4px;
-  padding: 8px 14px;
+  padding: 8px 15px;
+  border-radius: 8px;
   cursor: pointer;
-  font-weight: bold;
 }
 
 .post-box button:hover {
-  background-color: #0056b3;
+  background: #0056b3;
 }
 
-/* Publicaciones */
 .posts-list {
   display: flex;
   flex-direction: column;
@@ -99,10 +50,10 @@
 }
 
 .post {
-  background-color: #fff;
-  border-radius: 6px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background: #f8f8f8;
+  border-radius: 15px;
   padding: 15px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
 }
 
 .post-header {
@@ -116,6 +67,7 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
+  object-fit: cover;
 }
 
 .post-user-name {
@@ -123,21 +75,26 @@
   color: #333;
 }
 
-/* Pie de redes */
 .social-footer {
-  margin-top: 40px;
-  border-top: 1px solid #ddd;
+  margin-top: 30px;
+  text-align: center;
+  border-top: 1px solid #eee;
   padding-top: 15px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
 }
 
 .social-footer a {
-  color: #007bff;
+  display: inline-block;
+  margin: 8px 12px;
   text-decoration: none;
+  color: #333;
+  font-size: 15px;
+  transition: color 0.3s ease;
+}
+
+.social-footer a i {
+  margin-right: 6px;
 }
 
 .social-footer a:hover {
-  text-decoration: underline;
+  color: #007bff;
 }
