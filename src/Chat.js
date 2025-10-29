@@ -63,6 +63,19 @@ const Chat = () => {
     }
   };
 
+  return (
+    <div style={{ textAlign: "center", padding: "20px" }}>
+      {/* Logo principal */}
+      <h1>
+        <span
+          onClick={logoClick}
+          style={{ color: "blue", textDecoration: "none", cursor: "pointer" }}
+        >
+          MyBook
+        </span>
+      </h1>
+
+
   // 🔹 Seleccionar usuario para chatear
   const seleccionarUsuario = (usuario) => {
     setUsuarioSeleccionado(usuario);
