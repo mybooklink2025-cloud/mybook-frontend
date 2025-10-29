@@ -56,8 +56,7 @@ export default function Chat() {
     // Mostrar en pantalla también el mensaje propio
     setMensajes((prev) => [...prev, { ...data, tipo: "enviado" }]);
     setMensaje("");
-  };
-
+  
 
   return (
     <div style={{ textAlign: "center", padding: "20px" }}>
