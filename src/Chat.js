@@ -5,65 +5,65 @@ import { io } from "socket.io-client";
 function Chat() {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
+
+  const [socket, setSocket] = useState(null);
+  const [usuario, setUsuario] = useState(localStorage.getItem("email") || "Usuario");
+  const [usuariosActivos, setUsuariosActivos] = useState([]);
+  const [receptor, setReceptor] = useState("");
   const [mensaje, setMensaje] = useState("");
   const [mensajes, setMensajes] = useState([]);
-  const [usuarios, setUsuarios] = useState([]);
-  const [socket, setSocket] = useState(null);
 
-  const nombreUsuario = localStorage.getItem("nombre") || "Usuario";
+  // Redirigir si no hay token
+  if (!token) {
+    navigate("/");
+    return null;
+  }
 
+  // Logo MyBook (no se toca)
+  const logoClick = () => {
+    navigate("/muro");
+  };
+
+  // Conectar al servidor Socket.IO
   useEffect(() => {
-    if (!token) {
-      navigate("/");
-      return;
-    }
-
-    // 🔹 Conectar al servidor Socket.IO (Render backend)
     const newSocket = io("https://mybook-backend.onrender.com", {
-      transports: ["websocket"],
+      withCredentials: true,
+      transports: ["websocket", "polling"],
     });
     setSocket(newSocket);
 
-    // 🔹 Notificar al servidor el usuario conectado
-    newSocket.emit("usuarioConectado", nombreUsuario);
+    // Emitir evento de conexión del usuario
+    newSocket.emit("usuarioConectado", usuario);
 
-    // 🔹 Escuchar usuarios activos
+    // Escuchar lista de usuarios activos
     newSocket.on("usuariosActivos", (lista) => {
-      setUsuarios(lista);
+      setUsuariosActivos(lista);
     });
 
-    // 🔹 Escuchar mensajes entrantes
+    // Escuchar mensajes entrantes
     newSocket.on("recibirMensaje", (data) => {
-      setMensajes((prev) => [...prev, data]);
+      setMensajes((prev) => [...prev, { autor: data.emisor, texto: data.mensaje }]);
     });
 
     return () => {
       newSocket.disconnect();
     };
-  }, [token, navigate, nombreUsuario]);
+  }, [usuario]);
 
-  const logoClick = () => {
-    if (token) {
-      navigate("/muro");
-    } else {
-      navigate("/");
-    }
-  };
-
+  // Enviar mensaje
   const handleEnviar = () => {
-    if (!mensaje.trim() || !socket) return;
-    const data = {
-      autor: nombreUsuario,
-      texto: mensaje,
-    };
+    if (!mensaje.trim() || !receptor) return;
+
+    const data = { emisor: usuario, receptor, mensaje };
     socket.emit("enviarMensaje", data);
-    setMensajes((prev) => [...prev, data]);
+
+    setMensajes((prev) => [...prev, { autor: "Yo", texto: mensaje }]);
     setMensaje("");
   };
 
   return (
     <div style={{ textAlign: "center", padding: "20px" }}>
-      {/* 🔹 Logo MyBook azul centrado (NO TOCAR) */}
+      {/* 🔹 Logo MyBook azul centrado (no se toca) */}
       <h1>
         <span
           onClick={logoClick}
@@ -78,31 +78,36 @@ function Chat() {
         </span>
       </h1>
 
-      <h2>💬 Chat en tiempo real</h2>
+      <h2>Chat de MyBook</h2>
 
       {/* 🔹 Lista de usuarios conectados */}
       <div
         style={{
+          margin: "10px auto",
           border: "1px solid #ccc",
           borderRadius: "10px",
-          padding: "10px",
           width: "60%",
-          margin: "10px auto",
-          backgroundColor: "#f0f8ff",
+          padding: "10px",
+          backgroundColor: "#f0f0f0",
         }}
       >
-        <h3>Usuarios conectados</h3>
-        {usuarios.length === 0 ? (
-          <p style={{ color: "#777" }}>Nadie conectado</p>
-        ) : (
-          <ul style={{ listStyle: "none", padding: 0 }}>
-            {usuarios.map((u) => (
-              <li key={u.id} style={{ color: "blue", fontWeight: "bold" }}>
-                {u.name}
-              </li>
-            ))}
-          </ul>
-        )}
+        <h3>Usuarios conectados:</h3>
+        {usuariosActivos.length === 0 && <p>No hay usuarios en línea...</p>}
+        <ul style={{ listStyle: "none", padding: 0 }}>
+          {usuariosActivos.map((u) => (
+            <li
+              key={u.id}
+              onClick={() => setReceptor(u.name)}
+              style={{
+                cursor: "pointer",
+                fontWeight: receptor === u.name ? "bold" : "normal",
+                color: receptor === u.name ? "green" : "black",
+              }}
+            >
+              {u.name}
+            </li>
+          ))}
+        </ul>
       </div>
 
       {/* 🔹 Ventana de mensajes */}
@@ -129,11 +134,15 @@ function Chat() {
         ))}
       </div>
 
-      {/* 🔹 Caja de texto y botón */}
+      {/* 🔹 Campo para escribir y enviar */}
       <input
         type="text"
         value={mensaje}
-        placeholder="Escribe un mensaje..."
+        placeholder={
+          receptor
+            ? `Escribe un mensaje para ${receptor}...`
+            : "Selecciona un usuario para chatear..."
+        }
         onChange={(e) => setMensaje(e.target.value)}
         style={{ width: "60%", padding: "8px" }}
       />
