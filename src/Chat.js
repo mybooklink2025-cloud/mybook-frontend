@@ -57,10 +57,7 @@ export default function Chat() {
     setMensajes((prev) => [...prev, { ...data, tipo: "enviado" }]);
     setMensaje("");
   };
-  
-  const logoClick = () => {
-    navigate("/muro");
-  };
+
 
   return (
     <div style={{ textAlign: "center", padding: "20px" }}>
