@@ -5,65 +5,69 @@ import { io } from "socket.io-client";
 function Chat() {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
-
-  const [socket, setSocket] = useState(null);
-  const [usuario, setUsuario] = useState(localStorage.getItem("email") || "Usuario");
-  const [usuariosActivos, setUsuariosActivos] = useState([]);
-  const [receptor, setReceptor] = useState("");
   const [mensaje, setMensaje] = useState("");
   const [mensajes, setMensajes] = useState([]);
+  const [usuarios, setUsuarios] = useState([]);
+  const [socket, setSocket] = useState(null);
+  const [nombreUsuario, setNombreUsuario] = useState("Usuario Actual");
 
-  // Redirigir si no hay token
-  if (!token) {
-    navigate("/");
-    return null;
-  }
+  useEffect(() => {
+    if (!token) {
+      navigate("/");
+      return;
+    }
 
-  // Logo MyBook (no se toca)
+    // 🔹 Conexión a tu backend en Render
+    const newSocket = io("https://mybook-7a9s.onrender.com", {
+      transports: ["websocket"],
+      withCredentials: true,
+    });
+
+    setSocket(newSocket);
+
+    // Cuando se conecta, se notifica al servidor
+    newSocket.emit("usuarioConectado", nombreUsuario);
+
+    // Escuchar lista de usuarios activos
+    newSocket.on("usuariosActivos", (lista) => {
+      setUsuarios(lista);
+    });
+
+    // Escuchar mensajes recibidos
+    newSocket.on("recibirMensaje", (data) => {
+      setMensajes((prev) => [...prev, data]);
+    });
+
+    // Limpieza al salir del chat
+    return () => {
+      newSocket.disconnect();
+    };
+  }, [token, nombreUsuario, navigate]);
+
   const logoClick = () => {
     navigate("/muro");
   };
 
-  // Conectar al servidor Socket.IO
-  useEffect(() => {
-    const newSocket = io("https://mybook-backend.onrender.com", {
-      withCredentials: true,
-      transports: ["websocket", "polling"],
-    });
-    setSocket(newSocket);
-
-    // Emitir evento de conexión del usuario
-    newSocket.emit("usuarioConectado", usuario);
-
-    // Escuchar lista de usuarios activos
-    newSocket.on("usuariosActivos", (lista) => {
-      setUsuariosActivos(lista);
-    });
-
-    // Escuchar mensajes entrantes
-    newSocket.on("recibirMensaje", (data) => {
-      setMensajes((prev) => [...prev, { autor: data.emisor, texto: data.mensaje }]);
-    });
-
-    return () => {
-      newSocket.disconnect();
-    };
-  }, [usuario]);
-
-  // Enviar mensaje
   const handleEnviar = () => {
-    if (!mensaje.trim() || !receptor) return;
+    if (!mensaje.trim() || !socket) return;
 
-    const data = { emisor: usuario, receptor, mensaje };
-    socket.emit("enviarMensaje", data);
+    const data = {
+      autor: nombreUsuario,
+      texto: mensaje,
+    };
 
-    setMensajes((prev) => [...prev, { autor: "Yo", texto: mensaje }]);
+    // Mostrar localmente
+    setMensajes((prev) => [...prev, data]);
+
+    // Enviar a todos los usuarios conectados
+    socket.emit("enviarMensaje", { ...data });
+
     setMensaje("");
   };
 
   return (
     <div style={{ textAlign: "center", padding: "20px" }}>
-      {/* 🔹 Logo MyBook azul centrado (no se toca) */}
+      {/* Logo MyBook azul centrado */}
       <h1>
         <span
           onClick={logoClick}
@@ -78,39 +82,34 @@ function Chat() {
         </span>
       </h1>
 
-      <h2>Chat de MyBook</h2>
+      <h2>💬 Chat en tiempo real</h2>
 
-      {/* 🔹 Lista de usuarios conectados */}
+      {/* Usuarios conectados */}
       <div
         style={{
+          width: "60%",
           margin: "10px auto",
+          backgroundColor: "#f0f8ff",
           border: "1px solid #ccc",
           borderRadius: "10px",
-          width: "60%",
           padding: "10px",
-          backgroundColor: "#f0f0f0",
         }}
       >
-        <h3>Usuarios conectados:</h3>
-        {usuariosActivos.length === 0 && <p>No hay usuarios en línea...</p>}
-        <ul style={{ listStyle: "none", padding: 0 }}>
-          {usuariosActivos.map((u) => (
-            <li
-              key={u.id}
-              onClick={() => setReceptor(u.name)}
-              style={{
-                cursor: "pointer",
-                fontWeight: receptor === u.name ? "bold" : "normal",
-                color: receptor === u.name ? "green" : "black",
-              }}
-            >
-              {u.name}
-            </li>
-          ))}
-        </ul>
+        <h3>🟢 Usuarios conectados:</h3>
+        {usuarios.length === 0 ? (
+          <p style={{ color: "#999" }}>Nadie conectado aún...</p>
+        ) : (
+          <ul style={{ listStyle: "none", padding: 0 }}>
+            {usuarios.map((u) => (
+              <li key={u.id} style={{ color: "green", fontWeight: "bold" }}>
+                {u.name}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
 
-      {/* 🔹 Ventana de mensajes */}
+      {/* Zona de mensajes */}
       <div
         style={{
           border: "1px solid #ccc",
@@ -134,15 +133,11 @@ function Chat() {
         ))}
       </div>
 
-      {/* 🔹 Campo para escribir y enviar */}
+      {/* Campo de texto */}
       <input
         type="text"
         value={mensaje}
-        placeholder={
-          receptor
-            ? `Escribe un mensaje para ${receptor}...`
-            : "Selecciona un usuario para chatear..."
-        }
+        placeholder="Escribe un mensaje..."
         onChange={(e) => setMensaje(e.target.value)}
         style={{ width: "60%", padding: "8px" }}
       />
