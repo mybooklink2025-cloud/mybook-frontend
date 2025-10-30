@@ -55,24 +55,30 @@ function Muro() {
         style={{
           position: "fixed",
           top: "15px",
-          left: "15px",
+          left: mostrarSidebar ? "220px" : "15px", // 🔹 se separa un poco más cuando la barra está abierta
           width: "35px",
-          height: "30px",
+          height: "24px", // 🔹 más compacto
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
           cursor: "pointer",
           zIndex: 1000,
+          transition: "left 0.3s ease",
         }}
       >
-        <div style={{ height: "4px", backgroundColor: "#333", borderRadius: "2px" }}></div>
-        <div style={{ height: "4px", backgroundColor: "#333", borderRadius: "2px" }}></div>
-        <div style={{ height: "4px", backgroundColor: "#333", borderRadius: "2px" }}></div>
+        <div style={{ height: "4px", backgroundColor: "blue", borderRadius: "2px" }}></div>
+        <div style={{ height: "4px", backgroundColor: "blue", borderRadius: "2px" }}></div>
+        <div style={{ height: "4px", backgroundColor: "blue", borderRadius: "2px" }}></div>
       </div>
 
       {/* Barra lateral (por defecto oculta) */}
       {mostrarSidebar && (
-        <div className="sidebar">
+        <div
+          className="sidebar"
+          style={{
+            transition: "all 0.3s ease-in-out",
+          }}
+        >
           <h3>Enlaces rápidos</h3>
           <ul>
             {linksFijos.map((link) => (
