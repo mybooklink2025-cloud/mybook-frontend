@@ -81,8 +81,8 @@ function Muro() {
         <div style={{ display: "flex", alignItems: "center" }}>
           <div
             style={{
-              backgroundColor: "white",
-              color: "blue",
+              backgroundColor: "blue",
+              color: "white",
               borderRadius: "50%",
               width: "35px",
               height: "35px",
