@@ -16,8 +16,8 @@ function Muro() {
   const [nombreUsuario, setNombreUsuario] = useState("Usuario Actual");
   const [fotoUsuario, setFotoUsuario] = useState("https://cdn-icons-png.flaticon.com/512/847/847969.png");
 
-  // Estado para mostrar/ocultar la barra lateral
-  const [mostrarSidebar, setMostrarSidebar] = useState(true);
+  // Por defecto la barra estará oculta
+  const [mostrarSidebar, setMostrarSidebar] = useState(false);
 
   const handlePublicar = (e) => {
     e.preventDefault();
@@ -49,26 +49,28 @@ function Muro() {
   return (
     <div className="muro-page">
 
-      {/* Botón para mostrar/ocultar la barra lateral */}
-      <button
+      {/* Botón tipo hamburguesa para mostrar/ocultar la barra lateral */}
+      <div
         onClick={() => setMostrarSidebar(!mostrarSidebar)}
         style={{
           position: "fixed",
-          top: "10px",
-          left: "10px",
-          backgroundColor: "#007bff",
-          color: "white",
-          border: "none",
-          borderRadius: "5px",
-          padding: "8px 12px",
+          top: "15px",
+          left: "15px",
+          width: "35px",
+          height: "30px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
           cursor: "pointer",
           zIndex: 1000,
         }}
       >
-        {mostrarSidebar ? "Ocultar menú" : "Mostrar menú"}
-      </button>
+        <div style={{ height: "4px", backgroundColor: "#333", borderRadius: "2px" }}></div>
+        <div style={{ height: "4px", backgroundColor: "#333", borderRadius: "2px" }}></div>
+        <div style={{ height: "4px", backgroundColor: "#333", borderRadius: "2px" }}></div>
+      </div>
 
-      {/* Ventana izquierda fija */}
+      {/* Barra lateral (por defecto oculta) */}
       {mostrarSidebar && (
         <div className="sidebar">
           <h3>Enlaces rápidos</h3>
