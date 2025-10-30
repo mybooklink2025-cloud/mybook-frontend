@@ -16,6 +16,9 @@ function Muro() {
   const [nombreUsuario, setNombreUsuario] = useState("Usuario Actual");
   const [fotoUsuario, setFotoUsuario] = useState("https://cdn-icons-png.flaticon.com/512/847/847969.png");
 
+  // Estado para mostrar/ocultar la barra lateral
+  const [mostrarSidebar, setMostrarSidebar] = useState(true);
+
   const handlePublicar = (e) => {
     e.preventDefault();
     if (!nuevoPost.trim()) return;
@@ -45,17 +48,39 @@ function Muro() {
 
   return (
     <div className="muro-page">
+
+      {/* Botón para mostrar/ocultar la barra lateral */}
+      <button
+        onClick={() => setMostrarSidebar(!mostrarSidebar)}
+        style={{
+          position: "fixed",
+          top: "10px",
+          left: "10px",
+          backgroundColor: "#007bff",
+          color: "white",
+          border: "none",
+          borderRadius: "5px",
+          padding: "8px 12px",
+          cursor: "pointer",
+          zIndex: 1000,
+        }}
+      >
+        {mostrarSidebar ? "Ocultar menú" : "Mostrar menú"}
+      </button>
+
       {/* Ventana izquierda fija */}
-      <div className="sidebar">
-        <h3>Enlaces rápidos</h3>
-        <ul>
-          {linksFijos.map((link) => (
-            <li key={link.nombre}>
-              <a href={link.url} target="_blank" rel="noopener noreferrer">{link.nombre}</a>
-            </li>
-          ))}
-        </ul>
-      </div>
+      {mostrarSidebar && (
+        <div className="sidebar">
+          <h3>Enlaces rápidos</h3>
+          <ul>
+            {linksFijos.map((link) => (
+              <li key={link.nombre}>
+                <a href={link.url} target="_blank" rel="noopener noreferrer">{link.nombre}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {/* Contenido principal desplazable */}
       <div className="main-content">
