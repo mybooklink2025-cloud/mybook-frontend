@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Muro.css";
 
@@ -16,8 +16,33 @@ function Muro() {
   const [nombreUsuario, setNombreUsuario] = useState("Usuario Actual");
   const [fotoUsuario, setFotoUsuario] = useState("https://cdn-icons-png.flaticon.com/512/847/847969.png");
 
-  // Por defecto la barra estará oculta
-  const [mostrarSidebar, setMostrarSidebar] = useState(false);
+  // Obtener correo desde localStorage
+  const [correoUsuario, setCorreoUsuario] = useState("");
+  useEffect(() => {
+    const correo = localStorage.getItem("email") || "usuario@mybook.com";
+    setCorreoUsuario(correo);
+  }, []);
+
+  // Toggle del sidebar
+  const [sidebarVisible, setSidebarVisible] = useState(false);
+  const toggleSidebar = () => setSidebarVisible(!sidebarVisible);
+
+  // Toggle del menú de configuración
+  const [menuVisible, setMenuVisible] = useState(false);
+  const menuRef = useRef(null);
+
+  const toggleMenu = () => setMenuVisible(!menuVisible);
+
+  // Cerrar el menú al hacer clic fuera
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuVisible(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handlePublicar = (e) => {
     e.preventDefault();
@@ -36,7 +61,6 @@ function Muro() {
     navigate("/muro");
   };
 
-  // Links para la ventana fija
   const linksFijos = [
     { nombre: "Facebook", url: "https://facebook.com" },
     { nombre: "Instagram", url: "https://instagram.com" },
@@ -48,59 +72,122 @@ function Muro() {
 
   return (
     <div className="muro-page">
-
-      {/* Botón tipo hamburguesa para mostrar/ocultar la barra lateral */}
-      <div
-        onClick={() => setMostrarSidebar(!mostrarSidebar)}
+      {/* Botón hamburguesa */}
+      <button
+        onClick={toggleSidebar}
         style={{
           position: "fixed",
           top: "15px",
-          left: mostrarSidebar ? "220px" : "15px", // 🔹 se separa un poco más cuando la barra está abierta
-          width: "35px",
-          height: "24px", // 🔹 más compacto
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
+          left: "20px",
+          background: "none",
+          border: "none",
           cursor: "pointer",
-          zIndex: 1000,
-          transition: "left 0.3s ease",
+          zIndex: 1001,
         }}
       >
-        <div style={{ height: "4px", backgroundColor: "blue", borderRadius: "2px" }}></div>
-        <div style={{ height: "4px", backgroundColor: "blue", borderRadius: "2px" }}></div>
-        <div style={{ height: "4px", backgroundColor: "blue", borderRadius: "2px" }}></div>
+        <div style={{ width: "25px", height: "3px", backgroundColor: "blue", margin: "4px 0" }}></div>
+        <div style={{ width: "25px", height: "3px", backgroundColor: "blue", margin: "4px 0" }}></div>
+        <div style={{ width: "25px", height: "3px", backgroundColor: "blue", margin: "4px 0" }}></div>
+      </button>
+
+      {/* Sidebar */}
+      <div
+        className="sidebar"
+        style={{
+          transform: sidebarVisible ? "translateX(0)" : "translateX(-110%)",
+          transition: "transform 0.3s ease-in-out",
+        }}
+      >
+        <h3>Enlaces rápidos</h3>
+        <ul>
+          {linksFijos.map((link) => (
+            <li key={link.nombre}>
+              <a href={link.url} target="_blank" rel="noopener noreferrer">
+                {link.nombre}
+              </a>
+            </li>
+          ))}
+        </ul>
       </div>
 
-      {/* Barra lateral (por defecto oculta) */}
-      {mostrarSidebar && (
+      {/* Contenido principal */}
+      <div className="main-content" style={{ position: "relative" }}>
+        {/* Barra superior */}
         <div
-          className="sidebar"
           style={{
-            transition: "all 0.3s ease-in-out",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: "10px 20px",
           }}
         >
-          <h3>Enlaces rápidos</h3>
-          <ul>
-            {linksFijos.map((link) => (
-              <li key={link.nombre}>
-                <a href={link.url} target="_blank" rel="noopener noreferrer">{link.nombre}</a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+          <h1>
+            <span
+              onClick={logoClick}
+              style={{ color: "blue", textDecoration: "none", cursor: "pointer" }}
+            >
+              MyBook
+            </span>
+          </h1>
 
-      {/* Contenido principal desplazable */}
-      <div className="main-content">
-        {/* Logo principal */}
-        <h1>
-          <span
-            onClick={logoClick}
-            style={{ color: "blue", textDecoration: "none", cursor: "pointer" }}
-          >
-            MyBook
-          </span>
-        </h1>
+          {/* Ícono de configuración */}
+          <div style={{ position: "relative" }} ref={menuRef}>
+            <span
+              onClick={toggleMenu}
+              style={{
+                fontSize: "24px",
+                cursor: "pointer",
+                color: "blue",
+              }}
+            >
+              ⚙️
+            </span>
+
+            {/* Menú desplegable */}
+            {menuVisible && (
+              <div
+                style={{
+                  position: "absolute",
+                  right: 0,
+                  top: "40px",
+                  backgroundColor: "white",
+                  border: "1px solid #ccc",
+                  borderRadius: "8px",
+                  boxShadow: "0 2px 10px rgba(0,0,0,0.15)",
+                  padding: "15px",
+                  width: "220px",
+                  zIndex: 2000,
+                }}
+              >
+                <div style={{ textAlign: "center", marginBottom: "10px" }}>
+                  <img
+                    src={fotoUsuario}
+                    alt="usuario"
+                    style={{ width: "60px", borderRadius: "50%" }}
+                  />
+                  <p style={{ margin: "5px 0", fontSize: "14px", color: "#555" }}>
+                    {correoUsuario}
+                  </p>
+                </div>
+                <hr />
+                <p style={{ cursor: "pointer", margin: "8px 0" }}>Tu cuenta</p>
+                <p style={{ cursor: "pointer", margin: "8px 0" }}>Configuración</p>
+                <p style={{ cursor: "pointer", margin: "8px 0" }}>Ayuda</p>
+                <p
+                  onClick={() => navigate("/")}
+                  style={{
+                    cursor: "pointer",
+                    margin: "8px 0",
+                    color: "red",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Salir
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
 
         <h2>🌎 Muro general</h2>
 
