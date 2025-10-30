@@ -27,6 +27,7 @@ function Profile({ token }) {
   const handleUpload = async (e) => {
     e.preventDefault();
     if (!file) return setMessage("❌ Selecciona un archivo");
+
     const formData = new FormData();
     formData.append("profilePicture", file);
     formData.append("email", email);
@@ -37,6 +38,7 @@ function Profile({ token }) {
         headers: { Authorization: `Bearer ${token}` },
         body: formData,
       });
+
       const data = await res.json();
       if (res.ok) {
         setMessage("✅ Foto subida correctamente");
@@ -70,7 +72,11 @@ function Profile({ token }) {
 
   const handlePost = () => {
     if (!postText.trim()) return;
-    const newPost = { autor: email.split("@")[0], texto: postText, foto: profilePicture };
+    const newPost = {
+      autor: email.split("@")[0],
+      texto: postText,
+      foto: profilePicture,
+    };
     setPosts((prev) => [newPost, ...prev]);
     setPostText("");
   };
@@ -85,6 +91,7 @@ function Profile({ token }) {
           </span>
         </h1>
         <h2>Perfil de usuario</h2>
+
         {profilePicture && (
           <img
             src={`${BASE_URL}/uploads/${profilePicture}`}
@@ -93,12 +100,15 @@ function Profile({ token }) {
             style={{ borderRadius: "50%" }}
           />
         )}
+
         <form onSubmit={handleUpload} style={{ marginTop: "10px" }}>
           <input type="file" accept="image/*" onChange={handleFileChange} />
           <br />
           <button type="submit">Subir foto</button>
         </form>
+
         <p style={{ color: "blue" }}>{message}</p>
+
         <div style={{ marginTop: "20px" }}>
           <button onClick={() => navigate("/chat")} className="btn-green">
             Ir al Chat
@@ -117,11 +127,18 @@ function Profile({ token }) {
           onChange={(e) => setPostText(e.target.value)}
         />
         <button onClick={handlePost}>Publicar</button>
+
         <div className="posts-list">
           {posts.map((p, index) => (
             <div key={index} className="post">
               <div className="post-header">
-                {p.foto && <img src={`${BASE_URL}/uploads/${p.foto}`} alt="avatar" className="post-avatar" />}
+                {p.foto && (
+                  <img
+                    src={`${BASE_URL}/uploads/${p.foto}`}
+                    alt="avatar"
+                    className="post-avatar"
+                  />
+                )}
                 <span className="post-author">{p.autor}</span>
               </div>
               <p>{p.texto}</p>
@@ -133,20 +150,40 @@ function Profile({ token }) {
       {/* Zona inferior central */}
       <div className="profile-bottom">
         <div className="contact-link">
-          <a href="/contactanos" style={{ color: "blue", fontWeight: "bold", textDecoration: "underline" }}>
+          <a
+            href="/contactanos"
+            style={{
+              color: "blue",
+              fontWeight: "bold",
+              textDecoration: "underline",
+            }}
+          >
             Contáctanos
           </a>
         </div>
+
         <div className="social-links">
           <h3>Síguenos en redes sociales</h3>
           <div className="social-icons">
-            <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">
+            <a
+              href="https://www.facebook.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               📘 Facebook
             </a>
-            <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer">
+            <a
+              href="https://www.instagram.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               📸 Instagram
             </a>
-            <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer">
+            <a
+              href="https://www.tiktok.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               🎵 TikTok
             </a>
             <a href="https://x.com" target="_blank" rel="noopener noreferrer">
