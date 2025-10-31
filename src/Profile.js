@@ -95,7 +95,15 @@ function Profile({ token }) {
   }, []);
 
   return (
-    <div className="profile-container">
+    <div
+      className="profile-container"
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        marginTop: "80px", // 🚀 Desplaza todo hacia abajo
+      }}
+    >
       {/* 🔵 BARRA SUPERIOR FIJA */}
       <div
         style={{
@@ -266,9 +274,18 @@ function Profile({ token }) {
         </div>
       </div>
 
-      {/* 🔹 Contenido original del perfil (dentro de un contenedor desplazado) */}
-      <div style={{ paddingTop: "100px" }}>
-        <div className="profile-top-left">
+      {/* 🔹 CONTENIDO DEL PERFIL (forzado hacia abajo y centrado) */}
+      <div
+        style={{
+          width: "100%",
+          maxWidth: "900px",
+          marginTop: "100px", // 👈 este sí empuja todo hacia abajo
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <div className="profile-top-left" style={{ textAlign: "center" }}>
           <h1>
             <span onClick={logoClick} className="profile-logo">
               MyBook
@@ -304,7 +321,7 @@ function Profile({ token }) {
         </div>
 
         {/* Caja de post centrada */}
-        <div className="post-container">
+        <div className="post-container" style={{ marginTop: "30px" }}>
           <textarea
             placeholder="Escribe tu publicación..."
             value={postText}
@@ -331,8 +348,8 @@ function Profile({ token }) {
           </div>
         </div>
 
-        {/* Zona inferior central */}
-        <div className="profile-bottom">
+        {/* Zona inferior */}
+        <div className="profile-bottom" style={{ marginTop: "40px" }}>
           <div className="contact-link">
             <a
               href="/contactanos"
@@ -346,7 +363,7 @@ function Profile({ token }) {
             </a>
           </div>
 
-          <div className="social-links">
+          <div className="social-links" style={{ textAlign: "center" }}>
             <h3>Síguenos en redes sociales</h3>
             <div className="social-icons">
               <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">
