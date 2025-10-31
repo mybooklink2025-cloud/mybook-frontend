@@ -84,7 +84,6 @@ function Profile({ token }) {
     setPostText("");
   };
 
-  // 🔹 Cerrar el menú al hacer clic fuera
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -97,7 +96,7 @@ function Profile({ token }) {
 
   return (
     <div className="profile-container">
-      {/* 🔵 BARRA SUPERIOR FIJA (idéntica al muro) */}
+      {/* 🔵 BARRA SUPERIOR FIJA */}
       <div
         style={{
           position: "fixed",
@@ -114,7 +113,7 @@ function Profile({ token }) {
           zIndex: 1000,
         }}
       >
-        {/* 🔹 Izquierda: M + buscador */}
+        {/* Izquierda: M + buscador */}
         <div style={{ display: "flex", alignItems: "center" }}>
           <div
             style={{
@@ -147,7 +146,7 @@ function Profile({ token }) {
           />
         </div>
 
-        {/* 🔹 Centro: enlaces */}
+        {/* Centro: enlaces */}
         <div style={{ display: "flex", gap: "20px" }}>
           <a
             href="/profile"
@@ -174,7 +173,7 @@ function Profile({ token }) {
           </span>
         </div>
 
-        {/* 🔹 Derecha: contactos + rueda + chat */}
+        {/* Derecha: contactos + rueda + chat */}
         <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
           <button
             style={{
@@ -267,8 +266,8 @@ function Profile({ token }) {
         </div>
       </div>
 
-      {/* 🔹 Contenido original del perfil (solo desplazado más abajo) */}
-      <div style={{ marginTop: "190px" }}>
+      {/* 🔹 Contenido original del perfil (dentro de un contenedor desplazado) */}
+      <div style={{ paddingTop: "100px" }}>
         <div className="profile-top-left">
           <h1>
             <span onClick={logoClick} className="profile-logo">
