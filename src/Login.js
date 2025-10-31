@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
-import jwt_decode from "jwt-decode";
+import { GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
 import { iniciarSesion } from "./api";
 
 function Login({ setToken }) {
@@ -8,7 +8,6 @@ function Login({ setToken }) {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
-  // 🔹 Inicio de sesión tradicional
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -27,19 +26,17 @@ function Login({ setToken }) {
     }
   };
 
-  // 🔹 Inicio de sesión con Google
+  // 🔹 Manejo del inicio de sesión con Google
   const handleGoogleSuccess = (credentialResponse) => {
     try {
-      const decoded = jwt_decode(credentialResponse.credential);
-      console.log("👤 Usuario Google:", decoded);
-
+      const decoded = jwtDecode(credentialResponse.credential);
+      console.log("✅ Usuario Google:", decoded);
       localStorage.setItem("token", credentialResponse.credential);
-      localStorage.setItem("email", decoded.email);
-      setMessage(`✅ Bienvenido ${decoded.name || decoded.email}`);
+      if (typeof setToken === "function")
+        setToken(credentialResponse.credential);
       window.location.replace("/muro");
     } catch (err) {
-      console.error("Error decodificando token de Google:", err);
-      setMessage("❌ Error al procesar inicio con Google");
+      console.error("Error decodificando token:", err);
     }
   };
 
@@ -48,49 +45,41 @@ function Login({ setToken }) {
   };
 
   return (
-    <GoogleOAuthProvider clientId="20434049090-o87fehjhstkngj10389ov7bad02sb1in.apps.googleusercontent.com">
-      <div style={{ textAlign: "center", marginTop: "100px" }}>
-        <h1>
-          <a href="/" style={{ color: "blue", textDecoration: "none" }}>
-            MyBook
-          </a>
-        </h1>
-        <h2>Iniciar sesión</h2>
+    <div style={{ textAlign: "center", marginTop: "100px" }}>
+      <h1>
+        <a href="/" style={{ color: "blue", textDecoration: "none" }}>
+          MyBook
+        </a>
+      </h1>
+      <h2>Iniciar sesión</h2>
 
-        {/* 🔹 Formulario tradicional */}
-        <form onSubmit={handleLogin}>
-          <input
-            type="email"
-            placeholder="Correo"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          /><br />
-          <input
-            type="password"
-            placeholder="Contraseña"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          /><br />
-          <button type="submit">Ingresar</button>
-        </form>
+      <form onSubmit={handleLogin}>
+        <input
+          type="email"
+          placeholder="Correo"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        /><br />
+        <input
+          type="password"
+          placeholder="Contraseña"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        /><br />
+        <button type="submit">Ingresar</button>
+      </form>
 
-        {/* 🔹 Separador */}
-        <div style={{ margin: "20px 0", fontWeight: "bold" }}>o</div>
-
-        {/* 🔹 Botón de Google */}
+      <div style={{ marginTop: "20px" }}>
         <GoogleLogin
           onSuccess={handleGoogleSuccess}
           onError={handleGoogleError}
-          shape="pill"
-          size="large"
-          width="250"
         />
-
-        <p style={{ color: "blue", marginTop: "15px" }}>{message}</p>
       </div>
-    </GoogleOAuthProvider>
+
+      <p style={{ color: "blue" }}>{message}</p>
+    </div>
   );
 }
 
