@@ -309,7 +309,7 @@ function Muro() {
           style={{
             display: "flex",
             flexDirection: "column",
-            alignItems: "flex-start",
+            alignItems: "center",
             justifyContent: "flex-start",
             width: "100%",
             textAlign: "center",
