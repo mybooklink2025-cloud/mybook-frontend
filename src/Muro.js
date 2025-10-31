@@ -55,7 +55,7 @@ function Muro() {
 
   return (
     <div className="muro-page">
-      {/* 🔵 BARRA SUPERIOR FIJA */}
+      {/* 🔵 Barra superior fija */}
       <div
         style={{
           position: "fixed",
@@ -72,7 +72,7 @@ function Muro() {
           zIndex: 1000,
         }}
       >
-        {/* Izquierda: logo y buscador */}
+        {/* 🔹 Izquierda */}
         <div style={{ display: "flex", alignItems: "center" }}>
           <div
             style={{
@@ -105,14 +105,23 @@ function Muro() {
           />
         </div>
 
-        {/* Centro */}
+        {/* 🔹 Centro */}
         <div style={{ display: "flex", gap: "20px" }}>
           <a href="/profile" style={{ color: "#0d47a1", textDecoration: "none", fontWeight: "bold" }}>Perfil</a>
           <a href="/contactanos" style={{ color: "#0d47a1", textDecoration: "none", fontWeight: "bold" }}>Contáctanos</a>
-          <span onClick={() => navigate("/chat")} style={{ color: "#0d47a1", fontWeight: "bold", cursor: "pointer" }}>Chat</span>
+          <span
+            onClick={() => navigate("/chat")}
+            style={{
+              color: "#0d47a1",
+              fontWeight: "bold",
+              cursor: "pointer",
+            }}
+          >
+            Chat
+          </span>
         </div>
 
-        {/* Derecha */}
+        {/* 🔹 Derecha */}
         <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
           <button
             style={{
@@ -126,7 +135,6 @@ function Muro() {
             👥 Mis Contactos
           </button>
 
-          {/* ⚙️ Rueda */}
           <div style={{ position: "relative" }} ref={menuRef}>
             <span
               onClick={() => setMenuVisible(!menuVisible)}
@@ -189,7 +197,7 @@ function Muro() {
 
       {/* 🔹 Contenido principal */}
       <div style={{ marginTop: "80px" }}>
-        {/* 🍔 Botón de hamburguesa */}
+        {/* 🍔 Botón hamburguesa */}
         <div
           style={{
             position: "fixed",
@@ -222,7 +230,7 @@ function Muro() {
           </div>
         </div>
 
-        {/* Barra lateral */}
+        {/* 🔹 Barra lateral */}
         <div
           ref={sidebarRef}
           className="sidebar"
@@ -251,7 +259,7 @@ function Muro() {
           </ul>
         </div>
 
-        {/* 🧱 CONTENIDO CENTRAL CENTRADO */}
+        {/* 🧱 CONTENIDO CENTRAL (centrado de verdad) */}
         <div
           className="main-content"
           style={{
@@ -259,52 +267,54 @@ function Muro() {
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "flex-start",
-            marginLeft: sidebarVisible ? "250px" : "0",
-            transition: "margin-left 0.3s ease",
+            width: "100%",
+            textAlign: "center",
           }}
         >
-          <h1>
-            <span onClick={logoClick} style={{ color: "blue", textDecoration: "none", cursor: "pointer" }}>
-              MyBook
-            </span>
-          </h1>
+          <div style={{ maxWidth: "700px" }}>
+            <h1>
+              <span onClick={logoClick} style={{ color: "blue", textDecoration: "none", cursor: "pointer" }}>
+                MyBook
+              </span>
+            </h1>
 
-          <h2>🌎 Muro general</h2>
+            <h2>🌎 Muro general</h2>
 
-          {/* Nueva publicación */}
-          <form onSubmit={handlePublicar} className="post-box" style={{ textAlign: "center" }}>
-            <textarea
-              value={nuevoPost}
-              onChange={(e) => setNuevoPost(e.target.value)}
-              placeholder="¿Qué estás pensando?"
-              rows={3}
-              cols={60}
-              style={{ resize: "none" }}
-            />
-            <br />
-            <button type="submit">Publicar</button>
-          </form>
+            <form onSubmit={handlePublicar} className="post-box" style={{ marginBottom: "20px" }}>
+              <textarea
+                value={nuevoPost}
+                onChange={(e) => setNuevoPost(e.target.value)}
+                placeholder="¿Qué estás pensando?"
+                rows={3}
+                style={{
+                  width: "100%",
+                  maxWidth: "600px",
+                  resize: "none",
+                }}
+              />
+              <br />
+              <button type="submit">Publicar</button>
+            </form>
 
-          {/* Lista de publicaciones */}
-          <div className="posts-list" style={{ width: "100%", maxWidth: "600px" }}>
-            {publicaciones.map((post) => (
-              <div key={post.id} className="post">
-                <div className="post-header">
-                  <img src={post.foto} alt="foto autor" className="post-user-photo" />
-                  <p className="post-user-name">{post.autor}</p>
+            <div className="posts-list" style={{ width: "100%", maxWidth: "600px", margin: "0 auto" }}>
+              {publicaciones.map((post) => (
+                <div key={post.id} className="post">
+                  <div className="post-header">
+                    <img src={post.foto} alt="foto autor" className="post-user-photo" />
+                    <p className="post-user-name">{post.autor}</p>
+                  </div>
+                  <p>{post.texto}</p>
                 </div>
-                <p>{post.texto}</p>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
 
-          {/* Redes sociales */}
-          <div className="social-footer" style={{ marginTop: "20px" }}>
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">📘 Facebook</a>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">📸 Instagram</a>
-            <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer">🎵 TikTok</a>
-            <a href="https://x.com" target="_blank" rel="noopener noreferrer">🐦 X (Twitter)</a>
-            <a href="https://wa.me/573024502105" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>
+            <div className="social-footer" style={{ marginTop: "20px" }}>
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">📘 Facebook</a>
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">📸 Instagram</a>
+              <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer">🎵 TikTok</a>
+              <a href="https://x.com" target="_blank" rel="noopener noreferrer">🐦 X (Twitter)</a>
+              <a href="https://wa.me/573024502105" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>
+            </div>
           </div>
         </div>
       </div>
