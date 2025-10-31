@@ -19,6 +19,7 @@ function Muro() {
   const [menuVisible, setMenuVisible] = useState(false);
 
   const menuRef = useRef(null);
+  const sidebarRef = useRef(null);
 
   const handlePublicar = (e) => {
     e.preventDefault();
@@ -46,11 +47,14 @@ function Muro() {
     { nombre: "Juegos", url: "https://www.miniclip.com" },
   ];
 
-  // 🔹 Cerrar menú si haces clic fuera
+  // 🔹 Cerrar menú y barra lateral si haces clic fuera
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         setMenuVisible(false);
+      }
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+        setSidebarVisible(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -59,7 +63,6 @@ function Muro() {
 
   return (
     <div className="muro-page">
-
       {/* 🔵 BARRA SUPERIOR FIJA */}
       <div
         style={{
@@ -178,7 +181,13 @@ function Muro() {
                   padding: "10px",
                 }}
               >
-                <div style={{ textAlign: "center", borderBottom: "1px solid #ddd", paddingBottom: "8px" }}>
+                <div
+                  style={{
+                    textAlign: "center",
+                    borderBottom: "1px solid #ddd",
+                    paddingBottom: "8px",
+                  }}
+                >
                   <img
                     src={fotoUsuario}
                     alt="Usuario"
@@ -227,14 +236,14 @@ function Muro() {
 
       {/* 🔹 Contenido principal (desplazado hacia abajo por la barra) */}
       <div style={{ marginTop: "80px" }}>
-
         {/* 🍔 Botón de hamburguesa y barra lateral */}
         <div
           style={{
             position: "fixed",
             top: "80px",
-            left: "10px",
-            zIndex: 900,
+            left: sidebarVisible ? "260px" : "10px",
+            zIndex: 1100,
+            transition: "left 0.3s ease",
           }}
         >
           <div
@@ -248,7 +257,10 @@ function Muro() {
               gap: "3px",
               width: "25px",
               height: "25px",
-              marginBottom: "10px",
+              backgroundColor: "white",
+              borderRadius: "4px",
+              boxShadow: "0 1px 4px rgba(0,0,0,0.2)",
+              padding: "3px",
             }}
           >
             <div style={{ width: "22px", height: "2px", backgroundColor: "blue" }}></div>
@@ -257,20 +269,39 @@ function Muro() {
           </div>
         </div>
 
-        {sidebarVisible && (
-          <div className="sidebar">
-            <h3>Enlaces rápidos</h3>
-            <ul>
-              {linksFijos.map((link) => (
-                <li key={link.nombre}>
-                  <a href={link.url} target="_blank" rel="noopener noreferrer">
-                    {link.nombre}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+        {/* 🔹 Barra lateral animada */}
+        <div
+          ref={sidebarRef}
+          className="sidebar"
+          style={{
+            position: "fixed",
+            top: "80px",
+            left: sidebarVisible ? "0" : "-250px",
+            width: "250px",
+            height: "100%",
+            backgroundColor: "white",
+            boxShadow: "2px 0 5px rgba(0,0,0,0.2)",
+            transition: "left 0.3s ease",
+            zIndex: 1000,
+            padding: "20px",
+          }}
+        >
+          <h3>Enlaces rápidos</h3>
+          <ul style={{ listStyle: "none", padding: 0 }}>
+            {linksFijos.map((link) => (
+              <li key={link.nombre} style={{ marginBottom: "10px" }}>
+                <a
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: "blue", textDecoration: "none", fontWeight: "bold" }}
+                >
+                  {link.nombre}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
 
         {/* 🧱 Contenido principal */}
         <div className="main-content">
