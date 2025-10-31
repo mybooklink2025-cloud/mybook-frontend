@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { iniciarSesion } from "./api";
+import { GoogleLogin } from "@react-oauth/google";
+import jwtDecode from "jwt-decode";
 
 function Login({ setToken }) {
   const [email, setEmail] = useState("");
@@ -24,6 +26,23 @@ function Login({ setToken }) {
     }
   };
 
+  // 🔹 Manejo del inicio de sesión con Google
+  const handleGoogleSuccess = (credentialResponse) => {
+    const decoded = jwtDecode(credentialResponse.credential);
+    console.log("Usuario con Google:", decoded);
+
+    // Puedes guardar los datos del usuario en localStorage
+    localStorage.setItem("userGoogle", JSON.stringify(decoded));
+
+    // Redirigir al muro (o crear usuario en tu backend si lo deseas)
+    window.location.replace("/muro");
+  };
+
+  const handleGoogleError = () => {
+    console.error("❌ Error al iniciar sesión con Google");
+    setMessage("❌ Error al iniciar sesión con Google");
+  };
+
   return (
     <div style={{ textAlign: "center", marginTop: "100px" }}>
       <h1>
@@ -32,6 +51,7 @@ function Login({ setToken }) {
         </a>
       </h1>
       <h2>Iniciar sesión</h2>
+
       <form onSubmit={handleLogin}>
         <input
           type="email"
@@ -49,7 +69,16 @@ function Login({ setToken }) {
         /><br />
         <button type="submit">Ingresar</button>
       </form>
+
       <p style={{ color: "blue" }}>{message}</p>
+
+      {/* 🔹 Botón de inicio de sesión con Google */}
+      <div style={{ marginTop: "20px", display: "flex", justifyContent: "center" }}>
+        <GoogleLogin
+          onSuccess={handleGoogleSuccess}
+          onError={handleGoogleError}
+        />
+      </div>
     </div>
   );
 }
