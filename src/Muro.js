@@ -4,6 +4,7 @@ import "./Muro.css";
 
 function Muro() {
   const navigate = useNavigate();
+
   const [publicaciones, setPublicaciones] = useState([
     { id: 1, autor: "Alejo", texto: "¡Bienvenidos al nuevo muro de MyBook!", foto: "https://cdn-icons-png.flaticon.com/512/194/194938.png" },
     { id: 2, autor: "Martin", texto: "Este es el primer paso hacia la versión real 💙", foto: "https://cdn-icons-png.flaticon.com/512/2922/2922510.png" },
@@ -54,8 +55,7 @@ function Muro() {
 
   return (
     <div className="muro-page">
-
-      {/* 🔵 BARRA SUPERIOR FIJA — igual que antes */}
+      {/* 🔵 BARRA SUPERIOR FIJA */}
       <div
         style={{
           position: "fixed",
@@ -72,10 +72,9 @@ function Muro() {
           zIndex: 1000,
         }}
       >
-        {/* Izquierda */}
+        {/* Izquierda: logo y buscador */}
         <div style={{ display: "flex", alignItems: "center" }}>
           <div
-            onClick={logoClick}
             style={{
               backgroundColor: "blue",
               color: "white",
@@ -90,6 +89,7 @@ function Muro() {
               cursor: "pointer",
               marginRight: "10px",
             }}
+            onClick={logoClick}
           >
             M
           </div>
@@ -107,18 +107,9 @@ function Muro() {
 
         {/* Centro */}
         <div style={{ display: "flex", gap: "20px" }}>
-          <a href="/profile" style={{ color: "#0d47a1", fontWeight: "bold", textDecoration: "none" }}>
-            Perfil
-          </a>
-          <a href="/contactanos" style={{ color: "#0d47a1", fontWeight: "bold", textDecoration: "none" }}>
-            Contáctanos
-          </a>
-          <span
-            onClick={() => navigate("/chat")}
-            style={{ color: "#0d47a1", fontWeight: "bold", cursor: "pointer" }}
-          >
-            Chat
-          </span>
+          <a href="/profile" style={{ color: "#0d47a1", textDecoration: "none", fontWeight: "bold" }}>Perfil</a>
+          <a href="/contactanos" style={{ color: "#0d47a1", textDecoration: "none", fontWeight: "bold" }}>Contáctanos</a>
+          <span onClick={() => navigate("/chat")} style={{ color: "#0d47a1", fontWeight: "bold", cursor: "pointer" }}>Chat</span>
         </div>
 
         {/* Derecha */}
@@ -173,7 +164,12 @@ function Muro() {
                       localStorage.removeItem("token");
                       navigate("/");
                     }}
-                    style={{ padding: "8px", color: "red", cursor: "pointer", borderTop: "1px solid #ddd" }}
+                    style={{
+                      padding: "8px",
+                      color: "red",
+                      cursor: "pointer",
+                      borderTop: "1px solid #ddd",
+                    }}
                   >
                     Salir
                   </li>
@@ -191,9 +187,9 @@ function Muro() {
         </div>
       </div>
 
-      {/* 🔹 Contenido principal — centrado sin afectar la barra */}
+      {/* 🔹 Contenido principal */}
       <div style={{ marginTop: "80px" }}>
-        {/* 🍔 Botón de la barra lateral */}
+        {/* 🍔 Botón de hamburguesa */}
         <div
           style={{
             position: "fixed",
@@ -226,9 +222,10 @@ function Muro() {
           </div>
         </div>
 
-        {/* 🔹 Barra lateral */}
+        {/* Barra lateral */}
         <div
           ref={sidebarRef}
+          className="sidebar"
           style={{
             position: "fixed",
             top: "80px",
@@ -246,12 +243,7 @@ function Muro() {
           <ul style={{ listStyle: "none", padding: 0 }}>
             {linksFijos.map((link) => (
               <li key={link.nombre} style={{ marginBottom: "10px" }}>
-                <a
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{ color: "blue", textDecoration: "none", fontWeight: "bold" }}
-                >
+                <a href={link.url} target="_blank" rel="noopener noreferrer" style={{ color: "blue", textDecoration: "none", fontWeight: "bold" }}>
                   {link.nombre}
                 </a>
               </li>
@@ -259,49 +251,60 @@ function Muro() {
           </ul>
         </div>
 
-        {/* 🧱 Aquí centramos SOLO el muro */}
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <div className="main-content" style={{ maxWidth: "700px" }}>
-            <h1>
-              <span onClick={logoClick} style={{ color: "blue", cursor: "pointer" }}>
-                MyBook
-              </span>
-            </h1>
-            <h2>🌎 Muro general</h2>
+        {/* 🧱 CONTENIDO CENTRAL CENTRADO */}
+        <div
+          className="main-content"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "flex-start",
+            marginLeft: sidebarVisible ? "250px" : "0",
+            transition: "margin-left 0.3s ease",
+          }}
+        >
+          <h1>
+            <span onClick={logoClick} style={{ color: "blue", textDecoration: "none", cursor: "pointer" }}>
+              MyBook
+            </span>
+          </h1>
 
-            {/* Nueva publicación */}
-            <form onSubmit={handlePublicar} className="post-box">
-              <textarea
-                value={nuevoPost}
-                onChange={(e) => setNuevoPost(e.target.value)}
-                placeholder="¿Qué estás pensando?"
-                rows={3}
-                cols={60}
-              />
-              <button type="submit">Publicar</button>
-            </form>
+          <h2>🌎 Muro general</h2>
 
-            {/* Lista de publicaciones */}
-            <div className="posts-list">
-              {publicaciones.map((post) => (
-                <div key={post.id} className="post">
-                  <div className="post-header">
-                    <img src={post.foto} alt="autor" className="post-user-photo" />
-                    <p className="post-user-name">{post.autor}</p>
-                  </div>
-                  <p>{post.texto}</p>
+          {/* Nueva publicación */}
+          <form onSubmit={handlePublicar} className="post-box" style={{ textAlign: "center" }}>
+            <textarea
+              value={nuevoPost}
+              onChange={(e) => setNuevoPost(e.target.value)}
+              placeholder="¿Qué estás pensando?"
+              rows={3}
+              cols={60}
+              style={{ resize: "none" }}
+            />
+            <br />
+            <button type="submit">Publicar</button>
+          </form>
+
+          {/* Lista de publicaciones */}
+          <div className="posts-list" style={{ width: "100%", maxWidth: "600px" }}>
+            {publicaciones.map((post) => (
+              <div key={post.id} className="post">
+                <div className="post-header">
+                  <img src={post.foto} alt="foto autor" className="post-user-photo" />
+                  <p className="post-user-name">{post.autor}</p>
                 </div>
-              ))}
-            </div>
+                <p>{post.texto}</p>
+              </div>
+            ))}
+          </div>
 
-            {/* Footer */}
-            <div className="social-footer">
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">📘 Facebook</a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">📸 Instagram</a>
-              <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer">🎵 TikTok</a>
-              <a href="https://x.com" target="_blank" rel="noopener noreferrer">🐦 X (Twitter)</a>
-              <a href="https://wa.me/573024502105" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>
-            </div>
+          {/* Redes sociales */}
+          <div className="social-footer" style={{ marginTop: "20px" }}>
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">📘 Facebook</a>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">📸 Instagram</a>
+            <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer">🎵 TikTok</a>
+            <a href="https://x.com" target="_blank" rel="noopener noreferrer">🐦 X (Twitter)</a>
+            <a href="https://wa.me/573024502105" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>
           </div>
         </div>
       </div>
