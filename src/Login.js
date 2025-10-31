@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import jwt_decode from "jwt-decode";
 import { iniciarSesion } from "./api";
@@ -8,8 +8,7 @@ function Login({ setToken }) {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
-  const CLIENT_ID = "20434049090-o87fehjhstkngj10389ov7bad02sb1in.apps.googleusercontent.com";
-
+  // 🔹 Inicio de sesión tradicional
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -28,27 +27,28 @@ function Login({ setToken }) {
     }
   };
 
-  // 🔹 Manejo del login con Google
+  // 🔹 Inicio de sesión con Google
   const handleGoogleSuccess = (credentialResponse) => {
     try {
       const decoded = jwt_decode(credentialResponse.credential);
-      const emailGoogle = decoded.email;
+      console.log("👤 Usuario Google:", decoded);
+
       localStorage.setItem("token", credentialResponse.credential);
-      localStorage.setItem("email", emailGoogle);
-      setMessage(`✅ Bienvenido, ${decoded.name || "usuario"}`);
-      setTimeout(() => window.location.replace("/muro"), 1000);
-    } catch (error) {
-      console.error("Error al decodificar token de Google:", error);
-      setMessage("❌ Error al iniciar sesión con Google");
+      localStorage.setItem("email", decoded.email);
+      setMessage(`✅ Bienvenido ${decoded.name || decoded.email}`);
+      window.location.replace("/muro");
+    } catch (err) {
+      console.error("Error decodificando token de Google:", err);
+      setMessage("❌ Error al procesar inicio con Google");
     }
   };
 
-  const handleGoogleFailure = () => {
-    setMessage("❌ Error al autenticar con Google");
+  const handleGoogleError = () => {
+    setMessage("❌ Error al iniciar sesión con Google");
   };
 
   return (
-    <GoogleOAuthProvider clientId={CLIENT_ID}>
+    <GoogleOAuthProvider clientId="20434049090-o87fehjhstkngj10389ov7bad02sb1in.apps.googleusercontent.com">
       <div style={{ textAlign: "center", marginTop: "100px" }}>
         <h1>
           <a href="/" style={{ color: "blue", textDecoration: "none" }}>
@@ -57,7 +57,7 @@ function Login({ setToken }) {
         </h1>
         <h2>Iniciar sesión</h2>
 
-        {/* 🔹 Login tradicional */}
+        {/* 🔹 Formulario tradicional */}
         <form onSubmit={handleLogin}>
           <input
             type="email"
@@ -76,18 +76,19 @@ function Login({ setToken }) {
           <button type="submit">Ingresar</button>
         </form>
 
-        <p style={{ color: "blue" }}>{message}</p>
-
-        <hr style={{ margin: "30px auto", width: "50%" }} />
+        {/* 🔹 Separador */}
+        <div style={{ margin: "20px 0", fontWeight: "bold" }}>o</div>
 
         {/* 🔹 Botón de Google */}
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <GoogleLogin
-            onSuccess={handleGoogleSuccess}
-            onError={handleGoogleFailure}
-            useOneTap
-          />
-        </div>
+        <GoogleLogin
+          onSuccess={handleGoogleSuccess}
+          onError={handleGoogleError}
+          shape="pill"
+          size="large"
+          width="250"
+        />
+
+        <p style={{ color: "blue", marginTop: "15px" }}>{message}</p>
       </div>
     </GoogleOAuthProvider>
   );
