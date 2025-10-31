@@ -32,9 +32,7 @@ function Muro() {
     setNuevoPost("");
   };
 
-  const logoClick = () => {
-    navigate("/muro");
-  };
+  const logoClick = () => navigate("/muro");
 
   const linksFijos = [
     { nombre: "Facebook", url: "https://facebook.com" },
@@ -47,12 +45,8 @@ function Muro() {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setMenuVisible(false);
-      }
-      if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
-        setSidebarVisible(false);
-      }
+      if (menuRef.current && !menuRef.current.contains(event.target)) setMenuVisible(false);
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target)) setSidebarVisible(false);
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -60,7 +54,8 @@ function Muro() {
 
   return (
     <div className="muro-page">
-      {/* 🔵 BARRA SUPERIOR FIJA */}
+
+      {/* 🔵 BARRA SUPERIOR FIJA — igual que antes */}
       <div
         style={{
           position: "fixed",
@@ -77,9 +72,10 @@ function Muro() {
           zIndex: 1000,
         }}
       >
-        {/* Izquierda: Logo + buscador */}
+        {/* Izquierda */}
         <div style={{ display: "flex", alignItems: "center" }}>
           <div
+            onClick={logoClick}
             style={{
               backgroundColor: "blue",
               color: "white",
@@ -94,7 +90,6 @@ function Muro() {
               cursor: "pointer",
               marginRight: "10px",
             }}
-            onClick={logoClick}
           >
             M
           </div>
@@ -110,12 +105,12 @@ function Muro() {
           />
         </div>
 
-        {/* Centro: enlaces */}
+        {/* Centro */}
         <div style={{ display: "flex", gap: "20px" }}>
-          <a href="/profile" style={{ color: "#0d47a1", textDecoration: "none", fontWeight: "bold" }}>
+          <a href="/profile" style={{ color: "#0d47a1", fontWeight: "bold", textDecoration: "none" }}>
             Perfil
           </a>
-          <a href="/contactanos" style={{ color: "#0d47a1", textDecoration: "none", fontWeight: "bold" }}>
+          <a href="/contactanos" style={{ color: "#0d47a1", fontWeight: "bold", textDecoration: "none" }}>
             Contáctanos
           </a>
           <span
@@ -126,7 +121,7 @@ function Muro() {
           </span>
         </div>
 
-        {/* Derecha: contactos, rueda, chat */}
+        {/* Derecha */}
         <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
           <button
             style={{
@@ -140,6 +135,7 @@ function Muro() {
             👥 Mis Contactos
           </button>
 
+          {/* ⚙️ Rueda */}
           <div style={{ position: "relative" }} ref={menuRef}>
             <span
               onClick={() => setMenuVisible(!menuVisible)}
@@ -162,18 +158,8 @@ function Muro() {
                   padding: "10px",
                 }}
               >
-                <div
-                  style={{
-                    textAlign: "center",
-                    borderBottom: "1px solid #ddd",
-                    paddingBottom: "8px",
-                  }}
-                >
-                  <img
-                    src={fotoUsuario}
-                    alt="Usuario"
-                    style={{ width: "50px", height: "50px", borderRadius: "50%" }}
-                  />
+                <div style={{ textAlign: "center", borderBottom: "1px solid #ddd", paddingBottom: "8px" }}>
+                  <img src={fotoUsuario} alt="Usuario" style={{ width: "50px", height: "50px", borderRadius: "50%" }} />
                   <p style={{ fontSize: "14px", color: "#555" }}>
                     {localStorage.getItem("email") || "usuario@mybook.com"}
                   </p>
@@ -187,12 +173,7 @@ function Muro() {
                       localStorage.removeItem("token");
                       navigate("/");
                     }}
-                    style={{
-                      padding: "8px",
-                      color: "red",
-                      cursor: "pointer",
-                      borderTop: "1px solid #ddd",
-                    }}
+                    style={{ padding: "8px", color: "red", cursor: "pointer", borderTop: "1px solid #ddd" }}
                   >
                     Salir
                   </li>
@@ -210,87 +191,82 @@ function Muro() {
         </div>
       </div>
 
-      {/* 🔹 Contenido principal (centrado y desplazado hacia abajo) */}
-      <div style={{ marginTop: "80px", display: "flex", justifyContent: "center" }}>
-        <div style={{ width: "700px" }}>
-          {/* 🍔 Botón de hamburguesa y barra lateral */}
+      {/* 🔹 Contenido principal — centrado sin afectar la barra */}
+      <div style={{ marginTop: "80px" }}>
+        {/* 🍔 Botón de la barra lateral */}
+        <div
+          style={{
+            position: "fixed",
+            top: "80px",
+            left: sidebarVisible ? "260px" : "10px",
+            zIndex: 1100,
+            transition: "left 0.3s ease",
+          }}
+        >
           <div
+            onClick={() => setSidebarVisible(!sidebarVisible)}
             style={{
-              position: "fixed",
-              top: "80px",
-              left: sidebarVisible ? "260px" : "10px",
-              zIndex: 1100,
-              transition: "left 0.3s ease",
-            }}
-          >
-            <div
-              onClick={() => setSidebarVisible(!sidebarVisible)}
-              style={{
-                cursor: "pointer",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: "3px",
-                width: "25px",
-                height: "25px",
-                backgroundColor: "white",
-                borderRadius: "4px",
-                boxShadow: "0 1px 4px rgba(0,0,0,0.2)",
-                padding: "3px",
-              }}
-            >
-              <div style={{ width: "22px", height: "2px", backgroundColor: "blue" }}></div>
-              <div style={{ width: "22px", height: "2px", backgroundColor: "blue" }}></div>
-              <div style={{ width: "22px", height: "2px", backgroundColor: "blue" }}></div>
-            </div>
-          </div>
-
-          {/* 🔹 Barra lateral */}
-          <div
-            ref={sidebarRef}
-            className="sidebar"
-            style={{
-              position: "fixed",
-              top: "80px",
-              left: sidebarVisible ? "0" : "-250px",
-              width: "250px",
-              height: "100%",
+              cursor: "pointer",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "3px",
+              width: "25px",
+              height: "25px",
               backgroundColor: "white",
-              boxShadow: "2px 0 5px rgba(0,0,0,0.2)",
-              transition: "left 0.3s ease",
-              zIndex: 1000,
-              padding: "20px",
+              borderRadius: "4px",
+              boxShadow: "0 1px 4px rgba(0,0,0,0.2)",
+              padding: "3px",
             }}
           >
-            <h3>Enlaces rápidos</h3>
-            <ul style={{ listStyle: "none", padding: 0 }}>
-              {linksFijos.map((link) => (
-                <li key={link.nombre} style={{ marginBottom: "10px" }}>
-                  <a
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{ color: "blue", textDecoration: "none", fontWeight: "bold" }}
-                  >
-                    {link.nombre}
-                  </a>
-                </li>
-              ))}
-            </ul>
+            <div style={{ width: "22px", height: "2px", backgroundColor: "blue" }}></div>
+            <div style={{ width: "22px", height: "2px", backgroundColor: "blue" }}></div>
+            <div style={{ width: "22px", height: "2px", backgroundColor: "blue" }}></div>
           </div>
+        </div>
 
-          {/* 🧱 Contenido del muro */}
-          <div className="main-content">
+        {/* 🔹 Barra lateral */}
+        <div
+          ref={sidebarRef}
+          style={{
+            position: "fixed",
+            top: "80px",
+            left: sidebarVisible ? "0" : "-250px",
+            width: "250px",
+            height: "100%",
+            backgroundColor: "white",
+            boxShadow: "2px 0 5px rgba(0,0,0,0.2)",
+            transition: "left 0.3s ease",
+            zIndex: 1000,
+            padding: "20px",
+          }}
+        >
+          <h3>Enlaces rápidos</h3>
+          <ul style={{ listStyle: "none", padding: 0 }}>
+            {linksFijos.map((link) => (
+              <li key={link.nombre} style={{ marginBottom: "10px" }}>
+                <a
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: "blue", textDecoration: "none", fontWeight: "bold" }}
+                >
+                  {link.nombre}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* 🧱 Aquí centramos SOLO el muro */}
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <div className="main-content" style={{ maxWidth: "700px" }}>
             <h1>
-              <span
-                onClick={logoClick}
-                style={{ color: "blue", textDecoration: "none", cursor: "pointer" }}
-              >
+              <span onClick={logoClick} style={{ color: "blue", cursor: "pointer" }}>
                 MyBook
               </span>
             </h1>
-
             <h2>🌎 Muro general</h2>
 
             {/* Nueva publicación */}
@@ -305,12 +281,12 @@ function Muro() {
               <button type="submit">Publicar</button>
             </form>
 
-            {/* Publicaciones */}
+            {/* Lista de publicaciones */}
             <div className="posts-list">
               {publicaciones.map((post) => (
                 <div key={post.id} className="post">
                   <div className="post-header">
-                    <img src={post.foto} alt="foto autor" className="post-user-photo" />
+                    <img src={post.foto} alt="autor" className="post-user-photo" />
                     <p className="post-user-name">{post.autor}</p>
                   </div>
                   <p>{post.texto}</p>
