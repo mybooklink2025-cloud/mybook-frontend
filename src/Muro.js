@@ -5,6 +5,7 @@ import "./Muro.css";
 function Muro() {
   const navigate = useNavigate();
 
+  // 📦 Estado de publicaciones
   const [publicaciones, setPublicaciones] = useState([
     { id: 1, autor: "Alejo", texto: "¡Bienvenidos al nuevo muro de MyBook!", foto: "https://cdn-icons-png.flaticon.com/512/194/194938.png" },
     { id: 2, autor: "Martin", texto: "Este es el primer paso hacia la versión real 💙", foto: "https://cdn-icons-png.flaticon.com/512/2922/2922510.png" },
@@ -46,6 +47,7 @@ function Muro() {
     { nombre: "Juegos", url: "https://www.miniclip.com" },
   ];
 
+  // 🔹 Cerrar menú y barra lateral si haces clic fuera
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -68,7 +70,7 @@ function Muro() {
           top: 0,
           left: 0,
           width: "100%",
-          backgroundColor: "#e3f2fd",
+          backgroundColor: "#e3f2fd", // Azul muy claro
           height: "60px",
           display: "flex",
           alignItems: "center",
@@ -113,10 +115,16 @@ function Muro() {
 
         {/* 🔹 Centro: enlaces */}
         <div style={{ display: "flex", gap: "20px" }}>
-          <a href="/profile" style={{ color: "#0d47a1", textDecoration: "none", fontWeight: "bold" }}>
+          <a
+            href="/profile"
+            style={{ color: "#0d47a1", textDecoration: "none", fontWeight: "bold" }}
+          >
             Perfil
           </a>
-          <a href="/contactanos" style={{ color: "#0d47a1", textDecoration: "none", fontWeight: "bold" }}>
+          <a
+            href="/contactanos"
+            style={{ color: "#0d47a1", textDecoration: "none", fontWeight: "bold" }}
+          >
             Contáctanos
           </a>
           <span
@@ -212,6 +220,7 @@ function Muro() {
             )}
           </div>
 
+          {/* 💬 Botón de chat */}
           <span
             onClick={() => navigate("/chat")}
             style={{
@@ -225,138 +234,137 @@ function Muro() {
         </div>
       </div>
 
-      {/* 🔹 Contenido principal (centrado y desplazado hacia abajo por la barra) */}
-      <div
-        style={{
-          marginTop: "80px",
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
-        <div style={{ maxWidth: "700px", width: "100%" }}>
-          {/* 🍔 Botón de hamburguesa y barra lateral */}
+      {/* 🔹 Contenido principal (desplazado hacia abajo por la barra) */}
+      <div style={{ marginTop: "80px" }}>
+        {/* 🍔 Botón de hamburguesa y barra lateral */}
+        <div
+          style={{
+            position: "fixed",
+            top: "80px",
+            left: sidebarVisible ? "260px" : "10px",
+            zIndex: 1100,
+            transition: "left 0.3s ease",
+          }}
+        >
           <div
+            onClick={() => setSidebarVisible(!sidebarVisible)}
             style={{
-              position: "fixed",
-              top: "80px",
-              left: sidebarVisible ? "260px" : "10px",
-              zIndex: 1100,
-              transition: "left 0.3s ease",
-            }}
-          >
-            <div
-              onClick={() => setSidebarVisible(!sidebarVisible)}
-              style={{
-                cursor: "pointer",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: "3px",
-                width: "25px",
-                height: "25px",
-                backgroundColor: "white",
-                borderRadius: "4px",
-                boxShadow: "0 1px 4px rgba(0,0,0,0.2)",
-                padding: "3px",
-              }}
-            >
-              <div style={{ width: "22px", height: "2px", backgroundColor: "blue" }}></div>
-              <div style={{ width: "22px", height: "2px", backgroundColor: "blue" }}></div>
-              <div style={{ width: "22px", height: "2px", backgroundColor: "blue" }}></div>
-            </div>
-          </div>
-
-          {/* 🔹 Barra lateral animada */}
-          <div
-            ref={sidebarRef}
-            className="sidebar"
-            style={{
-              position: "fixed",
-              top: "80px",
-              left: sidebarVisible ? "0" : "-250px",
-              width: "250px",
-              height: "100%",
+              cursor: "pointer",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "3px",
+              width: "25px",
+              height: "25px",
               backgroundColor: "white",
-              boxShadow: "2px 0 5px rgba(0,0,0,0.2)",
-              transition: "left 0.3s ease",
-              zIndex: 1000,
-              padding: "20px",
+              borderRadius: "4px",
+              boxShadow: "0 1px 4px rgba(0,0,0,0.2)",
+              padding: "3px",
             }}
           >
-            <h3>Enlaces rápidos</h3>
-            <ul style={{ listStyle: "none", padding: 0 }}>
-              {linksFijos.map((link) => (
-                <li key={link.nombre} style={{ marginBottom: "10px" }}>
-                  <a
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{ color: "blue", textDecoration: "none", fontWeight: "bold" }}
-                  >
-                    {link.nombre}
-                  </a>
-                </li>
-              ))}
-            </ul>
+            <div style={{ width: "22px", height: "2px", backgroundColor: "blue" }}></div>
+            <div style={{ width: "22px", height: "2px", backgroundColor: "blue" }}></div>
+            <div style={{ width: "22px", height: "2px", backgroundColor: "blue" }}></div>
+          </div>
+        </div>
+
+        {/* 🔹 Barra lateral animada */}
+        <div
+          ref={sidebarRef}
+          className="sidebar"
+          style={{
+            position: "fixed",
+            top: "80px",
+            left: sidebarVisible ? "0" : "-250px",
+            width: "250px",
+            height: "100%",
+            backgroundColor: "white",
+            boxShadow: "2px 0 5px rgba(0,0,0,0.2)",
+            transition: "left 0.3s ease",
+            zIndex: 1000,
+            padding: "20px",
+          }}
+        >
+          <h3>Enlaces rápidos</h3>
+          <ul style={{ listStyle: "none", padding: 0 }}>
+            {linksFijos.map((link) => (
+              <li key={link.nombre} style={{ marginBottom: "10px" }}>
+                <a
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: "blue", textDecoration: "none", fontWeight: "bold" }}
+                >
+                  {link.nombre}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* 🧱 Contenido principal (centrado) */}
+        <div
+          className="main-content"
+          style={{
+            maxWidth: "700px",
+            margin: "0 auto",
+            textAlign: "center",
+          }}
+        >
+          <h1>
+            <span
+              onClick={logoClick}
+              style={{ color: "blue", textDecoration: "none", cursor: "pointer" }}
+            >
+              MyBook
+            </span>
+          </h1>
+
+          <h2>🌎 Muro general</h2>
+
+          {/* Nueva publicación */}
+          <form onSubmit={handlePublicar} className="post-box">
+            <textarea
+              value={nuevoPost}
+              onChange={(e) => setNuevoPost(e.target.value)}
+              placeholder="¿Qué estás pensando?"
+              rows={3}
+              cols={60}
+            />
+            <button type="submit">Publicar</button>
+          </form>
+
+          {/* Lista de publicaciones */}
+          <div className="posts-list">
+            {publicaciones.map((post) => (
+              <div key={post.id} className="post">
+                <div className="post-header">
+                  <img src={post.foto} alt="foto autor" className="post-user-photo" />
+                  <p className="post-user-name">{post.autor}</p>
+                </div>
+                <p>{post.texto}</p>
+              </div>
+            ))}
           </div>
 
-          {/* 🧱 Contenido principal */}
-          <div className="main-content">
-            <h1>
-              <span
-                onClick={logoClick}
-                style={{ color: "blue", textDecoration: "none", cursor: "pointer" }}
-              >
-                MyBook
-              </span>
-            </h1>
-
-            <h2>🌎 Muro general</h2>
-
-            {/* Nueva publicación */}
-            <form onSubmit={handlePublicar} className="post-box">
-              <textarea
-                value={nuevoPost}
-                onChange={(e) => setNuevoPost(e.target.value)}
-                placeholder="¿Qué estás pensando?"
-                rows={3}
-                cols={60}
-              />
-              <button type="submit">Publicar</button>
-            </form>
-
-            {/* Lista de publicaciones */}
-            <div className="posts-list">
-              {publicaciones.map((post) => (
-                <div key={post.id} className="post">
-                  <div className="post-header">
-                    <img src={post.foto} alt="foto autor" className="post-user-photo" />
-                    <p className="post-user-name">{post.autor}</p>
-                  </div>
-                  <p>{post.texto}</p>
-                </div>
-              ))}
-            </div>
-
-            {/* Redes sociales al pie */}
-            <div className="social-footer">
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
-                📘 Facebook
-              </a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
-                📸 Instagram
-              </a>
-              <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer">
-                🎵 TikTok
-              </a>
-              <a href="https://x.com" target="_blank" rel="noopener noreferrer">
-                🐦 X (Twitter)
-              </a>
-              <a href="https://wa.me/573024502105" target="_blank" rel="noopener noreferrer">
-                💬 WhatsApp
-              </a>
-            </div>
+          {/* Redes sociales al pie */}
+          <div className="social-footer">
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+              📘 Facebook
+            </a>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+              📸 Instagram
+            </a>
+            <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer">
+              🎵 TikTok
+            </a>
+            <a href="https://x.com" target="_blank" rel="noopener noreferrer">
+              🐦 X (Twitter)
+            </a>
+            <a href="https://wa.me/573024502105" target="_blank" rel="noopener noreferrer">
+              💬 WhatsApp
+            </a>
           </div>
         </div>
       </div>
