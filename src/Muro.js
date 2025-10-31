@@ -48,12 +48,8 @@ function Muro() {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setMenuVisible(false);
-      }
-      if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
-        setSidebarVisible(false);
-      }
+      if (menuRef.current && !menuRef.current.contains(event.target)) setMenuVisible(false);
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target)) setSidebarVisible(false);
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -65,7 +61,7 @@ function Muro() {
       style={{
         display: "flex",
         flexDirection: "column",
-        alignItems: "center", // 🔹 Centra todo el contenido horizontalmente
+        alignItems: "center",
         width: "100%",
       }}
     >
@@ -212,36 +208,66 @@ function Muro() {
         </div>
       </div>
 
-      {/* 🔹 Contenido principal centrado */}
+      {/* 🔹 Contenido principal */}
       <div
         style={{
-          marginTop: "90px",
+          marginTop: "80px",
+          width: "100%",
           display: "flex",
           justifyContent: "center",
-          width: "100%",
+          transition: "margin-left 0.3s ease",
+          marginLeft: sidebarVisible ? "250px" : "0px", // 🔹 Aquí se mueve el contenido
         }}
       >
-        {/* Contenedor con todo el cuerpo del muro */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "flex-start",
-            gap: "30px",
-            width: "90%",
-            maxWidth: "1200px",
-          }}
-        >
-          {/* Barra lateral */}
+        <div style={{ width: "100%", maxWidth: "1000px", position: "relative" }}>
+          {/* 🍔 Botón hamburguesa */}
+          <div
+            style={{
+              position: "fixed",
+              top: "80px",
+              left: sidebarVisible ? "260px" : "10px",
+              zIndex: 1100,
+              transition: "left 0.3s ease",
+            }}
+          >
+            <div
+              onClick={() => setSidebarVisible(!sidebarVisible)}
+              style={{
+                cursor: "pointer",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "3px",
+                width: "25px",
+                height: "25px",
+                backgroundColor: "white",
+                borderRadius: "4px",
+                boxShadow: "0 1px 4px rgba(0,0,0,0.2)",
+                padding: "3px",
+              }}
+            >
+              <div style={{ width: "22px", height: "2px", backgroundColor: "blue" }}></div>
+              <div style={{ width: "22px", height: "2px", backgroundColor: "blue" }}></div>
+              <div style={{ width: "22px", height: "2px", backgroundColor: "blue" }}></div>
+            </div>
+          </div>
+
+          {/* 🔹 Barra lateral */}
           <div
             ref={sidebarRef}
+            className="sidebar"
             style={{
-              width: "200px",
+              position: "fixed",
+              top: "80px",
+              left: sidebarVisible ? "0" : "-250px",
+              width: "250px",
+              height: "100%",
               backgroundColor: "white",
-              boxShadow: "2px 0 5px rgba(0,0,0,0.1)",
-              borderRadius: "10px",
-              padding: "15px",
-              height: "fit-content",
+              boxShadow: "2px 0 5px rgba(0,0,0,0.2)",
+              transition: "left 0.3s ease",
+              zIndex: 1000,
+              padding: "20px",
             }}
           >
             <h3>Enlaces rápidos</h3>
@@ -261,26 +287,20 @@ function Muro() {
             </ul>
           </div>
 
-          {/* Centro: Muro principal */}
+          {/* 🧱 Contenido principal */}
           <div
+            className="main-content"
             style={{
-              flexGrow: 1,
+              margin: "0 auto",
               maxWidth: "700px",
               textAlign: "center",
             }}
           >
-            <h1
-              style={{
-                color: "blue",
-                cursor: "pointer",
-              }}
-              onClick={logoClick}
-            >
+            <h1 onClick={logoClick} style={{ color: "blue", cursor: "pointer" }}>
               MyBook
             </h1>
             <h2>🌎 Muro general</h2>
 
-            {/* Cuadro de publicación */}
             <form onSubmit={handlePublicar} style={{ marginBottom: "20px" }}>
               <textarea
                 value={nuevoPost}
@@ -310,7 +330,6 @@ function Muro() {
               </button>
             </form>
 
-            {/* Publicaciones */}
             <div>
               {publicaciones.map((post) => (
                 <div
@@ -327,11 +346,7 @@ function Muro() {
                     <img
                       src={post.foto}
                       alt="foto autor"
-                      style={{
-                        width: "40px",
-                        height: "40px",
-                        borderRadius: "50%",
-                      }}
+                      style={{ width: "40px", height: "40px", borderRadius: "50%" }}
                     />
                     <strong>{post.autor}</strong>
                   </div>
