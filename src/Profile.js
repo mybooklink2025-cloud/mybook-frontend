@@ -268,7 +268,7 @@ function Profile({ token }) {
       </div>
 
       {/* 🔹 Contenido original del perfil (solo desplazado hacia abajo) */}
-      <div style={{ marginTop: "120px" }}>
+      <div style={{ marginTop: "160px" }}>
         <div className="profile-top-left">
           <h1>
             <span onClick={logoClick} className="profile-logo">
