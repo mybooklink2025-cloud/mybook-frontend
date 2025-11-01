@@ -56,83 +56,54 @@ function Login({ setToken }) {
         width: "100vw",
         height: "100vh",
         overflow: "hidden",
-        backgroundColor: "#000",
+        background: "radial-gradient(circle at center, #0a0a18 0%, #000000 100%)", // 🔵 Fondo más claro
       }}
     >
-      {/* Fondo animado de polígonos azules */}
+      {/* Fondo animado */}
       <Particles
         id="tsparticles"
         init={particlesInit}
         options={{
-          background: { color: "#000000" },
+          background: { color: "transparent" },
           fpsLimit: 60,
           particles: {
             number: {
-              value: 80,
+              value: 70,
               density: { enable: true, area: 800 },
             },
             color: { value: "#00aaff" },
-            shape: {
-              type: "polygon",
-              polygon: { sides: 6 },
-            },
+            shape: { type: "polygon", polygon: { sides: 6 } },
             opacity: {
-              value: 0.6,
+              value: 0.5,
               random: true,
-              anim: {
-                enable: true,
-                speed: 0.5,
-                opacity_min: 0.3,
-                sync: false,
-              },
+              anim: { enable: true, speed: 0.6, opacity_min: 0.3 },
             },
             size: {
-              value: 3,
+              value: 2.5,
               random: true,
-              anim: {
-                enable: true,
-                speed: 2,
-                size_min: 0.5,
-                sync: false,
-              },
+              anim: { enable: true, speed: 2, size_min: 0.5 },
             },
             links: {
               enable: true,
               distance: 150,
               color: "#00aaff",
-              opacity: 0.5,
-              width: 1.2,
-              triangles: {
-                enable: true,
-                color: "#0099ff",
-                opacity: 0.05,
-              },
+              opacity: 0.4,
+              width: 1,
             },
             move: {
               enable: true,
               speed: 1.2,
-              direction: "none",
               random: true,
               straight: false,
               outModes: { default: "bounce" },
-              attract: { enable: true, rotateX: 600, rotateY: 1200 },
-            },
-            shadow: {
-              enable: true,
-              color: "#00aaff",
-              blur: 10,
             },
           },
           interactivity: {
             events: {
               onHover: { enable: true, mode: "repulse" },
-              onClick: { enable: true, mode: "push" },
               resize: true,
             },
-            modes: {
-              repulse: { distance: 120, duration: 0.4 },
-              push: { quantity: 3 },
-            },
+            modes: { repulse: { distance: 120, duration: 0.4 } },
           },
           detectRetina: true,
         }}
@@ -141,28 +112,29 @@ function Login({ setToken }) {
           top: 0,
           left: 0,
           zIndex: 0,
-          filter: "drop-shadow(0 0 8px #00aaff)",
+          opacity: 0.8, // 💡 más visibles
         }}
       />
 
-      {/* Contenido del login */}
+      {/* Cuadro del login */}
       <div
         style={{
           position: "relative",
           zIndex: 1,
+          background: "rgba(0, 0, 20, 0.8)",
+          borderRadius: "15px",
+          boxShadow: "0 0 25px rgba(0,170,255,0.4)",
+          padding: "40px",
+          width: "320px",
+          margin: "120px auto",
           textAlign: "center",
-          marginTop: "100px",
-          color: "white",
+          color: "#fff",
         }}
       >
-        <h1>
-          <a href="/" style={{ color: "#00aaff", textDecoration: "none" }}>
-            MyBook
-          </a>
-        </h1>
+        <h1 style={{ color: "#00aaff", marginBottom: "20px" }}>MyBook</h1>
         <h2>Iniciar sesión</h2>
 
-        <form onSubmit={handleLogin}>
+        <form onSubmit={handleLogin} style={{ marginTop: "20px" }}>
           <input
             type="email"
             placeholder="Correo"
@@ -170,16 +142,15 @@ function Login({ setToken }) {
             onChange={(e) => setEmail(e.target.value)}
             required
             style={{
+              width: "90%",
               padding: "10px",
-              margin: "8px",
+              margin: "10px 0",
               borderRadius: "5px",
               border: "1px solid #00aaff",
               background: "rgba(255,255,255,0.1)",
-              color: "white",
-              width: "220px",
+              color: "#fff",
             }}
           />
-          <br />
           <input
             type="password"
             placeholder="Contraseña"
@@ -187,20 +158,20 @@ function Login({ setToken }) {
             onChange={(e) => setPassword(e.target.value)}
             required
             style={{
+              width: "90%",
               padding: "10px",
-              margin: "8px",
+              margin: "10px 0",
               borderRadius: "5px",
               border: "1px solid #00aaff",
               background: "rgba(255,255,255,0.1)",
-              color: "white",
-              width: "220px",
+              color: "#fff",
             }}
           />
-          <br />
           <button
             type="submit"
             style={{
-              padding: "10px 20px",
+              width: "100%",
+              padding: "10px",
               marginTop: "10px",
               backgroundColor: "#00aaff",
               color: "#fff",
@@ -223,7 +194,7 @@ function Login({ setToken }) {
           />
         </div>
 
-        <p style={{ color: "#00aaff" }}>{message}</p>
+        <p style={{ color: "#00aaff", marginTop: "10px" }}>{message}</p>
       </div>
     </div>
   );
