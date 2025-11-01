@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { GoogleLogin } from "@react-oauth/google";
-import jwt_decode from "jwt-decode";
+import { jwtDecode } from "jwt-decode"; // ✅ corrección aquí
 import { iniciarSesion } from "./api";
 import ParticlesBackground from "./ParticlesBackground";
 
@@ -29,7 +29,7 @@ function Login({ setToken }) {
 
   const handleGoogleSuccess = (credentialResponse) => {
     try {
-      const decoded = jwt_decode(credentialResponse.credential);
+      const decoded = jwtDecode(credentialResponse.credential); // ✅ corrección aquí
       console.log("✅ Usuario Google:", decoded);
       localStorage.setItem("token", credentialResponse.credential);
       if (typeof setToken === "function")
