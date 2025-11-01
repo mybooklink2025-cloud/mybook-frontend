@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { GoogleLogin } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode";
+import jwtDecode from "jwt-decode"; // import correcto
 import { iniciarSesion } from "./api";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
@@ -10,7 +10,7 @@ function Login({ setToken }) {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
-  // Login tradicional
+  // mantengo exactamente tu lógica de login
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -29,7 +29,6 @@ function Login({ setToken }) {
     }
   };
 
-  // Google login handlers (mismos que tenías)
   const handleGoogleSuccess = (credentialResponse) => {
     try {
       const decoded = jwtDecode(credentialResponse.credential);
@@ -46,12 +45,11 @@ function Login({ setToken }) {
     setMessage("❌ Error al iniciar sesión con Google");
   };
 
-  // Inicializador de particles (loadFull)
+  // inicializador de tsparticles (useCallback)
   const particlesInit = useCallback(async (engine) => {
-    // útil para debugging si no carga
-    console.log("tsparticles init — cargando engine...", engine);
+    console.log("tsparticles init...");
     await loadFull(engine);
-    console.log("tsparticles loadFull completado");
+    console.log("tsparticles loaded");
   }, []);
 
   return (
@@ -61,48 +59,22 @@ function Login({ setToken }) {
         width: "100vw",
         height: "100vh",
         overflow: "hidden",
-        // aclaramos un poco el fondo para que los polígonos resalten
-        background: "linear-gradient(180deg, #071026 0%, #000814 100%)",
+        // Fondo ligeramente aclarado para contraste (mantiene el look oscuro)
+        background: "radial-gradient(circle at 30% 20%, #07142b 0%, #000814 60%, #000000 100%)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontFamily: "Inter, Roboto, sans-serif",
       }}
     >
-      {/* Partículas: polígono + glow */}
+      {/* Partículas (canvas absoluto en zIndex 0) */}
       <Particles
         id="tsparticles"
         init={particlesInit}
         options={{
           background: { color: "transparent" },
           fpsLimit: 60,
-          particles: {
-            number: { value: 70, density: { enable: true, area: 900 } },
-            color: { value: "#00aaff" }, // azul del logo
-            shape: {
-              type: "polygon",
-              polygon: { sides: 6 }, // hexágonos
-            },
-            size: { value: 3, random: { enable: true, minimumValue: 1 }, animation: { enable: true, speed: 3, minimumValue: 0.3 } },
-            opacity: { value: 0.7, random: { enable: true, minimumValue: 0.3 }, animation: { enable: true, speed: 0.6, minimumValue: 0.2 } },
-            links: {
-              enable: true,
-              distance: 160,
-              color: "#00aaff",
-              opacity: 0.45,
-              width: 1.2,
-            },
-            move: {
-              enable: true,
-              speed: 1.1,
-              direction: "none",
-              random: true,
-              straight: false,
-              outModes: { default: "bounce" },
-            },
-            // sombra/glow en partículas (tsparticles soporta shadow)
-            shadow: {
-              enable: true,
-              color: "#00aaff",
-              blur: 12,
-            },
-          },
+          detectRetina: true,
           interactivity: {
             events: {
               onHover: { enable: true, mode: "repulse" },
@@ -110,42 +82,85 @@ function Login({ setToken }) {
               resize: true,
             },
             modes: {
-              repulse: { distance: 120, duration: 0.4 },
+              repulse: { distance: 140, duration: 0.4 },
               push: { quantity: 3 },
             },
           },
-          detectRetina: true,
+          particles: {
+            number: { value: 72, density: { enable: true, area: 900 } },
+            color: { value: "#0099FF" },         // azul fuerte
+            shape: { type: "polygon", polygon: { sides: 6 } }, // hexágonos
+            opacity: {
+              value: 0.8,
+              random: { enable: true, minimumValue: 0.35 },
+              anim: { enable: true, speed: 0.7, minimumValue: 0.25 },
+            },
+            size: {
+              value: { min: 1.5, max: 4 },
+              random: true,
+              animation: { enable: true, speed: 2, minimumValue: 0.5 },
+            },
+            links: {
+              enable: true,
+              distance: 160,
+              color: "#00b3ff",
+              opacity: 0.55,
+              width: 1.3,
+            },
+            move: {
+              enable: true,
+              speed: 1.06,
+              direction: "none",
+              random: true,
+              straight: false,
+              outModes: { default: "bounce" },
+            },
+            // shadow/neon glow por partícula
+            shadow: {
+              enable: true,
+              color: "#00b3ff",
+              blur: 14,
+            },
+            // triangles (ligero) para emular red de polígonos
+            // nota: triangles a veces requiere soporte; dejamos básico arriba
+          },
         }}
         style={{
           position: "absolute",
-          top: 0,
-          left: 0,
+          inset: 0,
           zIndex: 0,
-          // drop-shadow global para realzar el efecto neón
-          filter: "drop-shadow(0 0 10px rgba(0,170,255,0.35))",
-          opacity: 1,
+          // refuerzo visual neón global sin romper layout
+          filter: "drop-shadow(0 0 12px rgba(0,179,255,0.18))",
+          opacity: 0.96,
         }}
       />
 
-      {/* Cuadro del login — igual que antes, centrado y sin cambiar lógica */}
+      {/* Contenedor del cuadro (zIndex 1) EXACTO como en tu imagen:
+          - Título MyBook arriba
+          - "Iniciar sesión"
+          - Inputs (correo, contraseña)
+          - Botón Ingresar
+          - GoogleAuth (debajo), todo dentro del mismo cuadro */}
       <div
         style={{
           position: "relative",
           zIndex: 1,
-          background: "rgba(2,6,20,0.72)",
-          borderRadius: "12px",
-          boxShadow: "0 8px 30px rgba(0,170,255,0.14)",
-          padding: "36px",
-          width: "320px",
-          margin: "10vh auto",
+          width: 360,
+          maxWidth: "92%",
+          background: "linear-gradient(180deg, rgba(2,10,28,0.88), rgba(2,6,20,0.76))",
+          borderRadius: 14,
+          padding: "34px 28px",
+          boxShadow: "0 12px 40px rgba(0,170,255,0.14)",
+          border: "1px solid rgba(0,170,255,0.06)",
           textAlign: "center",
           color: "#fff",
         }}
       >
-        <h1 style={{ color: "#00aaff", marginBottom: "10px" }}>MyBook</h1>
-        <h2 style={{ marginBottom: "18px" }}>Iniciar sesión</h2>
+        <h1 style={{ margin: 0, marginBottom: 6, color: "#00b3ff", fontSize: 28 }}>MyBook</h1>
 
-        <form onSubmit={handleLogin}>
+        <h2 style={{ marginTop: 6, marginBottom: 18, fontSize: 18, fontWeight: 500 }}>Iniciar sesión</h2>
+
+        <form onSubmit={handleLogin} style={{ display: "block" }}>
           <input
             type="email"
             placeholder="Correo"
@@ -153,16 +168,18 @@ function Login({ setToken }) {
             onChange={(e) => setEmail(e.target.value)}
             required
             style={{
-              width: "92%",
-              padding: "10px",
+              width: "100%",
+              padding: "12px 10px",
               margin: "8px 0",
-              borderRadius: "6px",
-              border: "1px solid rgba(0,170,255,0.25)",
+              borderRadius: 8,
+              border: "1px solid rgba(0,179,255,0.12)",
               background: "rgba(255,255,255,0.03)",
               color: "#fff",
+              fontSize: 14,
+              outline: "none",
             }}
           />
-          <br />
+
           <input
             type="password"
             placeholder="Contraseña"
@@ -170,41 +187,45 @@ function Login({ setToken }) {
             onChange={(e) => setPassword(e.target.value)}
             required
             style={{
-              width: "92%",
-              padding: "10px",
-              margin: "8px 0",
-              borderRadius: "6px",
-              border: "1px solid rgba(0,170,255,0.25)",
+              width: "100%",
+              padding: "12px 10px",
+              margin: "10px 0 6px 0",
+              borderRadius: 8,
+              border: "1px solid rgba(0,179,255,0.12)",
               background: "rgba(255,255,255,0.03)",
               color: "#fff",
+              fontSize: 14,
+              outline: "none",
             }}
           />
-          <br />
+
           <button
             type="submit"
             style={{
               width: "100%",
-              padding: "10px",
-              marginTop: "12px",
-              backgroundColor: "#00aaff",
-              color: "#fff",
+              padding: "12px 14px",
+              marginTop: 10,
+              borderRadius: 8,
+              background: "linear-gradient(90deg, #00b3ff, #0099ff)",
+              color: "#001018",
+              fontWeight: 700,
               border: "none",
-              borderRadius: "6px",
               cursor: "pointer",
-              fontWeight: 600,
+              boxShadow: "0 6px 18px rgba(0,179,255,0.18)",
             }}
-            onMouseOver={(e) => (e.target.style.backgroundColor = "#0099ff")}
-            onMouseOut={(e) => (e.target.style.backgroundColor = "#00aaff")}
+            onMouseOver={(e) => (e.currentTarget.style.opacity = "0.95")}
+            onMouseOut={(e) => (e.currentTarget.style.opacity = "1")}
           >
             Ingresar
           </button>
         </form>
 
-        <div style={{ marginTop: "18px" }}>
+        {/* Google Auth exactamente abajo dentro del mismo cuadro */}
+        <div style={{ marginTop: 18 }}>
           <GoogleLogin onSuccess={handleGoogleSuccess} onError={handleGoogleError} />
         </div>
 
-        <p style={{ color: "#00aaff", marginTop: "12px" }}>{message}</p>
+        <p style={{ color: "#00b3ff", marginTop: 14 }}>{message}</p>
       </div>
     </div>
   );
