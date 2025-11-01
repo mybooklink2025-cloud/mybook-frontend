@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import { iniciarSesion } from "./api";
@@ -10,6 +10,7 @@ function Login({ setToken }) {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
+  // Login tradicional
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -28,13 +29,13 @@ function Login({ setToken }) {
     }
   };
 
+  // Google login handlers (mismos que tenías)
   const handleGoogleSuccess = (credentialResponse) => {
     try {
       const decoded = jwtDecode(credentialResponse.credential);
       console.log("✅ Usuario Google:", decoded);
       localStorage.setItem("token", credentialResponse.credential);
-      if (typeof setToken === "function")
-        setToken(credentialResponse.credential);
+      if (typeof setToken === "function") setToken(credentialResponse.credential);
       window.location.replace("/muro");
     } catch (err) {
       console.error("Error decodificando token:", err);
@@ -45,9 +46,13 @@ function Login({ setToken }) {
     setMessage("❌ Error al iniciar sesión con Google");
   };
 
-  const particlesInit = async (engine) => {
+  // Inicializador de particles (loadFull)
+  const particlesInit = useCallback(async (engine) => {
+    // útil para debugging si no carga
+    console.log("tsparticles init — cargando engine...", engine);
     await loadFull(engine);
-  };
+    console.log("tsparticles loadFull completado");
+  }, []);
 
   return (
     <div
@@ -56,10 +61,11 @@ function Login({ setToken }) {
         width: "100vw",
         height: "100vh",
         overflow: "hidden",
-        background: "radial-gradient(circle at center, #0a0a18 0%, #000000 100%)", // 🔵 Fondo más claro
+        // aclaramos un poco el fondo para que los polígonos resalten
+        background: "linear-gradient(180deg, #071026 0%, #000814 100%)",
       }}
     >
-      {/* Fondo animado */}
+      {/* Partículas: polígono + glow */}
       <Particles
         id="tsparticles"
         init={particlesInit}
@@ -67,43 +73,46 @@ function Login({ setToken }) {
           background: { color: "transparent" },
           fpsLimit: 60,
           particles: {
-            number: {
-              value: 70,
-              density: { enable: true, area: 800 },
+            number: { value: 70, density: { enable: true, area: 900 } },
+            color: { value: "#00aaff" }, // azul del logo
+            shape: {
+              type: "polygon",
+              polygon: { sides: 6 }, // hexágonos
             },
-            color: { value: "#00aaff" },
-            shape: { type: "polygon", polygon: { sides: 6 } },
-            opacity: {
-              value: 0.5,
-              random: true,
-              anim: { enable: true, speed: 0.6, opacity_min: 0.3 },
-            },
-            size: {
-              value: 2.5,
-              random: true,
-              anim: { enable: true, speed: 2, size_min: 0.5 },
-            },
+            size: { value: 3, random: { enable: true, minimumValue: 1 }, animation: { enable: true, speed: 3, minimumValue: 0.3 } },
+            opacity: { value: 0.7, random: { enable: true, minimumValue: 0.3 }, animation: { enable: true, speed: 0.6, minimumValue: 0.2 } },
             links: {
               enable: true,
-              distance: 150,
+              distance: 160,
               color: "#00aaff",
-              opacity: 0.4,
-              width: 1,
+              opacity: 0.45,
+              width: 1.2,
             },
             move: {
               enable: true,
-              speed: 1.2,
+              speed: 1.1,
+              direction: "none",
               random: true,
               straight: false,
               outModes: { default: "bounce" },
+            },
+            // sombra/glow en partículas (tsparticles soporta shadow)
+            shadow: {
+              enable: true,
+              color: "#00aaff",
+              blur: 12,
             },
           },
           interactivity: {
             events: {
               onHover: { enable: true, mode: "repulse" },
+              onClick: { enable: true, mode: "push" },
               resize: true,
             },
-            modes: { repulse: { distance: 120, duration: 0.4 } },
+            modes: {
+              repulse: { distance: 120, duration: 0.4 },
+              push: { quantity: 3 },
+            },
           },
           detectRetina: true,
         }}
@@ -112,29 +121,31 @@ function Login({ setToken }) {
           top: 0,
           left: 0,
           zIndex: 0,
-          opacity: 0.8, // 💡 más visibles
+          // drop-shadow global para realzar el efecto neón
+          filter: "drop-shadow(0 0 10px rgba(0,170,255,0.35))",
+          opacity: 1,
         }}
       />
 
-      {/* Cuadro del login */}
+      {/* Cuadro del login — igual que antes, centrado y sin cambiar lógica */}
       <div
         style={{
           position: "relative",
           zIndex: 1,
-          background: "rgba(0, 0, 20, 0.8)",
-          borderRadius: "15px",
-          boxShadow: "0 0 25px rgba(0,170,255,0.4)",
-          padding: "40px",
+          background: "rgba(2,6,20,0.72)",
+          borderRadius: "12px",
+          boxShadow: "0 8px 30px rgba(0,170,255,0.14)",
+          padding: "36px",
           width: "320px",
-          margin: "120px auto",
+          margin: "10vh auto",
           textAlign: "center",
           color: "#fff",
         }}
       >
-        <h1 style={{ color: "#00aaff", marginBottom: "20px" }}>MyBook</h1>
-        <h2>Iniciar sesión</h2>
+        <h1 style={{ color: "#00aaff", marginBottom: "10px" }}>MyBook</h1>
+        <h2 style={{ marginBottom: "18px" }}>Iniciar sesión</h2>
 
-        <form onSubmit={handleLogin} style={{ marginTop: "20px" }}>
+        <form onSubmit={handleLogin}>
           <input
             type="email"
             placeholder="Correo"
@@ -142,15 +153,16 @@ function Login({ setToken }) {
             onChange={(e) => setEmail(e.target.value)}
             required
             style={{
-              width: "90%",
+              width: "92%",
               padding: "10px",
-              margin: "10px 0",
-              borderRadius: "5px",
-              border: "1px solid #00aaff",
-              background: "rgba(255,255,255,0.1)",
+              margin: "8px 0",
+              borderRadius: "6px",
+              border: "1px solid rgba(0,170,255,0.25)",
+              background: "rgba(255,255,255,0.03)",
               color: "#fff",
             }}
           />
+          <br />
           <input
             type="password"
             placeholder="Contraseña"
@@ -158,27 +170,28 @@ function Login({ setToken }) {
             onChange={(e) => setPassword(e.target.value)}
             required
             style={{
-              width: "90%",
+              width: "92%",
               padding: "10px",
-              margin: "10px 0",
-              borderRadius: "5px",
-              border: "1px solid #00aaff",
-              background: "rgba(255,255,255,0.1)",
+              margin: "8px 0",
+              borderRadius: "6px",
+              border: "1px solid rgba(0,170,255,0.25)",
+              background: "rgba(255,255,255,0.03)",
               color: "#fff",
             }}
           />
+          <br />
           <button
             type="submit"
             style={{
               width: "100%",
               padding: "10px",
-              marginTop: "10px",
+              marginTop: "12px",
               backgroundColor: "#00aaff",
               color: "#fff",
               border: "none",
-              borderRadius: "5px",
+              borderRadius: "6px",
               cursor: "pointer",
-              transition: "0.3s",
+              fontWeight: 600,
             }}
             onMouseOver={(e) => (e.target.style.backgroundColor = "#0099ff")}
             onMouseOut={(e) => (e.target.style.backgroundColor = "#00aaff")}
@@ -187,14 +200,11 @@ function Login({ setToken }) {
           </button>
         </form>
 
-        <div style={{ marginTop: "20px" }}>
-          <GoogleLogin
-            onSuccess={handleGoogleSuccess}
-            onError={handleGoogleError}
-          />
+        <div style={{ marginTop: "18px" }}>
+          <GoogleLogin onSuccess={handleGoogleSuccess} onError={handleGoogleError} />
         </div>
 
-        <p style={{ color: "#00aaff", marginTop: "10px" }}>{message}</p>
+        <p style={{ color: "#00aaff", marginTop: "12px" }}>{message}</p>
       </div>
     </div>
   );
