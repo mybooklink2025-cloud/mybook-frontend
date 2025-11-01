@@ -51,13 +51,60 @@ function Login({ setToken }) {
 
   return (
     <div style={{ position: "relative", height: "100vh", overflow: "hidden", background: "#000" }}>
-      {/* 🔹 Fondo de polígonos tipo “Polygons Login Form” */}
+      {/* 🔹 Fondo animado de polígonos azules */}
       <Particles
         id="tsparticles"
         init={particlesInit}
         options={{
-          background: { color: "#000" },
+          background: { color: "#000000" },
           fpsLimit: 60,
+          particles: {
+            number: {
+              value: 80,
+              density: { enable: true, area: 800 },
+            },
+            color: { value: "#00aaff" }, // 🔵 Azul MyBook
+            shape: {
+              type: "polygon",
+              polygon: { sides: 6 }, // 🔹 Hexágonos
+            },
+            opacity: {
+              value: 0.6,
+              random: true,
+              anim: {
+                enable: true,
+                speed: 0.5,
+                opacity_min: 0.3,
+                sync: false,
+              },
+            },
+            size: {
+              value: 3,
+              random: true,
+              anim: {
+                enable: true,
+                speed: 2,
+                size_min: 0.5,
+                sync: false,
+              },
+            },
+            links: {
+              enable: true,
+              distance: 150,
+              color: "#00aaff",
+              opacity: 0.4,
+              width: 1,
+            },
+            move: {
+              enable: true,
+              speed: 1.2,
+              direction: "none",
+              random: true,
+              straight: false,
+              outModes: { default: "bounce" },
+              attract: { enable: true, rotateX: 600, rotateY: 1200 },
+            },
+          },
           interactivity: {
             events: {
               onHover: { enable: true, mode: "repulse" },
@@ -66,34 +113,8 @@ function Login({ setToken }) {
             },
             modes: {
               repulse: { distance: 120, duration: 0.4 },
-              push: { quantity: 2 },
+              push: { quantity: 3 },
             },
-          },
-          particles: {
-            color: { value: "#00aaff" }, // 🔵 Azul MyBook
-            links: {
-              color: "#00aaff",
-              distance: 150,
-              enable: true,
-              opacity: 0.3,
-              width: 1,
-            },
-            collisions: { enable: false },
-            move: {
-              direction: "none",
-              enable: true,
-              outModes: "bounce",
-              random: false,
-              speed: 1,
-              straight: false,
-            },
-            number: {
-              density: { enable: true, area: 800 },
-              value: 60,
-            },
-            opacity: { value: 0.3 },
-            shape: { type: "polygon" },
-            size: { value: { min: 1, max: 3 } },
           },
           detectRetina: true,
         }}
