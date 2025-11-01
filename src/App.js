@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import { GoogleOAuthProvider } from "@react-oauth/google"; // ✅ Import obligatorio
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import Login from "./Login";
 import Register from "./Register";
 import Profile from "./Profile";
 import Contactanos from "./Contactanos";
 import Muro from "./Muro";
-import Chat from "./Chat"; // ✅ Importamos el chat
+import Chat from "./Chat";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token") || "");
@@ -17,29 +17,20 @@ function App() {
   };
 
   return (
-    // ✅ Todo el sistema envuelto dentro del proveedor de Google
     <GoogleOAuthProvider clientId="20434049090-o87fehjhstkngj10389ov7bad02sb1in.apps.googleusercontent.com">
       <Router>
         <Routes>
-          {/* ✅ Página de inicio: login embebido */}
-          <Route 
-            path="/" 
+          <Route
+            path="/"
             element={
-              <div style={{ textAlign: "center", marginTop: "50px" }}>
-                <h1 style={{ color: "blue" }}>MyBook</h1>
-                <nav style={{ marginBottom: "20px" }}>
-                  <a href="/">Iniciar sesión</a> |{" "}
-                  <a href="/register">Registrarse</a> |{" "}
-                  <a href="/contactanos">Contáctanos</a>
-                </nav>
+              <div style={{ textAlign: "center", position: "relative", height: "100vh", overflow: "hidden" }}>
                 <Login setToken={handleLogin} />
               </div>
-            } 
+            }
           />
 
-          {/* ✅ Página de registro */}
-          <Route 
-            path="/register" 
+          <Route
+            path="/register"
             element={
               <div style={{ textAlign: "center", marginTop: "50px" }}>
                 <h1 style={{ color: "blue" }}>MyBook</h1>
@@ -50,28 +41,24 @@ function App() {
                 </nav>
                 <Register onRegister={handleLogin} />
               </div>
-            } 
+            }
           />
 
-          {/* ✅ Perfil: protegido con token */}
-          <Route 
-            path="/profile" 
-            element={token ? <Profile token={token} /> : <Navigate to="/" />} 
+          <Route
+            path="/profile"
+            element={token ? <Profile token={token} /> : <Navigate to="/" />}
           />
 
-          {/* ✅ Muro general: protegido */}
-          <Route 
+          <Route
             path="/muro"
             element={token ? <Muro /> : <Navigate to="/" />}
           />
 
-          {/* ✅ Chat entre usuarios: protegido */}
           <Route
             path="/chat"
             element={token ? <Chat /> : <Navigate to="/" />}
           />
 
-          {/* ✅ Contacto */}
           <Route path="/contactanos" element={<Contactanos />} />
         </Routes>
       </Router>
