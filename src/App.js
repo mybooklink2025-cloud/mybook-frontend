@@ -20,15 +20,17 @@ function App() {
     <GoogleOAuthProvider clientId="20434049090-o87fehjhstkngj10389ov7bad02sb1in.apps.googleusercontent.com">
       <Router>
         <Routes>
+          {/* ✅ Página de inicio (fondo completo con login animado) */}
           <Route
             path="/"
             element={
-              <div style={{ textAlign: "center", position: "relative", height: "100vh", overflow: "hidden" }}>
+              <div style={{ width: "100vw", height: "100vh", overflow: "hidden" }}>
                 <Login setToken={handleLogin} />
               </div>
             }
           />
 
+          {/* ✅ Página de registro */}
           <Route
             path="/register"
             element={
@@ -44,21 +46,25 @@ function App() {
             }
           />
 
+          {/* ✅ Perfil protegido */}
           <Route
             path="/profile"
             element={token ? <Profile token={token} /> : <Navigate to="/" />}
           />
 
+          {/* ✅ Muro protegido */}
           <Route
             path="/muro"
             element={token ? <Muro /> : <Navigate to="/" />}
           />
 
+          {/* ✅ Chat protegido */}
           <Route
             path="/chat"
             element={token ? <Chat /> : <Navigate to="/" />}
           />
 
+          {/* ✅ Contacto */}
           <Route path="/contactanos" element={<Contactanos />} />
         </Routes>
       </Router>
