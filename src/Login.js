@@ -1,7 +1,7 @@
-// ✅ Login.js — botón Google con autenticación real (sin texto)
+// ✅ Login.js — misma autenticación, botón Google solo con la “G”
 import React, { useState, useEffect, useRef } from "react";
+import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
-import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
 import { iniciarSesion } from "./api";
 
 function Login({ setToken }) {
@@ -10,9 +10,7 @@ function Login({ setToken }) {
   const [message, setMessage] = useState("");
   const canvasRef = useRef(null);
 
-  // =============================
-  // 🎨 FONDO CON POLÍGONOS
-  // =============================
+  // 🎨 Fondo animado (polígonos)
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
@@ -103,9 +101,7 @@ function Login({ setToken }) {
     return () => window.removeEventListener("resize", resize);
   }, []);
 
-  // =============================
-  // 🔐 LOGIN NORMAL
-  // =============================
+  // 🔐 Login manual
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -122,34 +118,24 @@ function Login({ setToken }) {
     }
   };
 
-  // =============================
-  // 🔐 LOGIN CON GOOGLE
-  // =============================
-  const login = useGoogleLogin({
-    onSuccess: async (credentialResponse) => {
-      try {
-        const decoded = jwtDecode(credentialResponse.credential);
-        const userData = {
-          email: decoded.email,
-          name: decoded.name,
-          picture: decoded.picture,
-        };
-        // Guarda token o llama a tu backend si lo necesitas
-        localStorage.setItem("googleUser", JSON.stringify(userData));
-        if (typeof setToken === "function") setToken(credentialResponse.credential);
-        window.location.replace("/muro");
-      } catch (err) {
-        console.error("Error decodificando token:", err);
-      }
-    },
-    onError: () => {
-      setMessage("❌ Error al iniciar sesión con Google");
-    },
-  });
+  // 🔐 Login con Google (original)
+  const handleGoogleSuccess = (credentialResponse) => {
+    try {
+      const decoded = jwtDecode(credentialResponse.credential);
+      console.log("✅ Usuario Google:", decoded);
+      localStorage.setItem("token", credentialResponse.credential);
+      if (typeof setToken === "function")
+        setToken(credentialResponse.credential);
+      window.location.replace("/muro");
+    } catch (err) {
+      console.error("Error decodificando token:", err);
+    }
+  };
 
-  // =============================
-  // 💻 INTERFAZ
-  // =============================
+  const handleGoogleError = () => {
+    setMessage("❌ Error al iniciar sesión con Google");
+  };
+
   return (
     <div
       style={{
@@ -236,68 +222,29 @@ function Login({ setToken }) {
           </button>
         </form>
 
-        {/* ✅ BOTÓN GOOGLE CON G REAL Y LOGIN FUNCIONAL */}
-        <div
-          style={{
-            marginTop: "20px",
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <button
-            onClick={() => login()}
-            aria-label="Iniciar sesión con Google"
-            style={{
-              backgroundColor: "white",
-              border: "none",
-              borderRadius: "50%",
-              width: "48px",
-              height: "48px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              boxShadow: "0 0 15px rgba(0,170,255,0.3)",
-              transition: "transform 0.15s ease, box-shadow 0.15s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "scale(1.12)";
-              e.currentTarget.style.boxShadow =
-                "0 0 25px rgba(0,200,255,0.45)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "scale(1)";
-              e.currentTarget.style.boxShadow =
-                "0 0 15px rgba(0,170,255,0.3)";
-            }}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 48 48"
-              style={{ width: "22px", height: "22px", display: "block" }}
-            >
-              <path
-                fill="#EA4335"
-                d="M24 9.5c3.94 0 6.61 1.69 8.12 3.1l5.9-5.9C34.3 3.42 29.62 1.5 24 1.5 14.94 1.5 7.12 7.16 3.72 15.08l6.84 5.32C11.8 14.52 17.4 9.5 24 9.5z"
-              />
-              <path
-                fill="#34A853"
-                d="M46.5 24.5c0-1.57-.14-3.07-.41-4.5H24v9h12.65c-.55 2.9-2.18 5.36-4.65 7.03l7.16 5.55C43.5 37.57 46.5 31.54 46.5 24.5z"
-              />
-              <path
-                fill="#4A90E2"
-                d="M10.56 28.91a14.41 14.41 0 0 1-.76-4.41c0-1.53.27-3.01.76-4.41l-6.84-5.32A22.96 22.96 0 0 0 1.5 24.5c0 3.62.87 7.04 2.42 10.04l6.64-5.63z"
-              />
-              <path
-                fill="#FBBC05"
-                d="M24 46.5c5.62 0 10.34-1.86 13.78-5.04l-7.16-5.55C28.78 37.35 26.49 38 24 38c-6.6 0-12.2-5.02-13.44-11.9l-6.84 5.32C7.12 40.84 14.94 46.5 24 46.5z"
-              />
-            </svg>
-          </button>
+        {/* ✅ Botón Google original, pero con solo la “G” visible */}
+        <div style={{ marginTop: "20px", display: "flex", justifyContent: "center" }}>
+          <div className="google-button-wrapper">
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={handleGoogleError}
+              theme="filled_blue"
+              shape="circle"
+            />
+          </div>
         </div>
 
         <p style={{ color: "#00aaff", marginTop: "15px" }}>{message}</p>
       </div>
+
+      {/* 🔧 CSS inyectado para ocultar texto y dejar solo el logo */}
+      <style>{`
+        .google-button-wrapper iframe {
+          border-radius: 50% !important;
+          width: 48px !important;
+          height: 48px !important;
+        }
+      `}</style>
     </div>
   );
 }
