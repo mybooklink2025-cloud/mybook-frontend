@@ -1,3 +1,4 @@
+// ✅ Login.js — misma autenticación, botón Google solo con la “G”
 import React, { useState, useEffect, useRef } from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
@@ -9,6 +10,7 @@ function Login({ setToken }) {
   const [message, setMessage] = useState("");
   const canvasRef = useRef(null);
 
+  // 🎨 Fondo animado (polígonos)
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
@@ -99,6 +101,7 @@ function Login({ setToken }) {
     return () => window.removeEventListener("resize", resize);
   }, []);
 
+  // 🔐 Login manual
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -115,6 +118,7 @@ function Login({ setToken }) {
     }
   };
 
+  // 🔐 Login con Google (original)
   const handleGoogleSuccess = (credentialResponse) => {
     try {
       const decoded = jwtDecode(credentialResponse.credential);
@@ -218,17 +222,29 @@ function Login({ setToken }) {
           </button>
         </form>
 
+        {/* ✅ Botón Google original, pero con solo la “G” visible */}
         <div style={{ marginTop: "20px", display: "flex", justifyContent: "center" }}>
-          <GoogleLogin
-            onSuccess={handleGoogleSuccess}
-            onError={handleGoogleError}
-            theme="filled_blue"
-            shape="circle"
-          />
+          <div className="google-button-wrapper">
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={handleGoogleError}
+              theme="filled_blue"
+              shape="circle"
+            />
+          </div>
         </div>
 
         <p style={{ color: "#00aaff", marginTop: "15px" }}>{message}</p>
       </div>
+
+      {/* 🔧 CSS inyectado para ocultar texto y dejar solo el logo */}
+      <style>{`
+        .google-button-wrapper iframe {
+          border-radius: 50% !important;
+          width: 48px !important;
+          height: 48px !important;
+        }
+      `}</style>
     </div>
   );
 }
