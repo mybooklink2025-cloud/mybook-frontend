@@ -239,10 +239,10 @@ function Login({ setToken }) {
           <GoogleLogin
             onSuccess={handleGoogleSuccess}
             onError={handleGoogleError}
-            shape="circle"
             theme="outline"
-            size="large"
-            text="icon"            
+            shape="circle"
+            text="icon"
+            size="large"         
           />
         </div>
 
