@@ -241,10 +241,8 @@ function Login({ setToken }) {
             onError={handleGoogleError}
             shape="circle"
             theme="outline"
-            size="medium"
-            text="icon"
-            logo_alignment="center"
-            width="auto"
+            size="large"
+            text="icon"            
           />
         </div>
 
