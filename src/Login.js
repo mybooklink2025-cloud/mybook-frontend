@@ -1,18 +1,32 @@
-// ✅ Login.js — versión con fondo azul-negro brillante y botón solo con la “G”
+// src/Login.js
 import React, { useState, useEffect, useRef } from "react";
-import { GoogleLogin } from "@react-oauth/google";
+import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import { iniciarSesion } from "./api";
 
-function Login({ setToken }) {
+/**
+ * Login.js final:
+ * - Fondo con polígonos (igual que tenías).
+ * - Botón propio SOLO con la imagen de la "G" (sin texto).
+ * - Lanza useGoogleLogin para autenticación y guarda token.
+ * - Compatible con tokenResponse.credential o tokenResponse.access_token.
+ *
+ * Reemplaza TODO este archivo y ejecuta npm start.
+ * Asegurate de tener REACT_APP_GOOGLE_CLIENT_ID en .env o en variables de Vercel.
+ */
+
+function LoginContent({ setToken }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const canvasRef = useRef(null);
 
-  // 🎨 Fondo con polígonos brillantes
+  // ----------------------
+  // Fondo de polígonos (igual que antes)
+  // ----------------------
   useEffect(() => {
     const canvas = canvasRef.current;
+    if (!canvas) return;
     const ctx = canvas.getContext("2d");
     let w, h;
     let particles = [];
@@ -51,9 +65,7 @@ function Login({ setToken }) {
     const init = () => {
       particles = [];
       for (let i = 0; i < 90; i++) {
-        particles.push(
-          new Particle(Math.random() * w, Math.random() * h)
-        );
+        particles.push(new Particle(Math.random() * w, Math.random() * h));
       }
     };
 
@@ -104,7 +116,9 @@ function Login({ setToken }) {
     return () => window.removeEventListener("resize", resize);
   }, []);
 
-  // 🔐 Login normal
+  // ----------------------
+  // Login normal (email/password)
+  // ----------------------
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -123,24 +137,53 @@ function Login({ setToken }) {
     }
   };
 
-  const handleGoogleSuccess = (credentialResponse) => {
-    try {
-      const decoded = jwtDecode(credentialResponse.credential);
-      console.log("✅ Usuario Google:", decoded);
-      localStorage.setItem("token", credentialResponse.credential);
-      if (typeof setToken === "function")
-        setToken(credentialResponse.credential);
-      window.location.replace("/muro");
-    } catch (err) {
-      console.error("Error decodificando token:", err);
-    }
-  };
+  // ----------------------
+  // Google login usando useGoogleLogin -> botón propio con img G
+  // ----------------------
+  const googleLogin = useGoogleLogin({
+    onSuccess: (tokenResponse) => {
+      // tokenResponse puede contener credential (one-tap) o access_token (oauth)
+      let tokenToStore = null;
+      try {
+        if (tokenResponse && typeof tokenResponse === "object") {
+          if (tokenResponse.credential) {
+            tokenToStore = tokenResponse.credential;
+            // opcional: decodificar si querés user info
+            try {
+              const decoded = jwtDecode(tokenResponse.credential);
+              console.log("Google decoded:", decoded);
+            } catch (e) { /* ignore decode errors */ }
+          } else if (tokenResponse.access_token) {
+            tokenToStore = tokenResponse.access_token;
+          } else {
+            // a veces la función retorna el token directamente
+            tokenToStore = tokenResponse;
+          }
+        } else {
+          tokenToStore = tokenResponse;
+        }
 
-  const handleGoogleError = () => {
-    setMessage("❌ Error al iniciar sesión con Google");
-  };
+        if (tokenToStore) {
+          localStorage.setItem("token", tokenToStore);
+          if (typeof setToken === "function") setToken(tokenToStore);
+          window.location.replace("/muro");
+        } else {
+          setMessage("❌ No se obtuvo token de Google");
+        }
+      } catch (err) {
+        console.error("Error procesando respuesta Google:", err);
+        setMessage("❌ Error al procesar login Google");
+      }
+    },
+    onError: () => {
+      setMessage("❌ Error al iniciar sesión con Google");
+    },
+    flow: "implicit", // funciona para popup
+  });
 
-  // 🧩 Interfaz visual
+  // ----------------------
+  // UI
+  // ----------------------
   return (
     <div
       style={{
@@ -227,34 +270,40 @@ function Login({ setToken }) {
           </button>
         </form>
 
-        {/* 🔹 Botón de Google — solo la G */}
-        <div
-          style={{
-            marginTop: "20px",
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <div
+        {/* --- BOTÓN PROPIO SOLO LA "G" --- */}
+        <div style={{ marginTop: "20px", display: "flex", justifyContent: "center" }}>
+          <button
+            onClick={() => googleLogin()}
+            aria-label="Iniciar sesión con Google"
             style={{
-              width: "45px",
-              height: "45px",
-              overflow: "hidden",
+              backgroundColor: "white",
+              border: "none",
               borderRadius: "50%",
+              width: "48px",
+              height: "48px",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              cursor: "pointer",
+              boxShadow: "0 0 15px rgba(0,170,255,0.3)",
+              transition: "transform 0.15s ease, box-shadow 0.15s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = "scale(1.12)";
+              e.currentTarget.style.boxShadow = "0 0 25px rgba(0,200,255,0.45)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "scale(1)";
+              e.currentTarget.style.boxShadow = "0 0 15px rgba(0,170,255,0.3)";
             }}
           >
-            <GoogleLogin
-              onSuccess={handleGoogleSuccess}
-              onError={handleGoogleError}
-              theme="outline"
-              shape="circle"
-              size="large"
-              width="45"
+            {/* Imagen oficial de la G (SVG simple) */}
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
+              alt="Google"
+              style={{ width: "22px", height: "22px", display: "block" }}
             />
-          </div>
+          </button>
         </div>
 
         <p style={{ color: "#00aaff", marginTop: "15px" }}>{message}</p>
@@ -263,4 +312,12 @@ function Login({ setToken }) {
   );
 }
 
-export default Login;
+// Wrap with provider so it works anywhere (use your existing client id)
+export default function Login({ setToken }) {
+  const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID || "REPLACE_WITH_YOUR_CLIENT_ID";
+  return (
+    <GoogleOAuthProvider clientId={clientId}>
+      <LoginContent setToken={setToken} />
+    </GoogleOAuthProvider>
+  );
+}
