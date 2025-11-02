@@ -1,6 +1,5 @@
-// ✅ Login.js — misma autenticación, botón Google solo con la “G”
 import React, { useState, useEffect, useRef } from "react";
-import { GoogleLogin } from "@react-oauth/google";
+import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import { iniciarSesion } from "./api";
 
@@ -118,7 +117,7 @@ function Login({ setToken }) {
     }
   };
 
-  // 🔐 Login con Google (original)
+  // 🔐 Login con Google
   const handleGoogleSuccess = (credentialResponse) => {
     try {
       const decoded = jwtDecode(credentialResponse.credential);
@@ -135,6 +134,12 @@ function Login({ setToken }) {
   const handleGoogleError = () => {
     setMessage("❌ Error al iniciar sesión con Google");
   };
+
+  // ✅ Botón de Google con solo la “G” y efectos visuales
+  const googleLogin = useGoogleLogin({
+    onSuccess: handleGoogleSuccess,
+    onError: handleGoogleError,
+  });
 
   return (
     <div
@@ -222,7 +227,7 @@ function Login({ setToken }) {
           </button>
         </form>
 
-        {/* ✅ BOTÓN GOOGLE CON G REAL Y LOGIN FUNCIONAL */}
+        {/* 🔥 Botón Google con “G” y efecto visual */}
         <div
           style={{
             marginTop: "20px",
@@ -231,7 +236,7 @@ function Login({ setToken }) {
           }}
         >
           <button
-            onClick={() => login()}
+            onClick={() => googleLogin()}
             aria-label="Iniciar sesión con Google"
             style={{
               backgroundColor: "white",
@@ -289,4 +294,3 @@ function Login({ setToken }) {
 }
 
 export default Login;
-
