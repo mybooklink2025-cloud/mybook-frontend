@@ -53,9 +53,7 @@ function Login({ setToken }) {
     const init = () => {
       particles = [];
       for (let i = 0; i < 90; i++) {
-        particles.push(
-          new Particle(Math.random() * w, Math.random() * h)
-        );
+        particles.push(new Particle(Math.random() * w, Math.random() * h));
       }
     };
 
@@ -87,9 +85,9 @@ function Login({ setToken }) {
         h / 2,
         Math.max(w, h)
       );
-      g.addColorStop(0, "#0d1b3a");   // azul oscuro
+      g.addColorStop(0, "#0d1b3a"); // azul oscuro
       g.addColorStop(0.5, "#081326"); // intermedio
-      g.addColorStop(1, "#01060f");   // casi negro
+      g.addColorStop(1, "#01060f"); // casi negro
       ctx.fillStyle = g;
       ctx.fillRect(0, 0, w, h);
 
@@ -236,11 +234,17 @@ function Login({ setToken }) {
           </button>
         </form>
 
-        {/* 🔹 Botón de Google */}
+        {/* 🔹 Botón de Google (solo logo) */}
         <div style={{ marginTop: "20px" }}>
           <GoogleLogin
             onSuccess={handleGoogleSuccess}
             onError={handleGoogleError}
+            shape="circle"
+            theme="outline"
+            size="medium"
+            text="signin_with"
+            logo_alignment="center"
+            width="auto"
           />
         </div>
 
