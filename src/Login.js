@@ -1,4 +1,5 @@
 // ✅ Login.js — versión final con fondo azul-negro brillante
+// + ajuste seguro para mostrar SOLO la "G" del botón Google (sin texto)
 import React, { useState, useEffect, useRef } from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
@@ -9,12 +10,14 @@ function Login({ setToken }) {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const canvasRef = useRef(null);
+  const googleWrapRef = useRef(null); // ref para actuar sobre el botón de Google
 
   // =============================
   // 🎨 EFECTO DE FONDO CON POLÍGONOS
   // =============================
   useEffect(() => {
     const canvas = canvasRef.current;
+    if (!canvas) return;
     const ctx = canvas.getContext("2d");
     let w, h;
     let particles = [];
@@ -85,9 +88,9 @@ function Login({ setToken }) {
         h / 2,
         Math.max(w, h)
       );
-      g.addColorStop(0, "#0d1b3a"); // azul oscuro
+      g.addColorStop(0, "#0d1b3a");   // azul oscuro
       g.addColorStop(0.5, "#081326"); // intermedio
-      g.addColorStop(1, "#01060f"); // casi negro
+      g.addColorStop(1, "#01060f");   // casi negro
       ctx.fillStyle = g;
       ctx.fillRect(0, 0, w, h);
 
@@ -142,6 +145,74 @@ function Login({ setToken }) {
   const handleGoogleError = () => {
     setMessage("❌ Error al iniciar sesión con Google");
   };
+
+  // =============================
+  // 🔧 Post-mount: dejar solo la "G" en el botón de Google
+  // =============================
+  useEffect(() => {
+    // pequeña función segura que elimina/oculta SOLO el texto del botón manteniendo el icono y listeners
+    const cleanup = () => {
+      try {
+        const wrap = googleWrapRef.current;
+        if (!wrap) return;
+
+        // buscamos el botón real generado por la librería
+        const btn = wrap.querySelector('[role="button"], button, div[data-testid]') || wrap.querySelector('button');
+        if (!btn) return;
+
+        // 1) ocultar nodos de texto directos
+        for (const node of Array.from(btn.childNodes)) {
+          // si es nodo de texto y tiene contenido, lo removemos
+          if (node.nodeType === Node.TEXT_NODE && node.textContent.trim().length > 0) {
+            node.textContent = "";
+          }
+          // si es un <span> que contiene texto (y no contiene SVG), esconderlo
+          if (node.nodeType === 1 && node.tagName === "SPAN") {
+            const span = node;
+            const hasSvg = !!span.querySelector("svg");
+            if (!hasSvg && span.innerText.trim().length > 0) {
+              span.style.display = "none";
+            }
+          }
+        }
+
+        // 2) forzamos tamaño circular y estilos seguros (sin tocar listeners)
+        btn.style.borderRadius = "50%";
+        btn.style.width = "48px";
+        btn.style.height = "48px";
+        btn.style.display = "inline-flex";
+        btn.style.alignItems = "center";
+        btn.style.justifyContent = "center";
+        btn.style.overflow = "hidden";
+        btn.style.boxShadow = "0 0 12px rgba(0,150,255,0.28)";
+        btn.style.transition = "transform 0.18s ease, box-shadow 0.18s ease";
+        // hover visual (no rompe funcion)
+        btn.addEventListener("mouseover", () => {
+          btn.style.transform = "scale(1.12)";
+          btn.style.boxShadow = "0 0 20px rgba(0,200,255,0.45)";
+        });
+        btn.addEventListener("mouseout", () => {
+          btn.style.transform = "scale(1)";
+          btn.style.boxShadow = "0 0 12px rgba(0,150,255,0.28)";
+        });
+
+        // si por alguna razón hay un span con el logo SVG, nos aseguramos de centrarlo
+        const svgSpan = btn.querySelector("svg") ? btn.querySelector("svg").closest("span") : null;
+        if (svgSpan) {
+          svgSpan.style.display = "inline-flex";
+          svgSpan.style.alignItems = "center";
+          svgSpan.style.justifyContent = "center";
+        }
+      } catch (e) {
+        // no rompe la app si algo falla aquí; solo logueamos
+        // console.warn("No se pudo transformar el botón de Google:", e);
+      }
+    };
+
+    // run after a short timeout to ensure the button finished rendering
+    const t = setTimeout(cleanup, 300);
+    return () => clearTimeout(t);
+  }, []);
 
   // =============================
   // 🧩 INTERFAZ VISUAL DEL LOGIN
@@ -235,14 +306,10 @@ function Login({ setToken }) {
         </form>
 
         {/* 🔹 Botón de Google (solo logo) */}
-        <div style={{ marginTop: "20px" }}>
+        <div style={{ marginTop: "20px" }} ref={googleWrapRef}>
           <GoogleLogin
             onSuccess={handleGoogleSuccess}
             onError={handleGoogleError}
-            theme="outline"
-            shape="circle"
-            text="icon"
-            size="large"         
           />
         </div>
 
