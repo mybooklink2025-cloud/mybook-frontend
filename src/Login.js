@@ -1,20 +1,18 @@
+// ✅ Login.js — versión con fondo azul-negro brillante y botón solo con la “G”
 import React, { useState, useEffect, useRef } from "react";
-import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
+import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import { iniciarSesion } from "./api";
 
-function LoginContent({ setToken }) {
+function Login({ setToken }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const canvasRef = useRef(null);
 
-  // =============================
-  // 🎨 EFECTO DE POLÍGONOS
-  // =============================
+  // 🎨 Fondo con polígonos brillantes
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
     const ctx = canvas.getContext("2d");
     let w, h;
     let particles = [];
@@ -53,7 +51,9 @@ function LoginContent({ setToken }) {
     const init = () => {
       particles = [];
       for (let i = 0; i < 90; i++) {
-        particles.push(new Particle(Math.random() * w, Math.random() * h));
+        particles.push(
+          new Particle(Math.random() * w, Math.random() * h)
+        );
       }
     };
 
@@ -104,9 +104,7 @@ function LoginContent({ setToken }) {
     return () => window.removeEventListener("resize", resize);
   }, []);
 
-  // =============================
-  // 🔐 LÓGICA DE LOGIN NORMAL
-  // =============================
+  // 🔐 Login normal
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -114,32 +112,35 @@ function LoginContent({ setToken }) {
       if (data.token) {
         localStorage.setItem("token", data.token);
         if (typeof setToken === "function") setToken(data.token);
+        setMessage("✅ Inicio de sesión exitoso");
         window.location.replace("/muro");
       } else {
-        setMessage("❌ Error al iniciar sesión");
+        setMessage(`❌ ${data.message || "Error al iniciar sesión"}`);
       }
-    } catch {
+    } catch (error) {
       setMessage("❌ Error al conectar con el servidor");
+      console.error("Login error:", error);
     }
   };
 
-  // =============================
-  // 🔵 LOGIN CON GOOGLE (solo logo)
-  // =============================
-  const loginGoogle = useGoogleLogin({
-    onSuccess: (tokenResponse) => {
-      const decoded = jwtDecode(tokenResponse.credential);
+  const handleGoogleSuccess = (credentialResponse) => {
+    try {
+      const decoded = jwtDecode(credentialResponse.credential);
       console.log("✅ Usuario Google:", decoded);
-      localStorage.setItem("token", tokenResponse.credential);
+      localStorage.setItem("token", credentialResponse.credential);
       if (typeof setToken === "function")
-        setToken(tokenResponse.credential);
+        setToken(credentialResponse.credential);
       window.location.replace("/muro");
-    },
-    onError: () => {
-      setMessage("❌ Error al iniciar sesión con Google");
-    },
-  });
+    } catch (err) {
+      console.error("Error decodificando token:", err);
+    }
+  };
 
+  const handleGoogleError = () => {
+    setMessage("❌ Error al iniciar sesión con Google");
+  };
+
+  // 🧩 Interfaz visual
   return (
     <div
       style={{
@@ -155,7 +156,12 @@ function LoginContent({ setToken }) {
     >
       <canvas
         ref={canvasRef}
-        style={{ position: "absolute", top: 0, left: 0, zIndex: 0 }}
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          zIndex: 0,
+        }}
       />
 
       <div
@@ -166,11 +172,16 @@ function LoginContent({ setToken }) {
           padding: "40px 60px",
           borderRadius: "15px",
           boxShadow: "0 0 25px rgba(0,170,255,0.3)",
+          backdropFilter: "blur(6px)",
           textAlign: "center",
           width: "350px",
         }}
       >
         <h1 style={{ color: "#00aaff", marginBottom: "10px" }}>MyBook</h1>
+        <h2 style={{ marginBottom: "25px", color: "#aad7ff" }}>
+          Iniciar sesión
+        </h2>
+
         <form onSubmit={handleLogin}>
           <input
             type="email"
@@ -216,40 +227,34 @@ function LoginContent({ setToken }) {
           </button>
         </form>
 
-        {/* SOLO LA G DE GOOGLE */}
-        <div style={{ marginTop: "25px" }}>
-          <button
-            onClick={() => loginGoogle()}
+        {/* 🔹 Botón de Google — solo la G */}
+        <div
+          style={{
+            marginTop: "20px",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <div
             style={{
-              backgroundColor: "white",
-              border: "none",
+              width: "45px",
+              height: "45px",
+              overflow: "hidden",
               borderRadius: "50%",
-              width: "50px",
-              height: "50px",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              cursor: "pointer",
-              boxShadow: "0 0 15px rgba(0,170,255,0.3)",
-              transition: "transform 0.2s ease, box-shadow 0.2s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "scale(1.15)";
-              e.currentTarget.style.boxShadow =
-                "0 0 25px rgba(0,200,255,0.5)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "scale(1)";
-              e.currentTarget.style.boxShadow =
-                "0 0 15px rgba(0,170,255,0.3)";
             }}
           >
-            <img
-              src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
-              alt="Google"
-              style={{ width: "24px", height: "24px" }}
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={handleGoogleError}
+              theme="outline"
+              shape="circle"
+              size="large"
+              width="45"
             />
-          </button>
+          </div>
         </div>
 
         <p style={{ color: "#00aaff", marginTop: "15px" }}>{message}</p>
@@ -258,10 +263,4 @@ function LoginContent({ setToken }) {
   );
 }
 
-export default function Login({ setToken }) {
-  return (
-    <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
-      <LoginContent setToken={setToken} />
-    </GoogleOAuthProvider>
-  );
-}
+export default Login;
