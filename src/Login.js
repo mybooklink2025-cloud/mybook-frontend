@@ -242,7 +242,7 @@ function Login({ setToken }) {
             shape="circle"
             theme="outline"
             size="medium"
-            text="signin_with"
+            text="icon"
             logo_alignment="center"
             width="auto"
           />
