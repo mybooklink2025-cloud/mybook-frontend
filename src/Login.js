@@ -1,6 +1,7 @@
-// ✅ Login.js — versión final con fondo azul-negro brillante y botón Google solo con la G
+// ✅ Login.js — botón Google con autenticación real (sin texto)
 import React, { useState, useEffect, useRef } from "react";
 import { jwtDecode } from "jwt-decode";
+import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
 import { iniciarSesion } from "./api";
 
 function Login({ setToken }) {
@@ -10,7 +11,7 @@ function Login({ setToken }) {
   const canvasRef = useRef(null);
 
   // =============================
-  // 🎨 EFECTO DE FONDO CON POLÍGONOS
+  // 🎨 FONDO CON POLÍGONOS
   // =============================
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -99,12 +100,11 @@ function Login({ setToken }) {
 
     init();
     animate();
-
     return () => window.removeEventListener("resize", resize);
   }, []);
 
   // =============================
-  // 🔐 LÓGICA DE LOGIN
+  // 🔐 LOGIN NORMAL
   // =============================
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -113,25 +113,42 @@ function Login({ setToken }) {
       if (data.token) {
         localStorage.setItem("token", data.token);
         if (typeof setToken === "function") setToken(data.token);
-        setMessage("✅ Inicio de sesión exitoso");
         window.location.replace("/muro");
       } else {
         setMessage(`❌ ${data.message || "Error al iniciar sesión"}`);
       }
     } catch (error) {
       setMessage("❌ Error al conectar con el servidor");
-      console.error("Login error:", error);
     }
   };
 
-  // ✅ Simulación de login Google
-  const googleLogin = () => {
-    // En producción reemplaza esto por la lógica real de Google OAuth si la usas
-    alert("Simulación: login con Google");
-  };
+  // =============================
+  // 🔐 LOGIN CON GOOGLE
+  // =============================
+  const login = useGoogleLogin({
+    onSuccess: async (credentialResponse) => {
+      try {
+        const decoded = jwtDecode(credentialResponse.credential);
+        const userData = {
+          email: decoded.email,
+          name: decoded.name,
+          picture: decoded.picture,
+        };
+        // Guarda token o llama a tu backend si lo necesitas
+        localStorage.setItem("googleUser", JSON.stringify(userData));
+        if (typeof setToken === "function") setToken(credentialResponse.credential);
+        window.location.replace("/muro");
+      } catch (err) {
+        console.error("Error decodificando token:", err);
+      }
+    },
+    onError: () => {
+      setMessage("❌ Error al iniciar sesión con Google");
+    },
+  });
 
   // =============================
-  // 🧩 INTERFAZ VISUAL DEL LOGIN
+  // 💻 INTERFAZ
   // =============================
   return (
     <div
@@ -146,7 +163,6 @@ function Login({ setToken }) {
         color: "white",
       }}
     >
-      {/* Fondo animado */}
       <canvas
         ref={canvasRef}
         style={{
@@ -157,7 +173,6 @@ function Login({ setToken }) {
         }}
       />
 
-      {/* Cuadro del formulario */}
       <div
         style={{
           position: "relative",
@@ -221,7 +236,7 @@ function Login({ setToken }) {
           </button>
         </form>
 
-        {/* --- BOTÓN PROPIO SOLO LA "G" --- */}
+        {/* ✅ BOTÓN GOOGLE CON G REAL Y LOGIN FUNCIONAL */}
         <div
           style={{
             marginTop: "20px",
@@ -230,7 +245,7 @@ function Login({ setToken }) {
           }}
         >
           <button
-            onClick={() => googleLogin()}
+            onClick={() => login()}
             aria-label="Iniciar sesión con Google"
             style={{
               backgroundColor: "white",
