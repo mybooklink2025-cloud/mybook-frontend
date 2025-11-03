@@ -1,4 +1,5 @@
 // src/Login.js
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useRef } from "react";
 import { jwtDecode } from "jwt-decode";
 import { iniciarSesion } from "./api";
