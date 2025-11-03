@@ -1,18 +1,33 @@
-// ✅ Login.js — misma autenticación, botón Google solo con la “G”
+// src/Login.js
 import React, { useState, useEffect, useRef } from "react";
-import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import { iniciarSesion } from "./api";
+
+/**
+ * Login.js
+ * - Mantiene el fondo con polígonos como lo tenías.
+ * - Renderiza el botón oficial de Google (solo la G) usando la librería `google.accounts.id`.
+ * - Usa callback que llama a handleGoogleSuccess (misma lógica que tenías).
+ * - No usa <GoogleLogin /> de @react-oauth/google aquí para evitar diferencias de versión.
+ *
+ * Requisitos:
+ * - Tener REACT_APP_GOOGLE_CLIENT_ID configurada en .env (o en Vercel env vars).
+ */
 
 function Login({ setToken }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const canvasRef = useRef(null);
+  const googleButtonRef = useRef(null);
+  const scriptRef = useRef(null);
 
-  // 🎨 Fondo animado (polígonos)
+  // -------------------------
+  // Fondo (polígonos) - idéntico a tu versión previa
+  // -------------------------
   useEffect(() => {
     const canvas = canvasRef.current;
+    if (!canvas) return;
     const ctx = canvas.getContext("2d");
     let w, h;
     let particles = [];
@@ -98,10 +113,15 @@ function Login({ setToken }) {
 
     init();
     animate();
-    return () => window.removeEventListener("resize", resize);
+
+    return () => {
+      window.removeEventListener("resize", resize);
+    };
   }, []);
 
-  // 🔐 Login manual
+  // -------------------------
+  // Login normal (email/password) - sin cambios
+  // -------------------------
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -115,27 +135,111 @@ function Login({ setToken }) {
       }
     } catch (error) {
       setMessage("❌ Error al conectar con el servidor");
+      console.error(error);
     }
   };
 
-  // 🔐 Login con Google (original)
-  const handleGoogleSuccess = (credentialResponse) => {
+  // -------------------------
+  // Mismo handler de Google que tenías — mantiene comportamiento exacto
+  // -------------------------
+  const handleGoogleCredential = (credentialResponse) => {
     try {
-      const decoded = jwtDecode(credentialResponse.credential);
+      // credentialResponse is the object from google.accounts.id
+      // it contains { credential } (a JWT)
+      const credential = credentialResponse?.credential || credentialResponse;
+      if (!credential) {
+        setMessage("❌ No se recibió credential de Google");
+        return;
+      }
+      const decoded = jwtDecode(credential);
       console.log("✅ Usuario Google:", decoded);
-      localStorage.setItem("token", credentialResponse.credential);
-      if (typeof setToken === "function")
-        setToken(credentialResponse.credential);
+      localStorage.setItem("token", credential);
+      if (typeof setToken === "function") setToken(credential);
       window.location.replace("/muro");
     } catch (err) {
-      console.error("Error decodificando token:", err);
+      console.error("Error decodificando token Google:", err);
+      setMessage("❌ Error al procesar credencial de Google");
     }
   };
 
-  const handleGoogleError = () => {
-    setMessage("❌ Error al iniciar sesión con Google");
-  };
+  // -------------------------
+  // Carga y render del botón oficial de Google (solo la G)
+  // -------------------------
+  useEffect(() => {
+    const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+    if (!clientId) {
+      console.warn("REACT_APP_GOOGLE_CLIENT_ID no está definido");
+      return;
+    }
 
+    // crear script (si no existe)
+    if (!document.querySelector('script[data-google-one-tap]')) {
+      const s = document.createElement("script");
+      s.src = "https://accounts.google.com/gsi/client";
+      s.async = true;
+      s.defer = true;
+      s.setAttribute("data-google-one-tap", "true");
+      document.body.appendChild(s);
+      scriptRef.current = s;
+      s.onload = () => {
+        if (window.google && google.accounts && google.accounts.id) {
+          // initialize
+          google.accounts.id.initialize({
+            client_id: clientId,
+            callback: handleGoogleCredential,
+          });
+          // render button into our wrapper with text='' (no text), shape circle
+          if (googleButtonRef.current) {
+            google.accounts.id.renderButton(googleButtonRef.current, {
+              theme: "outline",
+              size: "large",
+              shape: "circle",
+              text: "", // solicitamos sin texto
+              logo_alignment: "center",
+            });
+            // optionally remove the badge if present
+            google.accounts.id.disableAutoSelect();
+          }
+        }
+      };
+    } else {
+      // already loaded: render immediately if google available
+      if (window.google && google.accounts && google.accounts.id && googleButtonRef.current) {
+        google.accounts.id.initialize({
+          client_id: clientId,
+          callback: handleGoogleCredential,
+        });
+        google.accounts.id.renderButton(googleButtonRef.current, {
+          theme: "outline",
+          size: "large",
+          shape: "circle",
+          text: "",
+          logo_alignment: "center",
+        });
+        google.accounts.id.disableAutoSelect();
+      }
+    }
+
+    // cleanup: remove script and button on unmount
+    return () => {
+      try {
+        if (scriptRef.current && scriptRef.current.parentNode) {
+          scriptRef.current.parentNode.removeChild(scriptRef.current);
+        }
+        // clear any rendered button content
+        if (googleButtonRef.current) {
+          googleButtonRef.current.innerHTML = "";
+        }
+      } catch (e) {
+        // ignore
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // run once
+
+  // -------------------------
+  // UI (igual que tu versión)
+  // -------------------------
   return (
     <div
       style={{
@@ -222,29 +326,13 @@ function Login({ setToken }) {
           </button>
         </form>
 
-        {/* ✅ Botón Google original, pero con solo la “G” visible */}
+        {/* Google button wrapper: the official button will be rendered inside here */}
         <div style={{ marginTop: "20px", display: "flex", justifyContent: "center" }}>
-          <div className="google-button-wrapper">
-            <GoogleLogin
-              onSuccess={handleGoogleSuccess}
-              onError={handleGoogleError}
-              theme="filled_blue"
-              shape="circle"
-            />
-          </div>
+          <div ref={googleButtonRef} aria-hidden="false" />
         </div>
 
         <p style={{ color: "#00aaff", marginTop: "15px" }}>{message}</p>
       </div>
-
-      {/* 🔧 CSS inyectado para ocultar texto y dejar solo el logo */}
-      <style>{`
-        .google-button-wrapper iframe {
-          border-radius: 50% !important;
-          width: 48px !important;
-          height: 48px !important;
-        }
-      `}</style>
     </div>
   );
 }
