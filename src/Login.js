@@ -1,35 +1,20 @@
-// src/Login.js
-/* eslint-disable react-hooks/exhaustive-deps */
-/* global google */
+// ✅ Login.js — versión final con fondo azul-negro brillante
 import React, { useState, useEffect, useRef } from "react";
+import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import { iniciarSesion } from "./api";
-
-/**
- * Login.js
- * - Mantiene el fondo con polígonos como lo tenías.
- * - Renderiza el botón oficial de Google (solo la G) usando la librería `google.accounts.id`.
- * - Usa callback que llama a handleGoogleSuccess (misma lógica que tenías).
- * - No usa <GoogleLogin /> de @react-oauth/google aquí para evitar diferencias de versión.
- *
- * Requisitos:
- * - Tener REACT_APP_GOOGLE_CLIENT_ID configurada en .env (o en Vercel env vars).
- */
 
 function Login({ setToken }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const canvasRef = useRef(null);
-  const googleButtonRef = useRef(null);
-  const scriptRef = useRef(null);
 
-  // -------------------------
-  // Fondo (polígonos) - idéntico a tu versión previa
-  // -------------------------
+  // =============================
+  // 🎨 EFECTO DE FONDO CON POLÍGONOS
+  // =============================
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
     const ctx = canvas.getContext("2d");
     let w, h;
     let particles = [];
@@ -68,7 +53,9 @@ function Login({ setToken }) {
     const init = () => {
       particles = [];
       for (let i = 0; i < 90; i++) {
-        particles.push(new Particle(Math.random() * w, Math.random() * h));
+        particles.push(
+          new Particle(Math.random() * w, Math.random() * h)
+        );
       }
     };
 
@@ -91,6 +78,7 @@ function Login({ setToken }) {
     };
 
     const animate = () => {
+      // 🌌 Fondo azul-negro (más claro para resaltar los polígonos)
       const g = ctx.createRadialGradient(
         w * 0.3,
         h * 0.2,
@@ -99,9 +87,9 @@ function Login({ setToken }) {
         h / 2,
         Math.max(w, h)
       );
-      g.addColorStop(0, "#0d1b3a");
-      g.addColorStop(0.5, "#081326");
-      g.addColorStop(1, "#01060f");
+      g.addColorStop(0, "#0d1b3a");   // azul oscuro
+      g.addColorStop(0.5, "#081326"); // intermedio
+      g.addColorStop(1, "#01060f");   // casi negro
       ctx.fillStyle = g;
       ctx.fillRect(0, 0, w, h);
 
@@ -116,14 +104,12 @@ function Login({ setToken }) {
     init();
     animate();
 
-    return () => {
-      window.removeEventListener("resize", resize);
-    };
+    return () => window.removeEventListener("resize", resize);
   }, []);
 
-  // -------------------------
-  // Login normal (email/password) - sin cambios
-  // -------------------------
+  // =============================
+  // 🔐 LÓGICA DE LOGIN
+  // =============================
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -131,117 +117,37 @@ function Login({ setToken }) {
       if (data.token) {
         localStorage.setItem("token", data.token);
         if (typeof setToken === "function") setToken(data.token);
+        setMessage("✅ Inicio de sesión exitoso");
         window.location.replace("/muro");
       } else {
         setMessage(`❌ ${data.message || "Error al iniciar sesión"}`);
       }
     } catch (error) {
       setMessage("❌ Error al conectar con el servidor");
-      console.error(error);
+      console.error("Login error:", error);
     }
   };
 
-  // -------------------------
-  // Mismo handler de Google que tenías — mantiene comportamiento exacto
-  // -------------------------
-  const handleGoogleCredential = (credentialResponse) => {
+  const handleGoogleSuccess = (credentialResponse) => {
     try {
-      // credentialResponse is the object from google.accounts.id
-      // it contains { credential } (a JWT)
-      const credential = credentialResponse?.credential || credentialResponse;
-      if (!credential) {
-        setMessage("❌ No se recibió credential de Google");
-        return;
-      }
-      const decoded = jwtDecode(credential);
+      const decoded = jwtDecode(credentialResponse.credential);
       console.log("✅ Usuario Google:", decoded);
-      localStorage.setItem("token", credential);
-      if (typeof setToken === "function") setToken(credential);
+      localStorage.setItem("token", credentialResponse.credential);
+      if (typeof setToken === "function")
+        setToken(credentialResponse.credential);
       window.location.replace("/muro");
     } catch (err) {
-      console.error("Error decodificando token Google:", err);
-      setMessage("❌ Error al procesar credencial de Google");
+      console.error("Error decodificando token:", err);
     }
   };
 
-  // -------------------------
-  // Carga y render del botón oficial de Google (solo la G)
-  // -------------------------
-  useEffect(() => {
-    const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-    if (!clientId) {
-      console.warn("REACT_APP_GOOGLE_CLIENT_ID no está definido");
-      return;
-    }
+  const handleGoogleError = () => {
+    setMessage("❌ Error al iniciar sesión con Google");
+  };
 
-    // crear script (si no existe)
-    if (!document.querySelector('script[data-google-one-tap]')) {
-      const s = document.createElement("script");
-      s.src = "https://accounts.google.com/gsi/client";
-      s.async = true;
-      s.defer = true;
-      s.setAttribute("data-google-one-tap", "true");
-      document.body.appendChild(s);
-      scriptRef.current = s;
-      s.onload = () => {
-        if (window.google && google.accounts && google.accounts.id) {
-          // initialize
-          google.accounts.id.initialize({
-            client_id: clientId,
-            callback: handleGoogleCredential,
-          });
-          // render button into our wrapper with text='' (no text), shape circle
-          if (googleButtonRef.current) {
-            google.accounts.id.renderButton(googleButtonRef.current, {
-              theme: "outline",
-              size: "large",
-              shape: "circle",
-              text: "", // solicitamos sin texto
-              logo_alignment: "center",
-            });
-            // optionally remove the badge if present
-            google.accounts.id.disableAutoSelect();
-          }
-        }
-      };
-    } else {
-      // already loaded: render immediately if google available
-      if (window.google && google.accounts && google.accounts.id && googleButtonRef.current) {
-        google.accounts.id.initialize({
-          client_id: clientId,
-          callback: handleGoogleCredential,
-        });
-        google.accounts.id.renderButton(googleButtonRef.current, {
-          theme: "outline",
-          size: "large",
-          shape: "circle",
-          text: "",
-          logo_alignment: "center",
-        });
-        google.accounts.id.disableAutoSelect();
-      }
-    }
-
-    // cleanup: remove script and button on unmount
-    return () => {
-      try {
-        if (scriptRef.current && scriptRef.current.parentNode) {
-          scriptRef.current.parentNode.removeChild(scriptRef.current);
-        }
-        // clear any rendered button content
-        if (googleButtonRef.current) {
-          googleButtonRef.current.innerHTML = "";
-        }
-      } catch (e) {
-        // ignore
-      }
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // run once
-
-  // -------------------------
-  // UI (igual que tu versión)
-  // -------------------------
+  // =============================
+  // 🧩 INTERFAZ VISUAL DEL LOGIN
+  // =============================
   return (
     <div
       style={{
@@ -255,6 +161,7 @@ function Login({ setToken }) {
         color: "white",
       }}
     >
+      {/* Fondo animado */}
       <canvas
         ref={canvasRef}
         style={{
@@ -265,6 +172,7 @@ function Login({ setToken }) {
         }}
       />
 
+      {/* Cuadro del formulario */}
       <div
         style={{
           position: "relative",
@@ -328,9 +236,12 @@ function Login({ setToken }) {
           </button>
         </form>
 
-        {/* Google button wrapper: the official button will be rendered inside here */}
-        <div style={{ marginTop: "20px", display: "flex", justifyContent: "center" }}>
-          <div ref={googleButtonRef} aria-hidden="false" />
+        {/* 🔹 Botón de Google */}
+        <div style={{ marginTop: "20px" }}>
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={handleGoogleError}
+          />
         </div>
 
         <p style={{ color: "#00aaff", marginTop: "15px" }}>{message}</p>
