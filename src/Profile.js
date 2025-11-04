@@ -323,7 +323,7 @@ function Profile({ token }) {
 
           <p style={{ color: "blue" }}>{message}</p>
 
-          <div style={{ marginTop: "20px" }}>
+          <div style={{ marginTop: "10px" }}>
             <button onClick={() => navigate("/chat")} className="btn-red">
               Ir al Chat
             </button>
