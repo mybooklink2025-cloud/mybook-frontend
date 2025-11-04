@@ -292,7 +292,7 @@ function Profile({ token }) {
         style={{
           width: "100%",
           maxWidth: "900px",
-          marginTop: "60px", // 👈 este sí empuja todo hacia abajo
+          marginTop: "40px", // 👈 este sí empuja todo hacia abajo
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
