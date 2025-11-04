@@ -298,7 +298,7 @@ function Profile({ token }) {
           alignItems: "center",
         }}
       >
-        <div className="profile-top-left" style={{ textAlign: "center" }}>
+        <div className="profile-top-center" style={{ textAlign: "center" }}>
           <h1>
             <span onClick={logoClick} className="profile-logo">
               MyBook
