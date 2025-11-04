@@ -104,6 +104,19 @@ function Profile({ token }) {
         marginTop: "80px", // 🚀 Desplaza todo hacia abajo
       }}
     >
+      {/* 🌌 Fondo degradado sin polígonos */}
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            background: "radial-gradient(circle at 30% 20%, #0d1b3a 0%, #081326 50%, #01060f 100%)",
+            zIndex: -1,
+          }}
+        ></div>
+
       {/* 🔵 BARRA SUPERIOR FIJA */}
       <div
         style={{
@@ -120,20 +133,7 @@ function Profile({ token }) {
           boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
           zIndex: 1000,
         }}
-      >
-        {/* 🌌 Fondo degradado sin polígonos */}
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100vw",
-            height: "100vh",
-            background: "radial-gradient(circle at 30% 20%, #0d1b3a 0%, #081326 50%, #01060f 100%)",
-            zIndex: -1,
-          }}
-        ></div>
-
+      >        
         {/* Izquierda: M + buscador */}
         <div style={{ display: "flex", alignItems: "center" }}>
           <div
