@@ -304,7 +304,7 @@ function Profile({ token }) {
               MyBook
             </span>
           </h1>
-          <h2 style={{ color: "blue" }}>Mi perfil</h2>
+          <h2 style={{ color: "#00aaff" }}>Mi perfil</h2>
         </div>
 
           {profilePicture && (
