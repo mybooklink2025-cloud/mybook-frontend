@@ -328,7 +328,7 @@ function Profile({ token }) {
           <button onClick={() => navigate("/chat")} className="btn-green">
             Ir al Chat
           </button>
-          <button onClick={handleCerrarSesion} className="btn-red">
+          <button onClick={handleCerrarSesion} className="btn-green">
             Cerrar sesión
           </button>
         </div>
