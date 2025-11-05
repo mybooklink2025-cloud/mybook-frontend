@@ -14,6 +14,16 @@ function Profile({ token }) {
   const [menuVisible, setMenuVisible] = useState(false);
   const menuRef = useRef(null);
 
+  // 👇 añadidos para la barra lateral
+  const [sidebarVisible, setSidebarVisible] = useState(false);
+  const sidebarRef = useRef(null);
+  const linksFijos = [
+    { nombre: "Inicio", url: "/muro" },
+    { nombre: "Mi perfil", url: "/profile" },
+    { nombre: "Chat", url: "/chat" },
+    { nombre: "Contáctanos", url: "/contactanos" },
+  ];
+
   const BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
   useEffect(() => {
@@ -112,7 +122,8 @@ function Profile({ token }) {
           left: 0,
           width: "100vw",
           height: "100vh",
-          background: "radial-gradient(circle at 30% 20%, #0d1b3a 0%, #081326 50%, #01060f 100%)",
+          background:
+            "radial-gradient(circle at 30% 20%, #0d1b3a 0%, #081326 50%, #01060f 100%)",
           zIndex: -1,
         }}
       ></div>
@@ -287,79 +298,79 @@ function Profile({ token }) {
         </div>
       </div>
 
-        {/* 🍔 Botón de hamburguesa y barra lateral */}
+      {/* 🍔 Botón de hamburguesa y barra lateral */}
+      <div
+        style={{
+          position: "fixed",
+          top: "80px",
+          left: sidebarVisible ? "260px" : "10px",
+          zIndex: 1100,
+          transition: "left 0.3s ease",
+        }}
+      >
         <div
+          onClick={() => setSidebarVisible(!sidebarVisible)}
           style={{
-            position: "fixed",
-            top: "80px",
-            left: sidebarVisible ? "260px" : "10px",
-            zIndex: 1100,
-            transition: "left 0.3s ease",
-          }}
-        >
-          <div
-            onClick={() => setSidebarVisible(!sidebarVisible)}
-            style={{
-              cursor: "pointer",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: "3px",
-              width: "25px",
-              height: "25px",
-              backgroundColor: "white",
-              borderRadius: "4px",
-              boxShadow: "0 1px 4px rgba(0,0,0,0.2)",
-              padding: "3px",
-            }}
-          >
-            <div style={{ width: "22px", height: "2px", backgroundColor: "blue" }}></div>
-            <div style={{ width: "22px", height: "2px", backgroundColor: "blue" }}></div>
-            <div style={{ width: "22px", height: "2px", backgroundColor: "blue" }}></div>
-          </div>
-        </div>
-
-        {/* 🔹 Barra lateral animada */}
-        <div
-          ref={sidebarRef}
-          className="sidebar"
-          style={{
-            position: "fixed",
-            top: "80px",
-            left: sidebarVisible ? "0" : "-250px",
-            width: "250px",
-            height: "100%",
+            cursor: "pointer",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "3px",
+            width: "25px",
+            height: "25px",
             backgroundColor: "white",
-            boxShadow: "2px 0 5px rgba(0,0,0,0.2)",
-            transition: "left 0.3s ease",
-            zIndex: 1000,
-            padding: "20px",
+            borderRadius: "4px",
+            boxShadow: "0 1px 4px rgba(0,0,0,0.2)",
+            padding: "3px",
           }}
         >
-          <h3>Enlaces rápidos</h3>
-          <ul style={{ listStyle: "none", padding: 0 }}>
-            {linksFijos.map((link) => (
-              <li key={link.nombre} style={{ marginBottom: "10px" }}>
-                <a
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{ color: "blue", textDecoration: "none", fontWeight: "bold" }}
-                >
-                  {link.nombre}
-                </a>
-              </li>
-            ))}
-          </ul>
+          <div style={{ width: "22px", height: "2px", backgroundColor: "blue" }}></div>
+          <div style={{ width: "22px", height: "2px", backgroundColor: "blue" }}></div>
+          <div style={{ width: "22px", height: "2px", backgroundColor: "blue" }}></div>
         </div>
+      </div>
+
+      {/* 🔹 Barra lateral animada */}
+      <div
+        ref={sidebarRef}
+        className="sidebar"
+        style={{
+          position: "fixed",
+          top: "80px",
+          left: sidebarVisible ? "0" : "-250px",
+          width: "250px",
+          height: "100%",
+          backgroundColor: "white",
+          boxShadow: "2px 0 5px rgba(0,0,0,0.2)",
+          transition: "left 0.3s ease",
+          zIndex: 1000,
+          padding: "20px",
+        }}
+      >
+        <h3>Enlaces rápidos</h3>
+        <ul style={{ listStyle: "none", padding: 0 }}>
+          {linksFijos.map((link) => (
+            <li key={link.nombre} style={{ marginBottom: "10px" }}>
+              <a
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "blue", textDecoration: "none", fontWeight: "bold" }}
+              >
+                {link.nombre}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
 
       {/* 🔹 CONTENIDO DEL PERFIL (forzado hacia abajo y centrado) */}
       <div
         style={{
           width: "100%",
           maxWidth: "900px",
-          marginTop: "40px", // 👈 este sí empuja todo hacia abajo
+          marginTop: "40px",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
