@@ -288,16 +288,6 @@ function Profile({ token }) {
       </div>
 
       {/* 🔹 CONTENIDO DEL PERFIL (forzado hacia abajo y centrado) */}
-      <div
-        style={{
-          width: "100%",
-          maxWidth: "900px",
-          marginTop: "40px", // 👈 este sí empuja todo hacia abajo
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
         {/* 🍔 Botón de hamburguesa y barra lateral */}
         <div
           style={{
@@ -364,6 +354,16 @@ function Profile({ token }) {
             ))}
           </ul>
         </div>
+      <div
+        style={{
+          width: "100%",
+          maxWidth: "900px",
+          marginTop: "40px", // 👈 este sí empuja todo hacia abajo
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
 
         <div className="profile-top-center" style={{ textAlign: "center" }}>
           <h1>
