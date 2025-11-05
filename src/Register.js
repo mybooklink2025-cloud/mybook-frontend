@@ -22,6 +22,19 @@ function Register() {
 
   return (
     <div style={{ textAlign: "center", marginTop: "100px" }}>
+       {/* 🌌 Fondo degradado sin polígonos */}
+    <div
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100vw",
+        height: "100vh",
+        background: "radial-gradient(circle at 30% 20%, #0d1b3a 0%, #081326 50%, #01060f 100%)",
+        zIndex: -1,
+      }}
+    ></div>
+
       <h1>
         <a href="/" style={{ color: "blue", textDecoration: "none" }}>MyBook</a>
       </h1>
