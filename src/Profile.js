@@ -298,6 +298,39 @@ function Profile({ token }) {
           alignItems: "center",
         }}
       >
+        {/* 🍔 Botón de hamburguesa y barra lateral */}
+        <div
+          style={{
+            position: "fixed",
+            top: "80px",
+            left: sidebarVisible ? "260px" : "10px",
+            zIndex: 1100,
+            transition: "left 0.3s ease",
+          }}
+        >
+          <div
+            onClick={() => setSidebarVisible(!sidebarVisible)}
+            style={{
+              cursor: "pointer",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "3px",
+              width: "25px",
+              height: "25px",
+              backgroundColor: "white",
+              borderRadius: "4px",
+              boxShadow: "0 1px 4px rgba(0,0,0,0.2)",
+              padding: "3px",
+            }}
+          >
+            <div style={{ width: "22px", height: "2px", backgroundColor: "blue" }}></div>
+            <div style={{ width: "22px", height: "2px", backgroundColor: "blue" }}></div>
+            <div style={{ width: "22px", height: "2px", backgroundColor: "blue" }}></div>
+          </div>
+        </div>
+
         {/* 🔹 Barra lateral animada */}
         <div
           ref={sidebarRef}
