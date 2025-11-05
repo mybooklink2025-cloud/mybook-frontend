@@ -257,8 +257,8 @@ function Login({ setToken }) {
 
         {/* Mensaje de estado */}
         <p style={{ color: "#00aaff", marginTop: "15px" }}>{message}</p>
-      </div> {/* 🔹 Cierra el cuadro del formulario */}
-    </div>   {/* 🔹 Cierra el contenedor principal */}
+      </div>
+    </div>
   );
 }
 
