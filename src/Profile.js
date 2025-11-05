@@ -105,17 +105,17 @@ function Profile({ token }) {
       }}
     >
       {/* 🌌 Fondo degradado sin polígonos */}
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100vw",
-            height: "100vh",
-            background: "radial-gradient(circle at 30% 20%, #0d1b3a 0%, #081326 50%, #01060f 100%)",
-            zIndex: -1,
-          }}
-        ></div>
+      <div
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100vw",
+          height: "100vh",
+          background: "radial-gradient(circle at 30% 20%, #0d1b3a 0%, #081326 50%, #01060f 100%)",
+          zIndex: -1,
+        }}
+      ></div>
 
       {/* 🔵 BARRA SUPERIOR FIJA */}
       <div
@@ -133,7 +133,7 @@ function Profile({ token }) {
           boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
           zIndex: 1000,
         }}
-      >        
+      >
         {/* Izquierda: M + buscador */}
         <div style={{ display: "flex", alignItems: "center" }}>
           <div
@@ -299,41 +299,38 @@ function Profile({ token }) {
         }}
       >
         <div className="profile-top-center" style={{ textAlign: "center" }}>
-          <>
-            <h1>
-              <span onClick={logoClick} className="profile-logo">
-                MyBook
-              </span>
-            </h1>
-            <h2 style={{ color: "#00aaff" }}>Mi perfil</h2>
-          </>
+          <h1>
+            <span onClick={logoClick} className="profile-logo">
+              MyBook
+            </span>
+          </h1>
+          <h2 style={{ color: "#00aaff" }}>Mi perfil</h2>
         </div>
 
-          {profilePicture && (
-            <img
-              src={`${BASE_URL}/uploads/${profilePicture}`}
-              alt="Perfil"
-              width={150}
-              style={{ borderRadius: "50%" }}
-            />
-          )}
+        {profilePicture && (
+          <img
+            src={`${BASE_URL}/uploads/${profilePicture}`}
+            alt="Perfil"
+            width={150}
+            style={{ borderRadius: "50%" }}
+          />
+        )}
 
-          <form onSubmit={handleUpload} style={{ marginTop: "10px" }}>
-            <input type="file" accept="image/*" onChange={handleFileChange} />
-            <br />
-            <button type="submit">Subir foto</button>
-          </form>
+        <form onSubmit={handleUpload} style={{ marginTop: "10px" }}>
+          <input type="file" accept="image/*" onChange={handleFileChange} />
+          <br />
+          <button type="submit">Subir foto</button>
+        </form>
 
-          <p style={{ color: "blue" }}>{message}</p>
+        <p style={{ color: "blue" }}>{message}</p>
 
-          <div style={{ marginTop: "10px" }}>
-            <button onClick={() => navigate("/chat")} className="btn-red">
-              Ir al Chat
-            </button>
-            <button onClick={handleCerrarSesion} className="btn-red">
-              Cerrar sesión
-            </button>
-          </div>
+        <div style={{ marginTop: "10px" }}>
+          <button onClick={() => navigate("/chat")} className="btn-green">
+            Ir al Chat
+          </button>
+          <button onClick={handleCerrarSesion} className="btn-red">
+            Cerrar sesión
+          </button>
         </div>
 
         {/* Caja de post centrada */}
