@@ -304,7 +304,7 @@ function Profile({ token }) {
               MyBook
             </span>
           </h1>
-          <h2 style={{ color: "#00aaff" }}>Mi perfil</h2>
+          <h2 style={{ color: "blue" }}>Mi perfil</h2>
         </div>
 
         {profilePicture && (
@@ -328,7 +328,7 @@ function Profile({ token }) {
           <button onClick={() => navigate("/chat")} className="btn-green">
             Ir al Chat
           </button>
-          <button onClick={handleCerrarSesion} className="btn-red">
+          <button onClick={handleCerrarSesion} className="btn-green">
             Cerrar sesión
           </button>
         </div>
