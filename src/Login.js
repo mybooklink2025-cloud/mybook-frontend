@@ -192,62 +192,68 @@ function Login({ setToken }) {
         </h2>
 
         <form onSubmit={handleLogin}>
-          <input
-            type="email"
-            placeholder="Correo"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            style={{
-              width: "100%",
-              marginBottom: "12px",
-              padding: "10px",
-              borderRadius: "5px",
-              border: "none",
-            }}
-          />
-          <input
-            type="password"
-            placeholder="Contraseña"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            style={{
-              width: "100%",
-              marginBottom: "12px",
-              padding: "10px",
-              borderRadius: "5px",
-              border: "none",
-            }}
-          />
-          <button
-            type="submit"
-            style={{
-              width: "100%",
-              padding: "10px",
-              backgroundColor: "#00aaff",
-              color: "white",
-              border: "none",
-              borderRadius: "5px",
-              cursor: "pointer",
-            }}
-          >
-            Ingresar
-          </button>
-        </form>
+  <input
+    type="email"
+    placeholder="Correo"
+    value={email}
+    onChange={(e) => setEmail(e.target.value)}
+    required
+    style={{
+      width: "100%",
+      marginBottom: "12px",
+      padding: "10px",
+      borderRadius: "5px",
+      border: "none",
+    }}
+  />
+  <input
+    type="password"
+    placeholder="Contraseña"
+    value={password}
+    onChange={(e) => setPassword(e.target.value)}
+    required
+    style={{
+      width: "100%",
+      marginBottom: "12px",
+      padding: "10px",
+      borderRadius: "5px",
+      border: "none",
+    }}
+  />
+  <button
+    type="submit"
+    style={{
+      width: "100%",
+      padding: "10px",
+      backgroundColor: "#00aaff",
+      color: "white",
+      border: "none",
+      borderRadius: "5px",
+      cursor: "pointer",
+    }}
+  >
+    Ingresar
+  </button>
+</form>
 
-        {/* 🔹 Botón de Google */}
-        <div style={{ marginTop: "20px" }}>
-          <GoogleLogin
-            onSuccess={handleGoogleSuccess}
-            onError={handleGoogleError}
-          />
-        </div>
+{/* 🔸 Enlace de registro */}
+<p
+  style={{
+    marginTop: "10px",
+    color: "#aad7ff",
+    cursor: "pointer",
+    textDecoration: "underline",
+  }}
+  onClick={() => window.location.href = "/register"}
+>
+  ¿No tienes cuenta? Regístrate aquí
+</p>
 
-        <p style={{ color: "#00aaff", marginTop: "15px" }}>{message}</p>
-      </div>
-    </div>
-  );
-}
+{/* 🔹 Botón de Google */}
+<div style={{ marginTop: "20px" }}>
+  <GoogleLogin
+    onSuccess={handleGoogleSuccess}
+    onError={handleGoogleError}
+  />
+</div>
 
-export default Login;
