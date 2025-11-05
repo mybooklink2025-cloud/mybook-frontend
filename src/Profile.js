@@ -305,6 +305,7 @@ function Profile({ token }) {
             </span>
           </h1>
           <h2> style={{ color: "blue" }}>Mi perfil</h2>
+        </div>
 
           {profilePicture && (
             <img
