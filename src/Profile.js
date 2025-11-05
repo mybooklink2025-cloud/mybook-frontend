@@ -299,12 +299,14 @@ function Profile({ token }) {
         }}
       >
         <div className="profile-top-center" style={{ textAlign: "center" }}>
-          <h1>
-            <span onClick={logoClick} className="profile-logo">
-              MyBook
-            </span>
-          </h1>
-          <h2 style={{ color: "#00aaff" }}>Mi perfil</h2>
+          <>
+            <h1>
+              <span onClick={logoClick} className="profile-logo">
+                MyBook
+              </span>
+            </h1>
+            <h2 style={{ color: "#00aaff" }}>Mi perfil</h2>
+          </>
         </div>
 
           {profilePicture && (
