@@ -14,15 +14,9 @@ function Profile({ token }) {
   const [menuVisible, setMenuVisible] = useState(false);
   const menuRef = useRef(null);
 
-  // 👇 añadidos para la barra lateral
+  // 👉 NUEVOS ESTADOS para la barra lateral
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const sidebarRef = useRef(null);
-  const linksFijos = [
-    { nombre: "Inicio", url: "/muro" },
-    { nombre: "Mi perfil", url: "/profile" },
-    { nombre: "Chat", url: "/chat" },
-    { nombre: "Contáctanos", url: "/contactanos" },
-  ];
 
   const BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -99,10 +93,23 @@ function Profile({ token }) {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         setMenuVisible(false);
       }
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+        setSidebarVisible(false);
+      }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // 🔗 Enlaces fijos de la barra lateral
+  const linksFijos = [
+    { nombre: "🌐 Google", url: "https://www.google.com" },
+    { nombre: "🎬 YouTube", url: "https://www.youtube.com" },
+    { nombre: "🎵 Spotify", url: "https://open.spotify.com" },
+    { nombre: "📰 Noticias", url: "https://news.google.com" },
+    { nombre: "☁️ Clima", url: "https://weather.com" },
+    { nombre: "🕹️ Juegos", url: "https://poki.com" },
+  ];
 
   return (
     <div
@@ -111,7 +118,7 @@ function Profile({ token }) {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        marginTop: "80px", // 🚀 Desplaza todo hacia abajo
+        marginTop: "80px",
       }}
     >
       {/* 🌌 Fondo degradado sin polígonos */}
@@ -122,8 +129,7 @@ function Profile({ token }) {
           left: 0,
           width: "100vw",
           height: "100vh",
-          background:
-            "radial-gradient(circle at 30% 20%, #0d1b3a 0%, #081326 50%, #01060f 100%)",
+          background: "radial-gradient(circle at 30% 20%, #0d1b3a 0%, #081326 50%, #01060f 100%)",
           zIndex: -1,
         }}
       ></div>
@@ -365,7 +371,7 @@ function Profile({ token }) {
         </ul>
       </div>
 
-      {/* 🔹 CONTENIDO DEL PERFIL (forzado hacia abajo y centrado) */}
+      {/* 🔹 CONTENIDO DEL PERFIL */}
       <div
         style={{
           width: "100%",
