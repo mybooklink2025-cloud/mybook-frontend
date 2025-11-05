@@ -288,72 +288,6 @@ function Profile({ token }) {
       </div>
 
       {/* 🔹 CONTENIDO DEL PERFIL (forzado hacia abajo y centrado) */}
-        {/* 🍔 Botón de hamburguesa y barra lateral */}
-        <div
-          style={{
-            position: "fixed",
-            top: "80px",
-            left: sidebarVisible ? "260px" : "10px",
-            zIndex: 1100,
-            transition: "left 0.3s ease",
-          }}
-        >
-          <div
-            onClick={() => setSidebarVisible(!sidebarVisible)}
-            style={{
-              cursor: "pointer",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: "3px",
-              width: "25px",
-              height: "25px",
-              backgroundColor: "white",
-              borderRadius: "4px",
-              boxShadow: "0 1px 4px rgba(0,0,0,0.2)",
-              padding: "3px",
-            }}
-          >
-            <div style={{ width: "22px", height: "2px", backgroundColor: "blue" }}></div>
-            <div style={{ width: "22px", height: "2px", backgroundColor: "blue" }}></div>
-            <div style={{ width: "22px", height: "2px", backgroundColor: "blue" }}></div>
-          </div>
-        </div>
-
-        {/* 🔹 Barra lateral animada */}
-        <div
-          ref={sidebarRef}
-          className="sidebar"
-          style={{
-            position: "fixed",
-            top: "80px",
-            left: sidebarVisible ? "0" : "-250px",
-            width: "250px",
-            height: "100%",
-            backgroundColor: "white",
-            boxShadow: "2px 0 5px rgba(0,0,0,0.2)",
-            transition: "left 0.3s ease",
-            zIndex: 1000,
-            padding: "20px",
-          }}
-        >
-          <h3>Enlaces rápidos</h3>
-          <ul style={{ listStyle: "none", padding: 0 }}>
-            {linksFijos.map((link) => (
-              <li key={link.nombre} style={{ marginBottom: "10px" }}>
-                <a
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{ color: "blue", textDecoration: "none", fontWeight: "bold" }}
-                >
-                  {link.nombre}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
       <div
         style={{
           width: "100%",
@@ -364,14 +298,13 @@ function Profile({ token }) {
           alignItems: "center",
         }}
       >
-
         <div className="profile-top-center" style={{ textAlign: "center" }}>
           <h1>
             <span onClick={logoClick} className="profile-logo">
               MyBook
             </span>
           </h1>
-          <h2 style={{ color: "blue" }}>Mi perfil</h2>
+          <h2 style={{ color: "#00aaff" }}>Mi perfil</h2>
         </div>
 
         {profilePicture && (
@@ -395,7 +328,7 @@ function Profile({ token }) {
           <button onClick={() => navigate("/chat")} className="btn-green">
             Ir al Chat
           </button>
-          <button onClick={handleCerrarSesion} className="btn-green">
+          <button onClick={handleCerrarSesion} className="btn-red">
             Cerrar sesión
           </button>
         </div>
