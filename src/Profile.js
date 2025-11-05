@@ -298,6 +298,40 @@ function Profile({ token }) {
           alignItems: "center",
         }}
       >
+        {/* 🔹 Barra lateral animada */}
+        <div
+          ref={sidebarRef}
+          className="sidebar"
+          style={{
+            position: "fixed",
+            top: "80px",
+            left: sidebarVisible ? "0" : "-250px",
+            width: "250px",
+            height: "100%",
+            backgroundColor: "white",
+            boxShadow: "2px 0 5px rgba(0,0,0,0.2)",
+            transition: "left 0.3s ease",
+            zIndex: 1000,
+            padding: "20px",
+          }}
+        >
+          <h3>Enlaces rápidos</h3>
+          <ul style={{ listStyle: "none", padding: 0 }}>
+            {linksFijos.map((link) => (
+              <li key={link.nombre} style={{ marginBottom: "10px" }}>
+                <a
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: "blue", textDecoration: "none", fontWeight: "bold" }}
+                >
+                  {link.nombre}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
         <div className="profile-top-center" style={{ textAlign: "center" }}>
           <h1>
             <span onClick={logoClick} className="profile-logo">
