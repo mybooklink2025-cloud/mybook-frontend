@@ -1,4 +1,4 @@
-// ✅ Login.js — versión final con fondo azul-negro brillante
+// ✅ Login.js — versión final con fondo azul-negro brillante y enlace a registro
 import React, { useState, useEffect, useRef } from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
@@ -53,9 +53,7 @@ function Login({ setToken }) {
     const init = () => {
       particles = [];
       for (let i = 0; i < 90; i++) {
-        particles.push(
-          new Particle(Math.random() * w, Math.random() * h)
-        );
+        particles.push(new Particle(Math.random() * w, Math.random() * h));
       }
     };
 
@@ -78,7 +76,7 @@ function Login({ setToken }) {
     };
 
     const animate = () => {
-      // 🌌 Fondo azul-negro (más claro para resaltar los polígonos)
+      // 🌌 Fondo azul-negro degradado
       const g = ctx.createRadialGradient(
         w * 0.3,
         h * 0.2,
@@ -87,9 +85,9 @@ function Login({ setToken }) {
         h / 2,
         Math.max(w, h)
       );
-      g.addColorStop(0, "#0d1b3a");   // azul oscuro
+      g.addColorStop(0, "#0d1b3a"); // azul oscuro
       g.addColorStop(0.5, "#081326"); // intermedio
-      g.addColorStop(1, "#01060f");   // casi negro
+      g.addColorStop(1, "#01060f"); // casi negro
       ctx.fillStyle = g;
       ctx.fillRect(0, 0, w, h);
 
@@ -192,68 +190,76 @@ function Login({ setToken }) {
         </h2>
 
         <form onSubmit={handleLogin}>
-  <input
-    type="email"
-    placeholder="Correo"
-    value={email}
-    onChange={(e) => setEmail(e.target.value)}
-    required
-    style={{
-      width: "100%",
-      marginBottom: "12px",
-      padding: "10px",
-      borderRadius: "5px",
-      border: "none",
-    }}
-  />
-  <input
-    type="password"
-    placeholder="Contraseña"
-    value={password}
-    onChange={(e) => setPassword(e.target.value)}
-    required
-    style={{
-      width: "100%",
-      marginBottom: "12px",
-      padding: "10px",
-      borderRadius: "5px",
-      border: "none",
-    }}
-  />
-  <button
-    type="submit"
-    style={{
-      width: "100%",
-      padding: "10px",
-      backgroundColor: "#00aaff",
-      color: "white",
-      border: "none",
-      borderRadius: "5px",
-      cursor: "pointer",
-    }}
-  >
-    Ingresar
-  </button>
-</form>
+          <input
+            type="email"
+            placeholder="Correo"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            style={{
+              width: "100%",
+              marginBottom: "12px",
+              padding: "10px",
+              borderRadius: "5px",
+              border: "none",
+            }}
+          />
+          <input
+            type="password"
+            placeholder="Contraseña"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            style={{
+              width: "100%",
+              marginBottom: "12px",
+              padding: "10px",
+              borderRadius: "5px",
+              border: "none",
+            }}
+          />
+          <button
+            type="submit"
+            style={{
+              width: "100%",
+              padding: "10px",
+              backgroundColor: "#00aaff",
+              color: "white",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
+          >
+            Ingresar
+          </button>
+        </form>
 
-{/* 🔸 Enlace de registro */}
-<p
-  style={{
-    marginTop: "10px",
-    color: "#aad7ff",
-    cursor: "pointer",
-    textDecoration: "underline",
-  }}
-  onClick={() => window.location.href = "/register"}
->
-  ¿No tienes cuenta? Regístrate aquí
-</p>
+        {/* 🔸 Enlace de registro */}
+        <p
+          style={{
+            marginTop: "10px",
+            color: "#aad7ff",
+            cursor: "pointer",
+            textDecoration: "underline",
+          }}
+          onClick={() => (window.location.href = "/register")}
+        >
+          ¿No tienes cuenta? Regístrate aquí
+        </p>
 
-{/* 🔹 Botón de Google */}
-<div style={{ marginTop: "20px" }}>
-  <GoogleLogin
-    onSuccess={handleGoogleSuccess}
-    onError={handleGoogleError}
-  />
-</div>
+        {/* 🔹 Botón de Google */}
+        <div style={{ marginTop: "20px" }}>
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={handleGoogleError}
+          />
+        </div>
 
+        {/* Mensaje de estado */}
+        <p style={{ color: "#00aaff", marginTop: "15px" }}>{message}</p>
+      </div> {/* 🔹 Cierra el cuadro del formulario */}
+    </div>   {/* 🔹 Cierra el contenedor principal */}
+  );
+}
+
+export default Login;
