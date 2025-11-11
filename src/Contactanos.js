@@ -226,15 +226,18 @@ function Contactanos() {
       </div>
       {/* 👆 Este cierre era el que faltaba */}
 
-      <h1>
+      <h1
+        style={{
+          marginTop: "100px", // 👈 baja el contenido para que no quede tapado por la barra
+        }}
+      >
         <span
           onClick={logoClick}
           style={{ color: "blue", textDecoration: "none", cursor: "pointer" }}
         >
           MyBook - Contáctanos
         </span>
-      </h1>
-      <form
+      </h1>      <form
         onSubmit={handleSubmit}
         style={{ display: "inline-block", textAlign: "left" }}
       >
