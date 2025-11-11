@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { enviarContacto } from "./api";
 import { useNavigate } from "react-router-dom";
 
@@ -10,6 +10,9 @@ function Contactanos() {
   const [email, setEmail] = useState("");
   const [mensaje, setMensaje] = useState("");
   const [status, setStatus] = useState("");
+
+  const [menuVisible, setMenuVisible] = useState(false);
+  const menuRef = useRef(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,20 +42,29 @@ function Contactanos() {
     navigate(token ? "/muro" : "/");
   };
 
+  const handleCerrarSesion = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  };
+
+  const BASE_URL = "https://tuservidor.com"; // Ajusta si es necesario
+  const profilePicture = null; // O tu variable real
+
   return (
     <div style={{ textAlign: "center", marginTop: "50px" }}>
       {/* 🌌 Fondo degradado sin polígonos */}
-    <div
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: "100vw",
-        height: "100vh",
-        background: "radial-gradient(circle at 30% 20%, #0d1b3a 0%, #081326 50%, #01060f 100%)",
-        zIndex: -1,
-      }}
-    ></div>
+      <div
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100vw",
+          height: "100vh",
+          background:
+            "radial-gradient(circle at 30% 20%, #0d1b3a 0%, #081326 50%, #01060f 100%)",
+          zIndex: -1,
+        }}
+      ></div>
 
       {/* 🔵 BARRA SUPERIOR FIJA */}
       <div
@@ -210,7 +222,9 @@ function Contactanos() {
               </div>
             )}
           </div>
+        </div>
       </div>
+      {/* 👆 Este cierre era el que faltaba */}
 
       <h1>
         <span
@@ -232,7 +246,8 @@ function Contactanos() {
           onChange={(e) => setNombre(e.target.value)}
           required
         />
-        <br /><br />
+        <br />
+        <br />
 
         <label>Correo:</label>
         <br />
@@ -242,7 +257,8 @@ function Contactanos() {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-        <br /><br />
+        <br />
+        <br />
 
         <label>Mensaje:</label>
         <br />
@@ -253,7 +269,8 @@ function Contactanos() {
           cols={30}
           required
         />
-        <br /><br />
+        <br />
+        <br />
 
         <button type="submit">Enviar</button>
       </form>
