@@ -210,19 +210,8 @@ function Contactanos() {
               </div>
             )}
           </div>
-
-          <span
-            onClick={() => navigate("/chat")}
-            style={{
-              fontSize: "22px",
-              cursor: "pointer",
-              color: "#0d47a1",
-            }}
-          >
-            💬
-          </span>
-        </div>
       </div>
+
       <h1>
         <span
           onClick={logoClick}
