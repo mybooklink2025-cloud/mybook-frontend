@@ -166,7 +166,7 @@ function Contactanos() {
         </div>
       </div>
 
-      {/* 🔹 Barra lateral fija con efecto difuminado */}
+      {/* 🔹 BARRA LATERAL FIJA CON ICONOS */}
       <div
         style={{
           position: "fixed",
@@ -185,87 +185,42 @@ function Contactanos() {
           zIndex: 900,
         }}
       >
-        <a
-          href="/muro"
-          title="Inicio"
-          style={{
-            marginBottom: "25px",
-            fontSize: "22px",
-            textDecoration: "none",
-            color: "white",
-          }}
-        >
-          🏠
-        </a>
-        <a
-          href="/profile"
-          title="Perfil"
-          style={{
-            marginBottom: "25px",
-            fontSize: "22px",
-            textDecoration: "none",
-            color: "white",
-          }}
-        >
-          👤
-        </a>
-        <a
-          href="/chat"
-          title="Chat"
-          style={{
-            marginBottom: "25px",
-            fontSize: "22px",
-            textDecoration: "none",
-            color: "white",
-          }}
-        >
-          💬
-        </a>
-        <a
-          href="https://www.facebook.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          title="Facebook"
-          style={{
-            marginBottom: "25px",
-            fontSize: "22px",
-            textDecoration: "none",
-            color: "white",
-          }}
-        >
-          📘
-        </a>
-        <a
-          href="https://www.tiktok.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          title="TikTok"
-          style={{
-            marginBottom: "25px",
-            fontSize: "22px",
-            textDecoration: "none",
-            color: "white",
-          }}
-        >
-          🎵
-        </a>
-        <a
-          href="https://www.instagram.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          title="Instagram"
-          style={{
-            marginBottom: "25px",
-            fontSize: "22px",
-            textDecoration: "none",
-            color: "white",
-          }}
-        >
-          📸
-        </a>
+        {[
+          { icon: "🌐", url: "https://www.google.com", title: "Google" },
+          { icon: "🎬", url: "https://www.youtube.com", title: "YouTube" },
+          { icon: "🎵", url: "https://open.spotify.com", title: "Spotify" },
+          { icon: "📰", url: "https://news.google.com", title: "Noticias" },
+          { icon: "☁️", url: "https://weather.com", title: "Clima" },
+          { icon: "🕹️", url: "https://poki.com/es", title: "Juegos" },
+        ].map((item, i) => (
+          <a
+            key={i}
+            href={item.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            title={item.title}
+            style={{
+              marginBottom: "25px",
+              fontSize: "24px",
+              textDecoration: "none",
+              color: "white",
+              transition: "transform 0.3s ease, text-shadow 0.3s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.transform = "scale(1.4)";
+              e.target.style.textShadow = "0 0 8px white";
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.transform = "scale(1)";
+              e.target.style.textShadow = "none";
+            }}
+          >
+            {item.icon}
+          </a>
+        ))}
       </div>
 
-      {/* 📨 Contenido principal */}
+      {/* 📨 CONTENIDO PRINCIPAL */}
       <h1>
         <span
           onClick={logoClick}
