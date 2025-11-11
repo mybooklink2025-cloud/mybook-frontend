@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { enviarContacto } from "./api";
 import { useNavigate } from "react-router-dom";
 
@@ -10,9 +10,6 @@ function Contactanos() {
   const [email, setEmail] = useState("");
   const [mensaje, setMensaje] = useState("");
   const [status, setStatus] = useState("");
-
-  const [menuVisible, setMenuVisible] = useState(false);
-  const menuRef = useRef(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -42,16 +39,8 @@ function Contactanos() {
     navigate(token ? "/muro" : "/");
   };
 
-  const handleCerrarSesion = () => {
-    localStorage.removeItem("token");
-    navigate("/");
-  };
-
-  const BASE_URL = "https://tuservidor.com"; // Ajusta si es necesario
-  const profilePicture = null; // O tu variable real
-
   return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
+    <div style={{ textAlign: "center", marginTop: "70px", marginLeft: "80px" }}>
       {/* 🌌 Fondo degradado sin polígonos */}
       <div
         style={{
@@ -120,13 +109,21 @@ function Contactanos() {
         <div style={{ display: "flex", gap: "20px" }}>
           <a
             href="/profile"
-            style={{ color: "#0d47a1", textDecoration: "none", fontWeight: "bold" }}
+            style={{
+              color: "#0d47a1",
+              textDecoration: "none",
+              fontWeight: "bold",
+            }}
           >
             Perfil
           </a>
           <a
             href="/contactanos"
-            style={{ color: "#0d47a1", textDecoration: "none", fontWeight: "bold" }}
+            style={{
+              color: "#0d47a1",
+              textDecoration: "none",
+              fontWeight: "bold",
+            }}
           >
             Contáctanos
           </a>
@@ -143,7 +140,7 @@ function Contactanos() {
           </span>
         </div>
 
-        {/* Derecha: contactos + rueda + chat */}
+        {/* Derecha: contactos + rueda */}
         <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
           <button
             style={{
@@ -157,89 +154,134 @@ function Contactanos() {
             👥 Mis Contactos
           </button>
 
-          <div style={{ position: "relative" }} ref={menuRef}>
-            <span
-              onClick={() => setMenuVisible(!menuVisible)}
-              style={{
-                fontSize: "22px",
-                cursor: "pointer",
-                color: "#0d47a1",
-              }}
-            >
-              ⚙️
-            </span>
-
-            {menuVisible && (
-              <div
-                style={{
-                  position: "absolute",
-                  top: "35px",
-                  right: 0,
-                  backgroundColor: "white",
-                  borderRadius: "8px",
-                  boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
-                  width: "220px",
-                  zIndex: 2000,
-                  padding: "10px",
-                }}
-              >
-                <div
-                  style={{
-                    textAlign: "center",
-                    borderBottom: "1px solid #ddd",
-                    paddingBottom: "8px",
-                  }}
-                >
-                  <img
-                    src={
-                      profilePicture
-                        ? `${BASE_URL}/uploads/${profilePicture}`
-                        : "https://cdn-icons-png.flaticon.com/512/847/847969.png"
-                    }
-                    alt="Usuario"
-                    style={{ width: "50px", height: "50px", borderRadius: "50%" }}
-                  />
-                  <p style={{ fontSize: "14px", color: "#555" }}>
-                    {email || "usuario@mybook.com"}
-                  </p>
-                </div>
-                <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-                  <li style={{ padding: "8px", cursor: "pointer" }}>Tu cuenta</li>
-                  <li style={{ padding: "8px", cursor: "pointer" }}>Configuración</li>
-                  <li style={{ padding: "8px", cursor: "pointer" }}>Ayuda</li>
-                  <li
-                    onClick={handleCerrarSesion}
-                    style={{
-                      padding: "8px",
-                      color: "red",
-                      cursor: "pointer",
-                      borderTop: "1px solid #ddd",
-                    }}
-                  >
-                    Salir
-                  </li>
-                </ul>
-              </div>
-            )}
-          </div>
+          <span
+            style={{
+              fontSize: "22px",
+              cursor: "pointer",
+              color: "#0d47a1",
+            }}
+          >
+            ⚙️
+          </span>
         </div>
       </div>
-      {/* 👆 Este cierre era el que faltaba */}
 
-      <h1
+      {/* 🔹 Barra lateral fija con efecto difuminado */}
+      <div
         style={{
-          marginTop: "100px", // 👈 baja el contenido para que no quede tapado por la barra
+          position: "fixed",
+          top: "60px", // debajo de la barra superior
+          left: 0,
+          width: "65px",
+          height: "100vh",
+          background: "rgba(255, 255, 255, 0.2)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
+          borderRight: "1px solid rgba(255, 255, 255, 0.3)",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          paddingTop: "25px",
+          zIndex: 900,
         }}
       >
+        <a
+          href="/muro"
+          title="Inicio"
+          style={{
+            marginBottom: "25px",
+            fontSize: "22px",
+            textDecoration: "none",
+            color: "white",
+          }}
+        >
+          🏠
+        </a>
+        <a
+          href="/profile"
+          title="Perfil"
+          style={{
+            marginBottom: "25px",
+            fontSize: "22px",
+            textDecoration: "none",
+            color: "white",
+          }}
+        >
+          👤
+        </a>
+        <a
+          href="/chat"
+          title="Chat"
+          style={{
+            marginBottom: "25px",
+            fontSize: "22px",
+            textDecoration: "none",
+            color: "white",
+          }}
+        >
+          💬
+        </a>
+        <a
+          href="https://www.facebook.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Facebook"
+          style={{
+            marginBottom: "25px",
+            fontSize: "22px",
+            textDecoration: "none",
+            color: "white",
+          }}
+        >
+          📘
+        </a>
+        <a
+          href="https://www.tiktok.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="TikTok"
+          style={{
+            marginBottom: "25px",
+            fontSize: "22px",
+            textDecoration: "none",
+            color: "white",
+          }}
+        >
+          🎵
+        </a>
+        <a
+          href="https://www.instagram.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Instagram"
+          style={{
+            marginBottom: "25px",
+            fontSize: "22px",
+            textDecoration: "none",
+            color: "white",
+          }}
+        >
+          📸
+        </a>
+      </div>
+
+      {/* 📨 Contenido principal */}
+      <h1>
         <span
           onClick={logoClick}
-          style={{ color: "blue", textDecoration: "none", cursor: "pointer" }}
+          style={{
+            color: "white",
+            textDecoration: "none",
+            cursor: "pointer",
+          }}
         >
           MyBook - Contáctanos
         </span>
-      </h1>      <form
+      </h1>
+
+      <form
         onSubmit={handleSubmit}
-        style={{ display: "inline-block", textAlign: "left" }}
+        style={{ display: "inline-block", textAlign: "left", color: "white" }}
       >
         <label>Nombre:</label>
         <br />
@@ -278,7 +320,7 @@ function Contactanos() {
         <button type="submit">Enviar</button>
       </form>
 
-      <p style={{ color: "blue", marginTop: "10px" }}>{status}</p>
+      <p style={{ color: "lightblue", marginTop: "10px" }}>{status}</p>
 
       {/* Enlace directo a WhatsApp */}
       <p style={{ marginTop: "20px" }}>
@@ -286,7 +328,7 @@ function Contactanos() {
           href="https://wa.me/573233694655"
           target="_blank"
           rel="noopener noreferrer"
-          style={{ color: "blue", textDecoration: "underline" }}
+          style={{ color: "lightblue", textDecoration: "underline" }}
         >
           Escríbenos por WhatsApp 📱
         </a>
