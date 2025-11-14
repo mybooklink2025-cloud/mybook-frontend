@@ -66,7 +66,7 @@ function Chat() {
   };
 
   return (
-    <div style={{ textAlign: "center", padding: "20px" }}>
+    <div style={{ textAlign: "center", marginTop: "70px", marginLeft: "80px" }}>
       {/* 🌌 Fondo degradado sin polígonos */}
     <div
       style={{
