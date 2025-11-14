@@ -165,7 +165,7 @@ function Chat() {
           </span>
         </div>
 
-        {/* Derecha: contactos + rueda */}
+        {/* 🔹 Derecha: contactos, rueda, chat */}
         <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
           <button
             style={{
@@ -179,14 +179,82 @@ function Chat() {
             👥 Mis Contactos
           </button>
 
+          {/* ⚙️ Rueda de configuración */}
+          <div style={{ position: "relative" }} ref={menuRef}>
+            <span
+              onClick={() => setMenuVisible(!menuVisible)}
+              style={{
+                fontSize: "22px",
+                cursor: "pointer",
+                color: "#0d47a1",
+              }}
+            >
+              ⚙️
+            </span>
+
+            {menuVisible && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: "35px",
+                  right: 0,
+                  backgroundColor: "white",
+                  borderRadius: "8px",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+                  width: "220px",
+                  zIndex: 2000,
+                  padding: "10px",
+                }}
+              >
+                <div
+                  style={{
+                    textAlign: "center",
+                    borderBottom: "1px solid #ddd",
+                    paddingBottom: "8px",
+                  }}
+                >
+                  <img
+                    src={fotoUsuario}
+                    alt="Usuario"
+                    style={{ width: "50px", height: "50px", borderRadius: "50%" }}
+                  />
+                  <p style={{ fontSize: "14px", color: "#555" }}>
+                    {localStorage.getItem("email") || "usuario@mybook.com"}
+                  </p>
+                </div>
+                <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+                  <li style={{ padding: "8px", cursor: "pointer" }}>Tu cuenta</li>
+                  <li style={{ padding: "8px", cursor: "pointer" }}>Configuración</li>
+                  <li style={{ padding: "8px", cursor: "pointer" }}>Ayuda</li>
+                  <li
+                    onClick={() => {
+                      localStorage.removeItem("token");
+                      navigate("/");
+                    }}
+                    style={{
+                      padding: "8px",
+                      color: "red",
+                      cursor: "pointer",
+                      borderTop: "1px solid #ddd",
+                    }}
+                  >
+                    Salir
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div>
+
+          {/* 💬 Botón de chat */}
           <span
+            onClick={() => navigate("/chat")}
             style={{
               fontSize: "22px",
               cursor: "pointer",
               color: "#0d47a1",
             }}
           >
-            ⚙️
+            💬
           </span>
         </div>
       </div>
