@@ -80,6 +80,117 @@ function Chat() {
       }}
     ></div>
 
+      {/* 🔵 BARRA SUPERIOR FIJA */}
+      <div
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          backgroundColor: "#e3f2fd",
+          height: "60px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "0 20px",
+          boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
+          zIndex: 1000,
+        }}
+      >
+        {/* Izquierda: M + buscador */}
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <div
+            style={{
+              backgroundColor: "blue",
+              color: "white",
+              borderRadius: "50%",
+              width: "35px",
+              height: "35px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontWeight: "bold",
+              fontSize: "20px",
+              cursor: "pointer",
+              marginRight: "10px",
+            }}
+            onClick={logoClick}
+          >
+            M
+          </div>
+          <input
+            type="text"
+            placeholder="Buscar en MyBook..."
+            style={{
+              padding: "6px 10px",
+              borderRadius: "20px",
+              border: "1px solid #ccc",
+              width: "250px",
+            }}
+          />
+        </div>
+
+        {/* Centro: enlaces */}
+        <div style={{ display: "flex", gap: "20px" }}>
+          <a
+            href="/profile"
+            style={{
+              color: "#0d47a1",
+              textDecoration: "none",
+              fontWeight: "bold",
+            }}
+          >
+            Perfil
+          </a>
+          <a
+            href="/contactanos"
+            style={{
+              color: "#0d47a1",
+              textDecoration: "none",
+              fontWeight: "bold",
+            }}
+          >
+            Contáctanos
+          </a>
+          <span
+            onClick={() => navigate("/chat")}
+            style={{
+              color: "#0d47a1",
+              textDecoration: "none",
+              fontWeight: "bold",
+              cursor: "pointer",
+            }}
+          >
+            Chat
+          </span>
+        </div>
+
+        {/* Derecha: contactos + rueda */}
+        <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+          <button
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              color: "#0d47a1",
+              fontWeight: "bold",
+            }}
+          >
+            👥 Mis Contactos
+          </button>
+
+          <span
+            style={{
+              fontSize: "22px",
+              cursor: "pointer",
+              color: "#0d47a1",
+            }}
+          >
+            ⚙️
+          </span>
+        </div>
+      </div>
+
       {/* LOGO MyBook azul centrado */}
       <h1>
         <span
