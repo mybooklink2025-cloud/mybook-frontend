@@ -66,7 +66,7 @@ function Chat() {
   };
 
   return (
-    <div style={{ textAlign: "center", marginTop: "70px" }}>
+    <div className="muro-page">
       {/* 🌌 Fondo degradado sin polígonos */}
     <div
       style={{
@@ -87,7 +87,7 @@ function Chat() {
           top: 0,
           left: 0,
           width: "100%",
-          backgroundColor: "#e3f2fd",
+          backgroundColor: "#e3f2fd", // Azul muy claro
           height: "60px",
           display: "flex",
           alignItems: "center",
@@ -97,7 +97,7 @@ function Chat() {
           zIndex: 1000,
         }}
       >
-        {/* Izquierda: M + buscador */}
+        {/* 🔹 Izquierda: M + buscador */}
         <div style={{ display: "flex", alignItems: "center" }}>
           <div
             style={{
@@ -130,25 +130,17 @@ function Chat() {
           />
         </div>
 
-        {/* Centro: enlaces */}
+        {/* 🔹 Centro: enlaces */}
         <div style={{ display: "flex", gap: "20px" }}>
           <a
             href="/profile"
-            style={{
-              color: "#0d47a1",
-              textDecoration: "none",
-              fontWeight: "bold",
-            }}
+            style={{ color: "#0d47a1", textDecoration: "none", fontWeight: "bold" }}
           >
             Perfil
           </a>
           <a
             href="/contactanos"
-            style={{
-              color: "#0d47a1",
-              textDecoration: "none",
-              fontWeight: "bold",
-            }}
+            style={{ color: "#0d47a1", textDecoration: "none", fontWeight: "bold" }}
           >
             Contáctanos
           </a>
