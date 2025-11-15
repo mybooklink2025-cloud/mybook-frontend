@@ -267,6 +267,7 @@ function Chat() {
       <div
         style={{
           display: "flex",
+          color: "blue",
           justifyContent: "center",
           alignItems: "flex-start",
           gap: "20px",

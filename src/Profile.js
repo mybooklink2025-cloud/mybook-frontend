@@ -304,71 +304,58 @@ function Profile({ token }) {
         </div>
       </div>
 
-      {/* 🍔 Botón de hamburguesa y barra lateral */}
+      {/* 🔹 BARRA LATERAL FIJA CON ICONOS */}
       <div
         style={{
           position: "fixed",
-          top: "80px",
-          left: sidebarVisible ? "260px" : "10px",
-          zIndex: 1100,
-          transition: "left 0.3s ease",
+          top: "60px", // debajo de la barra superior
+          left: 0,
+          width: "65px",
+          height: "100vh",
+          background: "rgba(255, 255, 255, 0.2)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
+          borderRight: "1px solid rgba(255, 255, 255, 0.3)",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          paddingTop: "25px",
+          zIndex: 900,
         }}
       >
-        <div
-          onClick={() => setSidebarVisible(!sidebarVisible)}
-          style={{
-            cursor: "pointer",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: "3px",
-            width: "25px",
-            height: "25px",
-            backgroundColor: "white",
-            borderRadius: "4px",
-            boxShadow: "0 1px 4px rgba(0,0,0,0.2)",
-            padding: "3px",
-          }}
-        >
-          <div style={{ width: "22px", height: "2px", backgroundColor: "blue" }}></div>
-          <div style={{ width: "22px", height: "2px", backgroundColor: "blue" }}></div>
-          <div style={{ width: "22px", height: "2px", backgroundColor: "blue" }}></div>
-        </div>
-      </div>
-
-      {/* 🔹 Barra lateral animada */}
-      <div
-        ref={sidebarRef}
-        className="sidebar"
-        style={{
-          position: "fixed",
-          top: "80px",
-          left: sidebarVisible ? "0" : "-250px",
-          width: "250px",
-          height: "100%",
-          backgroundColor: "white",
-          boxShadow: "2px 0 5px rgba(0,0,0,0.2)",
-          transition: "left 0.3s ease",
-          zIndex: 1000,
-          padding: "20px",
-        }}
-      >
-        <h3>Enlaces rápidos</h3>
-        <ul style={{ listStyle: "none", padding: 0 }}>
-          {linksFijos.map((link) => (
-            <li key={link.nombre} style={{ marginBottom: "10px" }}>
-              <a
-                href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ color: "blue", textDecoration: "none", fontWeight: "bold" }}
-              >
-                {link.nombre}
-              </a>
-            </li>
-          ))}
-        </ul>
+        {[
+          { icon: "🌐", url: "https://www.google.com", title: "Google" },
+          { icon: "🎬", url: "https://www.youtube.com", title: "YouTube" },
+          { icon: "🎵", url: "https://open.spotify.com", title: "Spotify" },
+          { icon: "📰", url: "https://news.google.com", title: "Noticias" },
+          { icon: "☁️", url: "https://weather.com", title: "Clima" },
+          { icon: "🕹️", url: "https://poki.com/es", title: "Juegos" },
+        ].map((item, i) => (
+          <a
+            key={i}
+            href={item.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            title={item.title}
+            style={{
+              marginBottom: "25px",
+              fontSize: "24px",
+              textDecoration: "none",
+              color: "white",
+              transition: "transform 0.3s ease, text-shadow 0.3s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.transform = "scale(1.4)";
+              e.target.style.textShadow = "0 0 8px white";
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.transform = "scale(1)";
+              e.target.style.textShadow = "none";
+            }}
+          >
+            {item.icon}
+          </a>
+        ))}
       </div>
 
       {/* 🔹 CONTENIDO DEL PERFIL */}
