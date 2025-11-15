@@ -261,7 +261,7 @@ function Chat() {
         </span>
       </h1>
 
-      <h2>💬 Chat en tiempo real</h2>
+      <h2 style={{ color: "blue" }}>💬 Chat en tiempo real</h2>
 
       {/* Contenedor principal */}
       <div
