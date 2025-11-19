@@ -224,7 +224,7 @@ function Muro() {
 
       {/* 🔹 Contenido principal (desplazado hacia abajo por la barra) */}
       <div style={{ marginTop: "80px" }}>
-{/* 🔹 BARRA LATERAL FIJA CON ICONOS REALES */}
+{/* 🔹 BARRA LATERAL FIJA CON ICONOS REALMENTE FUNCIONALES */}
 <div
     style={{
         position: "fixed",
@@ -252,27 +252,27 @@ function Muro() {
         {
             title: "YouTube",
             url: "https://www.youtube.com",
-            icon: "https://www.youtube.com/s/desktop/fe1f0c45/img/favicon_144x144.png"
+            icon: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f4fa.svg"
         },
         {
             title: "Spotify",
             url: "https://open.spotify.com",
-            icon: "https://storage.googleapis.com/pr-newsroom-wp/1/2018/11/Spotify_Icon_RGB_Green.png"
+            icon: "https://cdn-icons-png.flaticon.com/512/174/174872.png"
         },
         {
             title: "Noticias",
             url: "https://news.google.com",
-            icon: "https://www.gstatic.com/images/branding/product/2x/news_96dp.png"
+            icon: "https://cdn-icons-png.flaticon.com/512/2965/2965879.png"
         },
         {
             title: "Clima",
             url: "https://weather.com",
-            icon: "https://weather.com/apple-touch-icon.png"
+            icon: "https://cdn-icons-png.flaticon.com/512/1163/1163661.png"
         },
         {
-            title: "Juegos",
+            title: "Juegos (Poki)",
             url: "https://poki.com/es",
-            icon: "https://poki.com/favicon.ico"
+            icon: "https://cdn-icons-png.flaticon.com/512/1048/1048953.png"
         },
     ].map((item, index) => (
         <a
