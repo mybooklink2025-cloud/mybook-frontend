@@ -17,6 +17,8 @@ function Profile({ token }) {
   // 👉 NUEVOS ESTADOS para la barra lateral
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const sidebarRef = useRef(null);
+  const [showBook, setShowBook] = useState(false);
+
 
   const BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
