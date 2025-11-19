@@ -134,175 +134,167 @@ function Profile({ token }) {
         }}
       ></div>
 
-      {/* 🔵 BARRA SUPERIOR FIJA */}
-      <div
+{/* 🔵 BARRA SUPERIOR FIJA — IGUAL AL MURO */}
+<div
+  style={{
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100%",
+    backgroundColor: "#e3f2fd",
+    height: "60px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: "0 20px",
+    boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
+    zIndex: 1000,
+  }}
+>
+
+  {/* 🔍 IZQUIERDA: Ícono de lupa */}
+  <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
+    <span
+      style={{
+        fontSize: "22px",
+        cursor: "pointer",
+        color: "#0d47a1",
+      }}
+    >
+      🔍
+    </span>
+  </div>
+
+  {/* 🅼 CENTRO: LOGO — CLIC PARA IR AL MURO */}
+  <div
+    onClick={logoClick}
+    style={{
+      backgroundColor: "blue",
+      color: "white",
+      borderRadius: "50%",
+      width: "40px",
+      height: "40px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      fontWeight: "bold",
+      fontSize: "22px",
+      cursor: "pointer",
+    }}
+  >
+    M
+  </div>
+
+  {/* ⚙️ DERECHA: Configuración + Chat */}
+  <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+
+    {/* ⚙️ MENÚ */}
+    <div style={{ position: "relative" }} ref={menuRef}>
+      <span
+        onClick={() => setMenuVisible(!menuVisible)}
         style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
-          backgroundColor: "#e3f2fd",
-          height: "60px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "0 20px",
-          boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
-          zIndex: 1000,
+          fontSize: "22px",
+          cursor: "pointer",
+          color: "#0d47a1",
+          marginRight: "8px", // 👉 Corrección para evitar que quede pegado al borde
         }}
       >
-        {/* Izquierda: M + buscador */}
-        <div style={{ display: "flex", alignItems: "center" }}>
+        ⚙️
+      </span>
+
+      {menuVisible && (
+        <div
+          style={{
+            position: "absolute",
+            top: "35px",
+            right: 0,
+            backgroundColor: "white",
+            borderRadius: "8px",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+            width: "220px",
+            zIndex: 2000,
+            padding: "10px",
+          }}
+        >
+          {/* Perfil compacto */}
           <div
             style={{
-              backgroundColor: "blue",
-              color: "white",
-              borderRadius: "50%",
-              width: "35px",
-              height: "35px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontWeight: "bold",
-              fontSize: "20px",
-              cursor: "pointer",
-              marginRight: "10px",
+              textAlign: "center",
+              borderBottom: "1px solid #ddd",
+              paddingBottom: "8px",
             }}
-            onClick={logoClick}
           >
-            M
+            <img
+              src={
+                profilePicture
+                  ? `${BASE_URL}/uploads/${profilePicture}`
+                  : "https://cdn-icons-png.flaticon.com/512/847/847969.png"
+              }
+              alt="Usuario"
+              style={{ width: "50px", height: "50px", borderRadius: "50%" }}
+            />
+            <p style={{ fontSize: "14px", color: "#555" }}>
+              {email || "usuario@mybook.com"}
+            </p>
           </div>
-          <input
-            type="text"
-            placeholder="Buscar en MyBook..."
-            style={{
-              padding: "6px 10px",
-              borderRadius: "20px",
-              border: "1px solid #ccc",
-              width: "250px",
-            }}
-          />
-        </div>
 
-        {/* Centro: enlaces */}
-        <div style={{ display: "flex", gap: "20px" }}>
-          <a
-            href="/profile"
-            style={{ color: "#0d47a1", textDecoration: "none", fontWeight: "bold" }}
-          >
-            Perfil
-          </a>
-          <a
-            href="/contactanos"
-            style={{ color: "#0d47a1", textDecoration: "none", fontWeight: "bold" }}
-          >
-            Contáctanos
-          </a>
-          <span
-            onClick={() => navigate("/chat")}
-            style={{
-              color: "#0d47a1",
-              textDecoration: "none",
-              fontWeight: "bold",
-              cursor: "pointer",
-            }}
-          >
-            Chat
-          </span>
-        </div>
+          {/* Opciones del menú */}
+          <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+            <li
+              onClick={() => navigate("/profile")}
+              style={{ padding: "8px", cursor: "pointer" }}
+            >
+              Perfil
+            </li>
+            <li
+              onClick={() => navigate("/contactanos")}
+              style={{ padding: "8px", cursor: "pointer" }}
+            >
+              Contáctanos
+            </li>
+            <li
+              onClick={() => navigate("/chat")}
+              style={{ padding: "8px", cursor: "pointer" }}
+            >
+              Chat
+            </li>
 
-        {/* Derecha: contactos + rueda + chat */}
-        <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-          <button
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              color: "#0d47a1",
-              fontWeight: "bold",
-            }}
-          >
-            👥 Mis Contactos
-          </button>
+            <li style={{ padding: "8px", cursor: "pointer" }}>
+              Configuración
+            </li>
+            <li style={{ padding: "8px", cursor: "pointer" }}>
+              Ayuda
+            </li>
 
-          <div style={{ position: "relative" }} ref={menuRef}>
-            <span
-              onClick={() => setMenuVisible(!menuVisible)}
+            <li
+              onClick={handleCerrarSesion}
               style={{
-                fontSize: "22px",
+                padding: "8px",
+                color: "red",
                 cursor: "pointer",
-                color: "#0d47a1",
+                borderTop: "1px solid #ddd",
               }}
             >
-              ⚙️
-            </span>
-
-            {menuVisible && (
-              <div
-                style={{
-                  position: "absolute",
-                  top: "35px",
-                  right: 0,
-                  backgroundColor: "white",
-                  borderRadius: "8px",
-                  boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
-                  width: "220px",
-                  zIndex: 2000,
-                  padding: "10px",
-                }}
-              >
-                <div
-                  style={{
-                    textAlign: "center",
-                    borderBottom: "1px solid #ddd",
-                    paddingBottom: "8px",
-                  }}
-                >
-                  <img
-                    src={
-                      profilePicture
-                        ? `${BASE_URL}/uploads/${profilePicture}`
-                        : "https://cdn-icons-png.flaticon.com/512/847/847969.png"
-                    }
-                    alt="Usuario"
-                    style={{ width: "50px", height: "50px", borderRadius: "50%" }}
-                  />
-                  <p style={{ fontSize: "14px", color: "#555" }}>
-                    {email || "usuario@mybook.com"}
-                  </p>
-                </div>
-                <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-                  <li style={{ padding: "8px", cursor: "pointer" }}>Tu cuenta</li>
-                  <li style={{ padding: "8px", cursor: "pointer" }}>Configuración</li>
-                  <li style={{ padding: "8px", cursor: "pointer" }}>Ayuda</li>
-                  <li
-                    onClick={handleCerrarSesion}
-                    style={{
-                      padding: "8px",
-                      color: "red",
-                      cursor: "pointer",
-                      borderTop: "1px solid #ddd",
-                    }}
-                  >
-                    Salir
-                  </li>
-                </ul>
-              </div>
-            )}
-          </div>
-
-          <span
-            onClick={() => navigate("/chat")}
-            style={{
-              fontSize: "22px",
-              cursor: "pointer",
-              color: "#0d47a1",
-            }}
-          >
-            💬
-          </span>
+              Salir
+            </li>
+          </ul>
         </div>
-      </div>
+      )}
+    </div>
+
+    {/* 💬 Chat directo */}
+    <span
+      onClick={() => navigate("/chat")}
+      style={{
+        fontSize: "22px",
+        cursor: "pointer",
+        color: "#0d47a1",
+      }}
+    >
+      💬
+    </span>
+  </div>
+</div>
 
       {/* 🔹 BARRA LATERAL FIJA CON ICONOS */}
       <div
