@@ -249,12 +249,11 @@ function Muro() {
             url: "https://www.google.com",
             icon: "https://www.google.com/favicon.ico"
         },
-        {
-            title: "YouTube",
-            url: "https://www.youtube.com",
-            icon: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f4fa.svg"
-        },
-        {
+{
+    title: "YouTube",
+    url: "https://www.youtube.com",
+    icon: "https://cdn-icons-png.flaticon.com/512/1384/1384060.png"
+},        {
             title: "Spotify",
             url: "https://open.spotify.com",
             icon: "https://cdn-icons-png.flaticon.com/512/174/174872.png"
