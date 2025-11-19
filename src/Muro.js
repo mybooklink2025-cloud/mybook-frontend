@@ -17,6 +17,7 @@ function Muro() {
   const [fotoUsuario] = useState("https://cdn-icons-png.flaticon.com/512/847/847969.png");
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
+  const [showBook, setShowBook] = useState(false);
 
   const menuRef = useRef(null);
   const sidebarRef = useRef(null);
