@@ -210,6 +210,7 @@ function Contactanos() {
                 </ul>
               </div>
             </div>
+          </div>
 
       {/* 🔹 BARRA LATERAL FIJA CON ICONOS */}
       <div
