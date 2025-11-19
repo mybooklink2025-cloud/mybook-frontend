@@ -134,7 +134,7 @@ function Profile({ token }) {
         }}
       ></div>
 
-{/* 🔵 BARRA SUPERIOR FIJA — IGUAL AL MURO */}
+{/* 🔵 BARRA SUPERIOR FIJA */}
 <div
   style={{
     position: "fixed",
@@ -152,43 +152,90 @@ function Profile({ token }) {
   }}
 >
 
-  {/* 🔍 IZQUIERDA: Ícono de lupa */}
-  <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
-    <span
+  {/* 🔹 Izquierda: LOGO M + libro animado */}
+  <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
+
+    <div
+      onClick={logoClick}
       style={{
+        backgroundColor: "blue",
+        color: "white",
+        borderRadius: "50%",
+        width: "40px",
+        height: "40px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontWeight: "bold",
         fontSize: "22px",
+        cursor: "pointer",
+        position: "relative",
+        zIndex: 2,
+      }}
+      onMouseEnter={() => setShowBook(true)}
+      onMouseLeave={() => setShowBook(false)}
+    >
+      M
+    </div>
+
+    {showBook && (
+      <div
+        style={{
+          position: "absolute",
+          left: "-70px",
+          top: "0px",
+          width: "50px",
+          height: "50px",
+          animation: "floatBook 1.5s ease-in-out infinite",
+          filter: "drop-shadow(0px 0px 8px #3f8cff)",
+          opacity: 1,
+        }}
+      >
+        <img
+          src="https://cdn-icons-png.flaticon.com/512/29/29302.png"
+          alt="Libro animado"
+          style={{
+            width: "50px",
+            height: "50px",
+          }}
+        />
+      </div>
+    )}
+  </div>
+
+  <div></div>
+
+  {/* 🔹 Derecha */}
+  <div
+    style={{
+      display: "flex",
+      alignItems: "center",
+      gap: "20px",
+      marginRight: "40px",
+    }}
+  >
+    <div
+      style={{
+        fontSize: "26px",
         cursor: "pointer",
         color: "#0d47a1",
       }}
     >
       🔍
-    </span>
-  </div>
+    </div>
 
-  {/* 🅼 CENTRO: LOGO — CLIC PARA IR AL MURO */}
-  <div
-    onClick={logoClick}
-    style={{
-      backgroundColor: "blue",
-      color: "white",
-      borderRadius: "50%",
-      width: "40px",
-      height: "40px",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      fontWeight: "bold",
-      fontSize: "22px",
-      cursor: "pointer",
-    }}
-  >
-    M
-  </div>
+    <button
+      style={{
+        background: "none",
+        border: "none",
+        cursor: "pointer",
+        color: "#0d47a1",
+        fontWeight: "bold",
+      }}
+    >
+      👥 Mis Contactos
+    </button>
 
-  {/* ⚙️ DERECHA: Configuración + Chat */}
-  <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-
-    {/* ⚙️ MENÚ */}
     <div style={{ position: "relative" }} ref={menuRef}>
       <span
         onClick={() => setMenuVisible(!menuVisible)}
@@ -196,7 +243,6 @@ function Profile({ token }) {
           fontSize: "22px",
           cursor: "pointer",
           color: "#0d47a1",
-          marginRight: "8px", // 👉 Corrección para evitar que quede pegado al borde
         }}
       >
         ⚙️
@@ -216,7 +262,6 @@ function Profile({ token }) {
             padding: "10px",
           }}
         >
-          {/* Perfil compacto */}
           <div
             style={{
               textAlign: "center",
@@ -225,49 +270,28 @@ function Profile({ token }) {
             }}
           >
             <img
-              src={
-                profilePicture
-                  ? `${BASE_URL}/uploads/${profilePicture}`
-                  : "https://cdn-icons-png.flaticon.com/512/847/847969.png"
-              }
+              src={fotoUsuario}
               alt="Usuario"
               style={{ width: "50px", height: "50px", borderRadius: "50%" }}
             />
             <p style={{ fontSize: "14px", color: "#555" }}>
-              {email || "usuario@mybook.com"}
+              {localStorage.getItem("email") || "usuario@mybook.com"}
             </p>
           </div>
 
-          {/* Opciones del menú */}
           <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-            <li
-              onClick={() => navigate("/profile")}
-              style={{ padding: "8px", cursor: "pointer" }}
-            >
-              Perfil
-            </li>
-            <li
-              onClick={() => navigate("/contactanos")}
-              style={{ padding: "8px", cursor: "pointer" }}
-            >
-              Contáctanos
-            </li>
-            <li
-              onClick={() => navigate("/chat")}
-              style={{ padding: "8px", cursor: "pointer" }}
-            >
-              Chat
-            </li>
+            <li style={{ padding: "8px", cursor: "pointer" }} onClick={() => navigate("/profile")}>Perfil</li>
+            <li style={{ padding: "8px", cursor: "pointer" }} onClick={() => navigate("/contactanos")}>Contáctanos</li>
+            <li style={{ padding: "8px", cursor: "pointer" }} onClick={() => navigate("/chat")}>Chat</li>
 
-            <li style={{ padding: "8px", cursor: "pointer" }}>
-              Configuración
-            </li>
-            <li style={{ padding: "8px", cursor: "pointer" }}>
-              Ayuda
-            </li>
+            <li style={{ padding: "8px", cursor: "pointer" }}>Configuración</li>
+            <li style={{ padding: "8px", cursor: "pointer" }}>Ayuda</li>
 
             <li
-              onClick={handleCerrarSesion}
+              onClick={() => {
+                localStorage.removeItem("token");
+                navigate("/");
+              }}
               style={{
                 padding: "8px",
                 color: "red",
@@ -281,20 +305,18 @@ function Profile({ token }) {
         </div>
       )}
     </div>
-
-    {/* 💬 Chat directo */}
-    <span
-      onClick={() => navigate("/chat")}
-      style={{
-        fontSize: "22px",
-        cursor: "pointer",
-        color: "#0d47a1",
-      }}
-    >
-      💬
-    </span>
   </div>
 </div>
+
+<style>
+  {`
+    @keyframes floatBook {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+      100% { transform: translateY(0); }
+    }
+  `}
+</style>
 
 {/* 🔹 BARRA LATERAL FIJA CON ICONOS REALMENTE FUNCIONALES */}
 <div
