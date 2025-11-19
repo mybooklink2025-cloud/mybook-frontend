@@ -120,7 +120,7 @@ function Muro() {
   </div>
 
   {/* 🔹 Derecha: contactos + rueda + (chat eliminado aquí) */}
-  <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+  <div style={{ display: "flex", alignItems: "center", gap: "20px", marginRight: "-10px", }}>
     <button
       style={{
         background: "none",
