@@ -76,176 +76,151 @@ function Muro() {
       }}
     ></div>
 
-      {/* 🔵 BARRA SUPERIOR FIJA */}
-      <div
+{/* 🔵 BARRA SUPERIOR FIJA */}
+<div
+  style={{
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100%",
+    backgroundColor: "#e3f2fd",
+    height: "60px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: "0 20px",
+    boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
+    zIndex: 1000,
+  }}
+>
+
+  {/* 🔹 Izquierda: ícono de lupa */}
+  <div style={{ fontSize: "26px", cursor: "pointer", color: "#0d47a1" }}>
+    🔍
+  </div>
+
+  {/* 🔹 Centro: LOGO M */}
+  <div
+    style={{
+      backgroundColor: "blue",
+      color: "white",
+      borderRadius: "50%",
+      width: "40px",
+      height: "40px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      fontWeight: "bold",
+      fontSize: "22px",
+      cursor: "pointer",
+    }}
+    onClick={logoClick}
+  >
+    M
+  </div>
+
+  {/* 🔹 Derecha: contactos + rueda + (chat eliminado aquí) */}
+  <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+    <button
+      style={{
+        background: "none",
+        border: "none",
+        cursor: "pointer",
+        color: "#0d47a1",
+        fontWeight: "bold",
+      }}
+    >
+      👥 Mis Contactos
+    </button>
+
+    {/* ⚙️ Menú de configuración */}
+    <div style={{ position: "relative" }} ref={menuRef}>
+      <span
+        onClick={() => setMenuVisible(!menuVisible)}
         style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
-          backgroundColor: "#e3f2fd", // Azul muy claro
-          height: "60px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "0 20px",
-          boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
-          zIndex: 1000,
+          fontSize: "22px",
+          cursor: "pointer",
+          color: "#0d47a1",
         }}
       >
-        {/* 🔹 Izquierda: M + buscador */}
-        <div style={{ display: "flex", alignItems: "center" }}>
+        ⚙️
+      </span>
+
+      {menuVisible && (
+        <div
+          style={{
+            position: "absolute",
+            top: "35px",
+            right: 0,
+            backgroundColor: "white",
+            borderRadius: "8px",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+            width: "220px",
+            zIndex: 2000,
+            padding: "10px",
+          }}
+        >
           <div
             style={{
-              backgroundColor: "blue",
-              color: "white",
-              borderRadius: "50%",
-              width: "35px",
-              height: "35px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontWeight: "bold",
-              fontSize: "20px",
-              cursor: "pointer",
-              marginRight: "10px",
+              textAlign: "center",
+              borderBottom: "1px solid #ddd",
+              paddingBottom: "8px",
             }}
-            onClick={logoClick}
           >
-            M
+            <img
+              src={fotoUsuario}
+              alt="Usuario"
+              style={{ width: "50px", height: "50px", borderRadius: "50%" }}
+            />
+            <p style={{ fontSize: "14px", color: "#555" }}>
+              {localStorage.getItem("email") || "usuario@mybook.com"}
+            </p>
           </div>
-          <input
-            type="text"
-            placeholder="Buscar en MyBook..."
-            style={{
-              padding: "6px 10px",
-              borderRadius: "20px",
-              border: "1px solid #ccc",
-              width: "250px",
-            }}
-          />
-        </div>
 
-        {/* 🔹 Centro: enlaces */}
-        <div style={{ display: "flex", gap: "20px" }}>
-          <a
-            href="/profile"
-            style={{ color: "#0d47a1", textDecoration: "none", fontWeight: "bold" }}
-          >
-            Perfil
-          </a>
-          <a
-            href="/contactanos"
-            style={{ color: "#0d47a1", textDecoration: "none", fontWeight: "bold" }}
-          >
-            Contáctanos
-          </a>
-          <span
-            onClick={() => navigate("/chat")}
-            style={{
-              color: "#0d47a1",
-              textDecoration: "none",
-              fontWeight: "bold",
-              cursor: "pointer",
-            }}
-          >
-            Chat
-          </span>
-        </div>
+          {/* 📌 Enlaces movidos dentro del menú */}
+          <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+            <li
+              style={{ padding: "8px", cursor: "pointer" }}
+              onClick={() => navigate("/profile")}
+            >
+              Perfil
+            </li>
+            <li
+              style={{ padding: "8px", cursor: "pointer" }}
+              onClick={() => navigate("/contactanos")}
+            >
+              Contáctanos
+            </li>
+            <li
+              style={{ padding: "8px", cursor: "pointer" }}
+              onClick={() => navigate("/chat")}
+            >
+              Chat
+            </li>
 
-        {/* 🔹 Derecha: contactos, rueda, chat */}
-        <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-          <button
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              color: "#0d47a1",
-              fontWeight: "bold",
-            }}
-          >
-            👥 Mis Contactos
-          </button>
+            <li style={{ padding: "8px", cursor: "pointer" }}>Configuración</li>
+            <li style={{ padding: "8px", cursor: "pointer" }}>Ayuda</li>
 
-          {/* ⚙️ Rueda de configuración */}
-          <div style={{ position: "relative" }} ref={menuRef}>
-            <span
-              onClick={() => setMenuVisible(!menuVisible)}
+            <li
+              onClick={() => {
+                localStorage.removeItem("token");
+                navigate("/");
+              }}
               style={{
-                fontSize: "22px",
+                padding: "8px",
+                color: "red",
                 cursor: "pointer",
-                color: "#0d47a1",
+                borderTop: "1px solid #ddd",
               }}
             >
-              ⚙️
-            </span>
-
-            {menuVisible && (
-              <div
-                style={{
-                  position: "absolute",
-                  top: "35px",
-                  right: 0,
-                  backgroundColor: "white",
-                  borderRadius: "8px",
-                  boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
-                  width: "220px",
-                  zIndex: 2000,
-                  padding: "10px",
-                }}
-              >
-                <div
-                  style={{
-                    textAlign: "center",
-                    borderBottom: "1px solid #ddd",
-                    paddingBottom: "8px",
-                  }}
-                >
-                  <img
-                    src={fotoUsuario}
-                    alt="Usuario"
-                    style={{ width: "50px", height: "50px", borderRadius: "50%" }}
-                  />
-                  <p style={{ fontSize: "14px", color: "#555" }}>
-                    {localStorage.getItem("email") || "usuario@mybook.com"}
-                  </p>
-                </div>
-                <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-                  <li style={{ padding: "8px", cursor: "pointer" }}>Tu cuenta</li>
-                  <li style={{ padding: "8px", cursor: "pointer" }}>Configuración</li>
-                  <li style={{ padding: "8px", cursor: "pointer" }}>Ayuda</li>
-                  <li
-                    onClick={() => {
-                      localStorage.removeItem("token");
-                      navigate("/");
-                    }}
-                    style={{
-                      padding: "8px",
-                      color: "red",
-                      cursor: "pointer",
-                      borderTop: "1px solid #ddd",
-                    }}
-                  >
-                    Salir
-                  </li>
-                </ul>
-              </div>
-            )}
-          </div>
-
-          {/* 💬 Botón de chat */}
-          <span
-            onClick={() => navigate("/chat")}
-            style={{
-              fontSize: "22px",
-              cursor: "pointer",
-              color: "#0d47a1",
-            }}
-          >
-            💬
-          </span>
+              Salir
+            </li>
+          </ul>
         </div>
-      </div>
+      )}
+    </div>
+  </div>
+</div>
 
       {/* 🔹 Contenido principal (desplazado hacia abajo por la barra) */}
       <div style={{ marginTop: "80px" }}>
