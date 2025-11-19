@@ -39,15 +39,6 @@ function Muro() {
     navigate("/muro");
   };
 
-  const linksFijos = [
-    { nombre: "Facebook", url: "https://facebook.com" },
-    { nombre: "Instagram", url: "https://instagram.com" },
-    { nombre: "TikTok", url: "https://www.tiktok.com" },
-    { nombre: "X (Twitter)", url: "https://x.com" },
-    { nombre: "Noticias", url: "https://www.bbc.com" },
-    { nombre: "Juegos", url: "https://www.miniclip.com" },
-  ];
-
   // 🔹 Cerrar menú y barra lateral si haces clic fuera
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -64,18 +55,20 @@ function Muro() {
 
   return (
     <div className="muro-page">
-      {/* 🌌 Fondo degradado sin polígonos */}
-    <div
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: "100vw",
-        height: "100vh",
-        background: "radial-gradient(circle at 30% 20%, #0d1b3a 0%, #081326 50%, #01060f 100%)",
-        zIndex: -1,
-      }}
-    ></div>
+
+      {/* 🌌 Fondo degradado */}
+      <div
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100vw",
+          height: "100vh",
+          background: "radial-gradient(circle at 30% 20%, #0d1b3a 0%, #081326 50%, #01060f 100%)",
+          zIndex: -1,
+        }}
+      ></div>
+
 
 {/* 🔵 BARRA SUPERIOR FIJA */}
 <div
@@ -97,8 +90,7 @@ function Muro() {
 
   {/* 🔹 Izquierda: LOGO M + libro animado */}
   <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
-    
-    {/* LOGO M (clic navega, NO se daña) */}
+
     <div
       onClick={logoClick}
       style={{
@@ -122,18 +114,16 @@ function Muro() {
       M
     </div>
 
-    {/* 📘 LIBRO ANIMADO CON RESPLANDOR AZUL */}
     {showBook && (
       <div
         style={{
           position: "absolute",
-          left: "-70px",          // ← aparece hacia la izquierda
+          left: "-70px",
           top: "0px",
           width: "50px",
           height: "50px",
           animation: "floatBook 1.5s ease-in-out infinite",
-          filter: "drop-shadow(0px 0px 8px #3f8cff)", // ← resplandor azul
-          transition: "opacity 0.3s ease",
+          filter: "drop-shadow(0px 0px 8px #3f8cff)",
           opacity: 1,
         }}
       >
@@ -149,12 +139,9 @@ function Muro() {
     )}
   </div>
 
-
-  {/* 🔹 Centro vacío (antes era el logo, ahora ya no va nada aquí) */}
   <div></div>
 
-
-  {/* 🔹 Derecha: lupa + contactos + rueda */}
+  {/* 🔹 Derecha */}
   <div
     style={{
       display: "flex",
@@ -163,8 +150,6 @@ function Muro() {
       marginRight: "40px",
     }}
   >
-
-    {/* LUPA antes de Mis Contactos */}
     <div
       style={{
         fontSize: "26px",
@@ -187,7 +172,6 @@ function Muro() {
       👥 Mis Contactos
     </button>
 
-    {/*⚙️ Menú de configuración */}
     <div style={{ position: "relative" }} ref={menuRef}>
       <span
         onClick={() => setMenuVisible(!menuVisible)}
@@ -232,24 +216,9 @@ function Muro() {
           </div>
 
           <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-            <li
-              style={{ padding: "8px", cursor: "pointer" }}
-              onClick={() => navigate("/profile")}
-            >
-              Perfil
-            </li>
-            <li
-              style={{ padding: "8px", cursor: "pointer" }}
-              onClick={() => navigate("/contactanos")}
-            >
-              Contáctanos
-            </li>
-            <li
-              style={{ padding: "8px", cursor: "pointer" }}
-              onClick={() => navigate("/chat")}
-            >
-              Chat
-            </li>
+            <li style={{ padding: "8px", cursor: "pointer" }} onClick={() => navigate("/profile")}>Perfil</li>
+            <li style={{ padding: "8px", cursor: "pointer" }} onClick={() => navigate("/contactanos")}>Contáctanos</li>
+            <li style={{ padding: "8px", cursor: "pointer" }} onClick={() => navigate("/chat")}>Chat</li>
 
             <li style={{ padding: "8px", cursor: "pointer" }}>Configuración</li>
             <li style={{ padding: "8px", cursor: "pointer" }}>Ayuda</li>
@@ -275,7 +244,6 @@ function Muro() {
   </div>
 </div>
 
-{/* 🎞 ANIMACIÓN FLOATING DEL LIBRO */}
 <style>
   {`
     @keyframes floatBook {
@@ -286,9 +254,11 @@ function Muro() {
   `}
 </style>
 
-      {/* 🔹 Contenido principal (desplazado hacia abajo por la barra) */}
+
+      {/* 🔹 Contenido principal */}
       <div style={{ marginTop: "80px" }}>
-{/* 🔹 BARRA LATERAL FIJA CON ICONOS REALMENTE FUNCIONALES */}
+
+{/* 🔹 BARRA LATERAL */}
 <div
     style={{
         position: "fixed",
@@ -308,35 +278,12 @@ function Muro() {
     }}
 >
     {[
-        {
-            title: "Google",
-            url: "https://www.google.com",
-            icon: "https://www.google.com/favicon.ico"
-        },
-{
-    title: "YouTube",
-    url: "https://www.youtube.com",
-    icon: "https://cdn-icons-png.flaticon.com/512/1384/1384060.png"
-},        {
-            title: "Spotify",
-            url: "https://open.spotify.com",
-            icon: "https://cdn-icons-png.flaticon.com/512/174/174872.png"
-        },
-        {
-            title: "Noticias",
-            url: "https://news.google.com",
-            icon: "https://cdn-icons-png.flaticon.com/512/2965/2965879.png"
-        },
-        {
-            title: "Clima",
-            url: "https://weather.com",
-            icon: "https://cdn-icons-png.flaticon.com/512/1163/1163661.png"
-        },
-        {
-            title: "Juegos (Poki)",
-            url: "https://poki.com/es",
-            icon: "https://cdn-icons-png.flaticon.com/512/1048/1048953.png"
-        },
+        { title: "Google", url: "https://www.google.com", icon: "https://www.google.com/favicon.ico" },
+        { title: "YouTube", url: "https://www.youtube.com", icon: "https://cdn-icons-png.flaticon.com/512/1384/1384060.png" },
+        { title: "Spotify", url: "https://open.spotify.com", icon: "https://cdn-icons-png.flaticon.com/512/174/174872.png" },
+        { title: "Noticias", url: "https://news.google.com", icon: "https://cdn-icons-png.flaticon.com/512/2965/2965879.png" },
+        { title: "Clima", url: "https://weather.com", icon: "https://cdn-icons-png.flaticon.com/512/1163/1163661.png" },
+        { title: "Juegos (Poki)", url: "https://poki.com/es", icon: "https://cdn-icons-png.flaticon.com/512/1048/1048953.png" },
     ].map((item, index) => (
         <a
             key={index}
@@ -376,7 +323,8 @@ function Muro() {
     ))}
 </div>
 
-        {/* 🧱 Contenido principal centrado */}
+
+        {/* 🧱 CONTENIDO CENTRAL */}
         <div
           className="main-content"
           style={{
@@ -386,8 +334,7 @@ function Muro() {
             justifyContent: "flex-start",
             width: "100%",
             textAlign: "center",
-            marginLeft: "240px", // 🔹 alineado con “Contáctanos”
-            transition: "margin 0.3s ease",
+            marginLeft: "240px",
           }}
         >
           <h1>
@@ -426,24 +373,15 @@ function Muro() {
             ))}
           </div>
 
-          {/* Redes sociales al pie */}
+          {/* Redes sociales */}
           <div className="social-footer">
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
-              📘 Facebook
-            </a>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
-              📸 Instagram
-            </a>
-            <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer">
-              🎵 TikTok
-            </a>
-            <a href="https://x.com" target="_blank" rel="noopener noreferrer">
-              🐦 X (Twitter)
-            </a>
-            <a href="https://wa.me/573024502105" target="_blank" rel="noopener noreferrer">
-              💬 WhatsApp
-            </a>
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">📘 Facebook</a>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">📸 Instagram</a>
+            <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer">🎵 TikTok</a>
+            <a href="https://x.com" target="_blank" rel="noopener noreferrer">🐦 X (Twitter)</a>
+            <a href="https://wa.me/573024502105" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>
           </div>
+
         </div>
       </div>
     </div>
