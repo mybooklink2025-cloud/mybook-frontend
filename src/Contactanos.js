@@ -209,6 +209,7 @@ function Contactanos() {
                   </li>
                 </ul>
               </div>
+            </div>
 
       {/* 🔹 BARRA LATERAL FIJA CON ICONOS */}
       <div
