@@ -94,13 +94,20 @@ function Muro() {
   }}
 >
 
-  {/* 🔹 Izquierda: ícono de lupa */}
-  <div style={{ fontSize: "26px", cursor: "pointer", color: "#0d47a1", }}>
-    🔍
-  </div>
-
-  {/* 🔹 Centro: LOGO M */}
+  {/* 🔹 Izquierda: LOGO M con libro animado */}
   <div
+    onClick={() => {
+      logoClick();
+      const book = document.getElementById("animatedBook");
+      if (book) {
+        book.style.opacity = 1;
+        book.style.transform = "scale(1)";
+        setTimeout(() => {
+          book.style.opacity = 0;
+          book.style.transform = "scale(0.5)";
+        }, 800);
+      }
+    }}
     style={{
       backgroundColor: "blue",
       color: "white",
@@ -114,13 +121,52 @@ function Muro() {
       fontSize: "22px",
       cursor: "pointer",
     }}
-    onClick={logoClick}
   >
     M
   </div>
 
-  {/* 🔹 Derecha: contactos + rueda + (chat eliminado aquí) */}
-  <div style={{ display: "flex", alignItems: "center", gap: "20px", marginRight: "40px", }}>
+  {/* 📚 Libro animado (aparece al clickear la M) */}
+  <div
+    id="animatedBook"
+    style={{
+      position: "absolute",
+      top: "65px",
+      left: "20px",
+      opacity: 0,
+      transform: "scale(0.5)",
+      transition: "all 0.4s ease",
+      fontSize: "40px",
+      pointerEvents: "none",
+    }}
+  >
+    📖
+  </div>
+
+  {/* (Centro vacío para mantener el equilibrio visual) */}
+  <div></div>
+
+  {/* 🔹 Derecha: Lupa + contactos + rueda */}
+  <div
+    style={{
+      display: "flex",
+      alignItems: "center",
+      gap: "20px",
+      marginRight: "40px",
+    }}
+  >
+
+    {/* 🔍 Lupa antes de contactos */}
+    <div
+      style={{
+        fontSize: "26px",
+        cursor: "pointer",
+        color: "#0d47a1",
+      }}
+      title="Buscar"
+    >
+      🔍
+    </div>
+
     <button
       style={{
         background: "none",
@@ -177,7 +223,6 @@ function Muro() {
             </p>
           </div>
 
-          {/* 📌 Enlaces movidos dentro del menú */}
           <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
             <li
               style={{ padding: "8px", cursor: "pointer" }}
