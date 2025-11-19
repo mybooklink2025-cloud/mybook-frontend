@@ -94,58 +94,66 @@ function Muro() {
   }}
 >
 
-  {/* 🔹 Izquierda: LOGO M con libro animado */}
-  <div
-    onClick={() => {
-      logoClick();
-      const book = document.getElementById("animatedBook");
-      if (book) {
-        book.style.opacity = 1;
-        book.style.transform = "scale(1)";
-        setTimeout(() => {
-          book.style.opacity = 0;
-          book.style.transform = "scale(0.5)";
-        }, 800);
-      }
-    }}
-    style={{
-      backgroundColor: "blue",
-      color: "white",
-      borderRadius: "50%",
-      width: "40px",
-      height: "40px",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      fontWeight: "bold",
-      fontSize: "22px",
-      cursor: "pointer",
-    }}
-  >
-    M
+  {/* 🔹 Izquierda: LOGO M + libro animado */}
+  <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
+    
+    {/* LOGO M (clic navega, NO se daña) */}
+    <div
+      onClick={logoClick}
+      style={{
+        backgroundColor: "blue",
+        color: "white",
+        borderRadius: "50%",
+        width: "40px",
+        height: "40px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontWeight: "bold",
+        fontSize: "22px",
+        cursor: "pointer",
+        position: "relative",
+        zIndex: 2,
+      }}
+      onMouseEnter={() => setShowBook(true)}
+      onMouseLeave={() => setShowBook(false)}
+    >
+      M
+    </div>
+
+    {/* 📘 LIBRO ANIMADO CON RESPLANDOR AZUL */}
+    {showBook && (
+      <div
+        style={{
+          position: "absolute",
+          left: "-70px",          // ← aparece hacia la izquierda
+          top: "0px",
+          width: "50px",
+          height: "50px",
+          animation: "floatBook 1.5s ease-in-out infinite",
+          filter: "drop-shadow(0px 0px 8px #3f8cff)", // ← resplandor azul
+          transition: "opacity 0.3s ease",
+          opacity: 1,
+        }}
+      >
+        <img
+          src="https://cdn-icons-png.flaticon.com/512/29/29302.png"
+          alt="Libro animado"
+          style={{
+            width: "50px",
+            height: "50px",
+          }}
+        />
+      </div>
+    )}
   </div>
 
-  {/* 📚 Libro animado (aparece al clickear la M) */}
-  <div
-    id="animatedBook"
-    style={{
-      position: "absolute",
-      top: "65px",
-      left: "20px",
-      opacity: 0,
-      transform: "scale(0.5)",
-      transition: "all 0.4s ease",
-      fontSize: "40px",
-      pointerEvents: "none",
-    }}
-  >
-    📖
-  </div>
 
-  {/* (Centro vacío para mantener el equilibrio visual) */}
+  {/* 🔹 Centro vacío (antes era el logo, ahora ya no va nada aquí) */}
   <div></div>
 
-  {/* 🔹 Derecha: Lupa + contactos + rueda */}
+
+  {/* 🔹 Derecha: lupa + contactos + rueda */}
   <div
     style={{
       display: "flex",
@@ -155,14 +163,13 @@ function Muro() {
     }}
   >
 
-    {/* 🔍 Lupa antes de contactos */}
+    {/* LUPA antes de Mis Contactos */}
     <div
       style={{
         fontSize: "26px",
         cursor: "pointer",
         color: "#0d47a1",
       }}
-      title="Buscar"
     >
       🔍
     </div>
@@ -179,7 +186,7 @@ function Muro() {
       👥 Mis Contactos
     </button>
 
-    {/* ⚙️ Menú de configuración */}
+    {/*⚙️ Menú de configuración */}
     <div style={{ position: "relative" }} ref={menuRef}>
       <span
         onClick={() => setMenuVisible(!menuVisible)}
@@ -266,6 +273,17 @@ function Muro() {
     </div>
   </div>
 </div>
+
+{/* 🎞 ANIMACIÓN FLOATING DEL LIBRO */}
+<style>
+  {`
+    @keyframes floatBook {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+      100% { transform: translateY(0); }
+    }
+  `}
+</style>
 
       {/* 🔹 Contenido principal (desplazado hacia abajo por la barra) */}
       <div style={{ marginTop: "80px" }}>
