@@ -296,59 +296,93 @@ function Profile({ token }) {
   </div>
 </div>
 
-      {/* 🔹 BARRA LATERAL FIJA CON ICONOS */}
-      <div
-        style={{
-          position: "fixed",
-          top: "60px", // debajo de la barra superior
-          left: 0,
-          width: "65px",
-          height: "100vh",
-          background: "rgba(255, 255, 255, 0.2)",
-          backdropFilter: "blur(12px)",
-          WebkitBackdropFilter: "blur(12px)",
-          borderRight: "1px solid rgba(255, 255, 255, 0.3)",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          paddingTop: "25px",
-          zIndex: 900,
-        }}
-      >
-        {[
-          { icon: "🌐", url: "https://www.google.com", title: "Google" },
-          { icon: "🎬", url: "https://www.youtube.com", title: "YouTube" },
-          { icon: "🎵", url: "https://open.spotify.com", title: "Spotify" },
-          { icon: "📰", url: "https://news.google.com", title: "Noticias" },
-          { icon: "☁️", url: "https://weather.com", title: "Clima" },
-          { icon: "🕹️", url: "https://poki.com/es", title: "Juegos" },
-        ].map((item, i) => (
-          <a
-            key={i}
+{/* 🔹 BARRA LATERAL FIJA CON ICONOS REALMENTE FUNCIONALES */}
+<div
+    style={{
+        position: "fixed",
+        top: "60px",
+        left: 0,
+        width: "65px",
+        height: "100vh",
+        background: "rgba(255, 255, 255, 0.2)",
+        backdropFilter: "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)",
+        borderRight: "1px solid rgba(255, 255, 255, 0.3)",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        paddingTop: "25px",
+        zIndex: 900,
+    }}
+>
+    {[
+        {
+            title: "Google",
+            url: "https://www.google.com",
+            icon: "https://www.google.com/favicon.ico"
+        },
+{
+    title: "YouTube",
+    url: "https://www.youtube.com",
+    icon: "https://cdn-icons-png.flaticon.com/512/1384/1384060.png"
+},        {
+            title: "Spotify",
+            url: "https://open.spotify.com",
+            icon: "https://cdn-icons-png.flaticon.com/512/174/174872.png"
+        },
+        {
+            title: "Noticias",
+            url: "https://news.google.com",
+            icon: "https://cdn-icons-png.flaticon.com/512/2965/2965879.png"
+        },
+        {
+            title: "Clima",
+            url: "https://weather.com",
+            icon: "https://cdn-icons-png.flaticon.com/512/1163/1163661.png"
+        },
+        {
+            title: "Juegos (Poki)",
+            url: "https://poki.com/es",
+            icon: "https://cdn-icons-png.flaticon.com/512/1048/1048953.png"
+        },
+    ].map((item, index) => (
+        <a
+            key={index}
             href={item.url}
             target="_blank"
             rel="noopener noreferrer"
             title={item.title}
             style={{
-              marginBottom: "25px",
-              fontSize: "24px",
-              textDecoration: "none",
-              color: "white",
-              transition: "transform 0.3s ease, text-shadow 0.3s ease",
+                width: "40px",
+                height: "40px",
+                marginBottom: "25px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                transition: "transform 0.3s ease, filter 0.3s ease",
             }}
             onMouseEnter={(e) => {
-              e.target.style.transform = "scale(1.4)";
-              e.target.style.textShadow = "0 0 8px white";
+                e.currentTarget.style.transform = "scale(1.3)";
+                e.currentTarget.style.filter = "drop-shadow(0 0 6px white)";
             }}
             onMouseLeave={(e) => {
-              e.target.style.transform = "scale(1)";
-              e.target.style.textShadow = "none";
+                e.currentTarget.style.transform = "scale(1)";
+                e.currentTarget.style.filter = "none";
             }}
-          >
-            {item.icon}
-          </a>
-        ))}
-      </div>
+        >
+            <img
+                src={item.icon}
+                alt={item.title}
+                style={{
+                    width: "32px",
+                    height: "32px",
+                    borderRadius: "8px",
+                    objectFit: "contain",
+                }}
+            />
+        </a>
+    ))}
+</div>
 
       {/* 🔹 CONTENIDO DEL PERFIL */}
       <div
