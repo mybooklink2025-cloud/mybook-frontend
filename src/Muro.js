@@ -226,91 +226,91 @@ function Muro() {
       <div style={{ marginTop: "80px" }}>
 {/* 🔹 BARRA LATERAL FIJA CON ICONOS REALES */}
 <div
-  style={{
-    position: "fixed",
-    top: "60px",
-    left: 0,
-    width: "65px",
-    height: "100vh",
-    background: "rgba(255, 255, 255, 0.2)",
-    backdropFilter: "blur(12px)",
-    WebkitBackdropFilter: "blur(12px)",
-    borderRight: "1px solid rgba(255, 255, 255, 0.3)",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    paddingTop: "25px",
-    zIndex: 900,
-  }}
->
-  {[
-    {
-      title: "Google",
-      url: "https://www.google.com",
-      icon: "https://www.google.com/favicon.ico"
-    },
-    {
-      title: "YouTube",
-      url: "https://www.youtube.com",
-      icon: "https://www.youtube.com/s/desktop/fe1f0c45/img/favicon_144x144.png"
-    },
-    {
-      title: "Spotify",
-      url: "https://open.spotify.com",
-      icon: "https://storage.googleapis.com/pr-newsroom-wp/1/2018/11/Spotify_Icon_RGB_Green.png"
-    },
-    {
-      title: "Noticias",
-      url: "https://news.google.com",
-      icon: "https://www.gstatic.com/images/branding/product/2x/news_96dp.png"
-    },
-    {
-      title: "Clima",
-      url: "https://weather.com",
-      icon: "https://weather.com/apple-touch-icon.png"
-    },
-    {
-      title: "Juegos",
-      url: "https://poki.com/es",
-      icon: "https://poki.com/favicon.ico"
-    },
-  ].map((item, index) => (
-    <a
-      key={index}
-      href={item.url}
-      target="_blank"
-      rel="noopener noreferrer"
-      title={item.title}
-      style={{
-        width: "40px",
-        height: "40px",
-        marginBottom: "25px",
+    style={{
+        position: "fixed",
+        top: "60px",
+        left: 0,
+        width: "65px",
+        height: "100vh",
+        background: "rgba(255, 255, 255, 0.2)",
+        backdropFilter: "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)",
+        borderRight: "1px solid rgba(255, 255, 255, 0.3)",
         display: "flex",
+        flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
-        transition: "transform 0.3s ease, filter 0.3s ease"
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = "scale(1.3)";
-        e.currentTarget.style.filter = "drop-shadow(0 0 6px white)";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = "scale(1)";
-        e.currentTarget.style.filter = "none";
-      }}
-    >
-      <img
-        src={item.icon}
-        alt={item.title}
-        style={{
-          width: "32px",
-          height: "32px",
-          borderRadius: "10px",
-          objectFit: "contain"
-        }}
-      />
-    </a>
-  ))}
+        paddingTop: "25px",
+        zIndex: 900,
+    }}
+>
+    {[
+        {
+            title: "Google",
+            url: "https://www.google.com",
+            icon: "https://www.google.com/favicon.ico"
+        },
+        {
+            title: "YouTube",
+            url: "https://www.youtube.com",
+            icon: "https://www.youtube.com/s/desktop/fe1f0c45/img/favicon_144x144.png"
+        },
+        {
+            title: "Spotify",
+            url: "https://open.spotify.com",
+            icon: "https://storage.googleapis.com/pr-newsroom-wp/1/2018/11/Spotify_Icon_RGB_Green.png"
+        },
+        {
+            title: "Noticias",
+            url: "https://news.google.com",
+            icon: "https://www.gstatic.com/images/branding/product/2x/news_96dp.png"
+        },
+        {
+            title: "Clima",
+            url: "https://weather.com",
+            icon: "https://weather.com/apple-touch-icon.png"
+        },
+        {
+            title: "Juegos",
+            url: "https://poki.com/es",
+            icon: "https://poki.com/favicon.ico"
+        },
+    ].map((item, index) => (
+        <a
+            key={index}
+            href={item.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            title={item.title}
+            style={{
+                width: "40px",
+                height: "40px",
+                marginBottom: "25px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                transition: "transform 0.3s ease, filter 0.3s ease",
+            }}
+            onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "scale(1.3)";
+                e.currentTarget.style.filter = "drop-shadow(0 0 6px white)";
+            }}
+            onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "scale(1)";
+                e.currentTarget.style.filter = "none";
+            }}
+        >
+            <img
+                src={item.icon}
+                alt={item.title}
+                style={{
+                    width: "32px",
+                    height: "32px",
+                    borderRadius: "8px",
+                    objectFit: "contain",
+                }}
+            />
+        </a>
+    ))}
 </div>
 
         {/* 🧱 Contenido principal centrado */}
