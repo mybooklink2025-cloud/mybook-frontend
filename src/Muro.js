@@ -94,12 +94,12 @@ function Muro() {
   }}
 >
 
-  {/* 🔹 Izquierda: ícono de lupa */}
-  <div style={{ fontSize: "26px", cursor: "pointer", color: "#0d47a1" }}>
+  {/* 🔹 Derecha: ícono de lupa */}
+  <div style={{ fontSize: "26px", cursor: "pointer", color: "#0d47a1", alignItems: "center", }}>
     🔍
   </div>
 
-  {/* 🔹 Centro: LOGO M */}
+  {/* 🔹 Izquierda: LOGO M */}
   <div
     style={{
       backgroundColor: "blue",
@@ -108,8 +108,8 @@ function Muro() {
       width: "40px",
       height: "40px",
       display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
+      alignItems: "left",
+      justifyContent: "left",
       fontWeight: "bold",
       fontSize: "22px",
       cursor: "pointer",
