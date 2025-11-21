@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import "./Muro.css";
 
 function Muro() {
   const navigate = useNavigate();
 
-  // 📦 Estado de publicaciones
   const [publicaciones, setPublicaciones] = useState([
     { id: 1, autor: "Alejo", texto: "¡Bienvenidos al nuevo muro de MyBook!", foto: "https://cdn-icons-png.flaticon.com/512/194/194938.png" },
     { id: 2, autor: "Martin", texto: "Este es el primer paso hacia la versión real 💙", foto: "https://cdn-icons-png.flaticon.com/512/2922/2922510.png" },
@@ -14,10 +14,12 @@ function Muro() {
   const [nuevoPost, setNuevoPost] = useState("");
   const [nombreUsuario] = useState("Usuario Actual");
   const [fotoUsuario] = useState("https://cdn-icons-png.flaticon.com/512/847/847969.png");
+  const [sidebarVisible, setSidebarVisible] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
   const [showBook, setShowBook] = useState(false);
 
   const menuRef = useRef(null);
+  const sidebarRef = useRef(null);
 
   const handlePublicar = (e) => {
     e.preventDefault();
@@ -36,13 +38,16 @@ function Muro() {
     navigate("/muro");
   };
 
-  // 🔹 Cerrar menú si haces clic fuera
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         setMenuVisible(false);
       }
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+        setSidebarVisible(false);
+      }
     };
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
@@ -50,7 +55,7 @@ function Muro() {
   return (
     <div className="muro-page">
 
-      {/* 🔵 Fondo degradado */}
+      {/* Fondo */}
       <div
         style={{
           position: "fixed",
@@ -63,7 +68,7 @@ function Muro() {
         }}
       ></div>
 
-      {/* 🔵 BARRA SUPERIOR */}
+      {/* ---------------- BARRA SUPERIOR ---------------- */}
       <div
         style={{
           position: "fixed",
@@ -83,8 +88,7 @@ function Muro() {
 
         {/* LOGO + LIBRO ANIMADO */}
         <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
-          
-          {/* LOGO M */}
+
           <div
             onClick={logoClick}
             style={{
@@ -99,8 +103,7 @@ function Muro() {
               fontWeight: "bold",
               fontSize: "22px",
               cursor: "pointer",
-              position: "relative",
-              zIndex: 3
+              zIndex: 5,
             }}
             onMouseEnter={() => setShowBook(true)}
             onMouseLeave={() => setShowBook(false)}
@@ -108,18 +111,19 @@ function Muro() {
             M
           </div>
 
-          {/* LIBRO ANIMADO HACIA LA DERECHA */}
+          {/* LIBRO ANIMADO CORREGIDO */}
           {showBook && (
             <div
               style={{
                 position: "absolute",
-                left: "55px",
-                top: "5px",
+                left: "50px",   // ← ahora sale A LA DERECHA
+                top: "-5px",
                 width: "50px",
                 height: "50px",
                 animation: "floatBook 1.5s ease-in-out infinite",
                 filter: "drop-shadow(0px 0px 8px #3f8cff)",
-                zIndex: 2
+                pointerEvents: "none", // ← NO afecta clics
+                zIndex: 10,
               }}
             >
               <img
@@ -131,7 +135,10 @@ function Muro() {
           )}
         </div>
 
-        {/* LADO DERECHO */}
+        {/* (Espacio centro vacío) */}
+        <div></div>
+
+        {/* ITEMS DERECHA */}
         <div
           style={{
             display: "flex",
@@ -140,13 +147,7 @@ function Muro() {
             marginRight: "40px",
           }}
         >
-          <div
-            style={{
-              fontSize: "26px",
-              cursor: "pointer",
-              color: "#0d47a1",
-            }}
-          >
+          <div style={{ fontSize: "26px", cursor: "pointer", color: "#0d47a1" }}>
             🔍
           </div>
 
@@ -165,11 +166,7 @@ function Muro() {
           <div style={{ position: "relative" }} ref={menuRef}>
             <span
               onClick={() => setMenuVisible(!menuVisible)}
-              style={{
-                fontSize: "22px",
-                cursor: "pointer",
-                color: "#0d47a1",
-              }}
+              style={{ fontSize: "22px", cursor: "pointer", color: "#0d47a1" }}
             >
               ⚙️
             </span>
@@ -234,7 +231,7 @@ function Muro() {
         </div>
       </div>
 
-      {/* 🔹 Animación del libro */}
+      {/* ANIMACIÓN */}
       <style>
         {`
           @keyframes floatBook {
@@ -245,9 +242,10 @@ function Muro() {
         `}
       </style>
 
-      {/* CONTENIDO PRINCIPAL */}
+      {/* ----------- CONTENIDO DEL MURO (SIN CAMBIOS) ----------- */}
       <div style={{ marginTop: "80px" }}>
 
+        {/* Barra lateral */}
         <div
           style={{
             position: "fixed",
@@ -312,8 +310,9 @@ function Muro() {
           ))}
         </div>
 
-        {/* CENTRAL */}
+        {/* CONTENIDO CENTRAL */}
         <div
+          className="main-content"
           style={{
             display: "flex",
             flexDirection: "column",
@@ -335,7 +334,6 @@ function Muro() {
 
           <h2>🌎 Muro general</h2>
 
-          {/* NUEVO POST */}
           <form onSubmit={handlePublicar} className="post-box">
             <textarea
               value={nuevoPost}
@@ -347,7 +345,6 @@ function Muro() {
             <button type="submit">Publicar</button>
           </form>
 
-          {/* LISTA POSTS */}
           <div className="posts-list">
             {publicaciones.map((post) => (
               <div key={post.id} className="post">
@@ -360,7 +357,6 @@ function Muro() {
             ))}
           </div>
 
-          {/* FOOTER REDES */}
           <div className="social-footer">
             <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">📘 Facebook</a>
             <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">📸 Instagram</a>
@@ -368,6 +364,7 @@ function Muro() {
             <a href="https://x.com" target="_blank" rel="noopener noreferrer">🐦 X (Twitter)</a>
             <a href="https://wa.me/573024502105" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>
           </div>
+
         </div>
       </div>
     </div>
