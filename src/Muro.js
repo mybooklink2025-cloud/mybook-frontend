@@ -216,7 +216,7 @@ function Muro() {
                 pointerEvents: "none", // para que todo el clic/hover esté en el círculo principal
               }}
             >
-              yBook
+              MyBook
             </div>
           </div>
 
