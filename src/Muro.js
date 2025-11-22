@@ -203,9 +203,9 @@ function Muro() {
             <div
               style={{
                 display: "flex",
-                alignItems: "center",
+                alignItems: "left",
                 height: "100%",
-                paddingLeft: 4,
+                paddingLeft: 12,
                 paddingRight: 8,
                 whiteSpace: "nowrap",
                 color: "white",
@@ -216,7 +216,7 @@ function Muro() {
                 pointerEvents: "none", // para que todo el clic/hover esté en el círculo principal
               }}
             >
-              MyBook
+              yBook
             </div>
           </div>
 
