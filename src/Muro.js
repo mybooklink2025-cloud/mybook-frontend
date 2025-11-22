@@ -29,7 +29,7 @@ function Muro() {
   const [menuVisible, setMenuVisible] = useState(false);
 
   // NUEVAS ESTADOS
-  const [expanded, setExpanded] = useState(false); // cuando true, el logo se extiende y muestra "yBook" dentro
+  const [expanded, setExpanded] = useState(false); // cuando true, el logo se extiende y muestra "MyBook" dentro
   const [showBook, setShowBook] = useState(false); // si true, el libro está visible sobre la barra
   const [bookPos, setBookPos] = useState({ left: 0, top: 0 }); // posición absoluta dentro de la barra
 
@@ -198,7 +198,7 @@ function Muro() {
               M
             </div>
 
-            {/* Texto "yBook" — sólo visible cuando expanded === true. Lo centramos verticalmente
+            {/* Texto "MyBook" — sólo visible cuando expanded === true. Lo centramos verticalmente
                 y usamos la misma familia de color/estilo para que parezca parte del logo. */}
             <div
               style={{
