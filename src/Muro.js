@@ -203,7 +203,7 @@ function Muro() {
             <div
               style={{
                 display: "flex",
-                alignItems: "left",
+                alignItems: "center",
                 height: "100%",
                 paddingLeft: 12,
                 paddingRight: 8,
