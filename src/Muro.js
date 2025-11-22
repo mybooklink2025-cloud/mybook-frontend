@@ -205,7 +205,7 @@ function Muro() {
                 display: "flex",
                 alignItems: "center",
                 height: "100%",
-                paddingLeft: 8,
+                paddingLeft: 4,
                 paddingRight: 12,
                 whiteSpace: "nowrap",
                 color: "white",
