@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 
@@ -16,6 +16,19 @@ function Chat() {
   const [usuarioSeleccionado, setUsuarioSeleccionado] = useState(null);
   const [mensaje, setMensaje] = useState("");
   const [mensajes, setMensajes] = useState([]);
+
+  const [menuVisible, setMenuVisible] = useState(false);
+  const [sidebarVisible, setSidebarVisible] = useState(false);
+
+  const [expanded, setExpanded] = useState(false);
+  const [showBook, setShowBook] = useState(false);
+  const [bookPos, setBookPos] = useState({ left: 0, top: 0 });
+
+  const menuRef = useRef(null);
+  const sidebarRef = useRef(null);
+  const topBarRef = useRef(null);
+  const logoRef = useRef(null);
+  const bookRef = useRef(null);
 
   // Redirigir si no hay token
   useEffect(() => {
@@ -65,6 +78,68 @@ function Chat() {
     setMensaje("");
   };
 
+  // 🔹 Cerrar menú y barra lateral si haces clic fuera
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuVisible(false);
+      }
+
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+        setSidebarVisible(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // 🔹 Activar logo y mostrar libro
+  const activateLogo = () => {
+    if (!topBarRef.current || !logoRef.current) {
+      setExpanded(true);
+      setShowBook(true);
+      return;
+    }
+
+    const barRect = topBarRef.current.getBoundingClientRect();
+    const logoRect = logoRef.current.getBoundingClientRect();
+
+    const left = logoRect.right - barRect.left + 12;
+    const top = (barRect.height - 48) / 2;
+
+    setExpanded(true);
+    setShowBook(true);
+    setBookPos({ left, top });
+  };
+
+  // 🔹 El libro escapa a una posición aleatoria dentro de la barra
+  const escapeBook = () => {
+    if (!topBarRef.current || !bookRef.current || !logoRef.current) return;
+
+    const barRect = topBarRef.current.getBoundingClientRect();
+    const bookRect = bookRef.current.getBoundingClientRect();
+    const logoRect = logoRef.current.getBoundingClientRect();
+
+    const minLeft = Math.max(logoRect.right - barRect.left + 8, 8);
+    const maxLeft = Math.max(
+      barRect.width - bookRect.width - 12,
+      minLeft + 12
+    );
+
+    const randomLeft =
+      Math.floor(Math.random() * (maxLeft - minLeft + 1)) + minLeft;
+
+    const top = (barRect.height - bookRect.height) / 2;
+
+    setBookPos({ left: randomLeft, top });
+  };
+
+  const handleBookMouseEnter = () => {
+    escapeBook();
+  };
+
   return (
     <div style={{ textAlign: "center", marginTop: "70px", marginLeft: "80px" }}>
       {/* 🌌 Fondo degradado sin polígonos */}
@@ -83,6 +158,7 @@ function Chat() {
 
       {/* 🔵 BARRA SUPERIOR FIJA */}
       <div
+        ref={topBarRef}
         style={{
           position: "fixed",
           top: 0,
@@ -96,78 +172,137 @@ function Chat() {
           padding: "0 20px",
           boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
           zIndex: 1000,
+          overflow: "visible",
         }}
       >
-        {/* Izquierda: M + buscador */}
-        <div style={{ display: "flex", alignItems: "center" }}>
+        {/* 🔹 Izquierda: LOGO M + texto extendido + libro animado */}
+        <div
+          style={{
+            position: "relative",
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <div
+            ref={logoRef}
+            onClick={logoClick}
+            onMouseEnter={activateLogo}
+            style={{
+              display: "flex",
+              alignItems: "left",
+              justifyContent: "flex-start",
+              position: "relative",
+              width: expanded ? 140 : 40,
+              height: 40,
+              transition: "width 280ms ease, border-radius 280ms ease",
+              borderRadius: expanded ? 20 : "50%",
+              backgroundColor: "#0d47a1",
+              color: "white",
+              cursor: "pointer",
+              overflow: "hidden",
+              paddingLeft: 0,
+              boxSizing: "border-box",
+              zIndex: 2,
+            }}
+          >
+            {!expanded && (
+              <div
+                style={{
+                  width: 40,
+                  height: 40,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontWeight: "bold",
+                  fontSize: 22,
+                  userSelect: "none",
+                  flex: "0 0 40px",
+                }}
+              >
+                M
+              </div>
+            )}
+
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+                height: "100%",
+                paddingLeft: 4,
+                paddingRight: 8,
+                whiteSpace: "nowrap",
+                color: "white",
+                fontWeight: "bold",
+                fontSize: 18,
+                opacity: expanded ? 1 : 0,
+                transition: "opacity 220ms ease",
+                pointerEvents: "none",
+              }}
+            >
+              MyBook
+            </div>
+          </div>
+
+          {/* 🔹 LIBRO ANIMADO */}
+          {showBook && (
+            <div
+              ref={bookRef}
+              onMouseEnter={handleBookMouseEnter}
+              style={{
+                position: "absolute",
+                left: bookPos.left,
+                top: bookPos.top,
+                width: 48,
+                height: 48,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                transition:
+                  "left 420ms cubic-bezier(.2,.9,.2,1), top 420ms cubic-bezier(.2,.9,.2,1)",
+                zIndex: 1500,
+                filter:
+                  "drop-shadow(0 6px 18px rgba(63,140,255,0.25))",
+                transform: "translateZ(0)",
+              }}
+            >
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/29/29302.png"
+                alt="Libro animado"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  pointerEvents: "auto",
+                  cursor: "pointer",
+                  animation: "floatBook 1.6s ease-in-out infinite",
+                }}
+              />
+            </div>
+          )}
+        </div>
+
+        <div></div>
+
+        {/* 🔹 Derecha */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "20px",
+            marginRight: "40px",
+          }}
+        >
           <div
             style={{
-              backgroundColor: "blue",
-              color: "white",
-              borderRadius: "50%",
-              width: "35px",
-              height: "35px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontWeight: "bold",
-              fontSize: "20px",
+              fontSize: "26px",
               cursor: "pointer",
-              marginRight: "10px",
+              color: "#0d47a1",
             }}
-            onClick={logoClick}
           >
-            M
+            🔍
           </div>
-          <input
-            type="text"
-            placeholder="Buscar en MyBook..."
-            style={{
-              padding: "6px 10px",
-              borderRadius: "20px",
-              border: "1px solid #ccc",
-              width: "250px",
-            }}
-          />
-        </div>
 
-        {/* Centro: enlaces */}
-        <div style={{ display: "flex", gap: "20px" }}>
-          <a
-            href="/profile"
-            style={{
-              color: "#0d47a1",
-              textDecoration: "none",
-              fontWeight: "bold",
-            }}
-          >
-            Perfil
-          </a>
-          <a
-            href="/contactanos"
-            style={{
-              color: "#0d47a1",
-              textDecoration: "none",
-              fontWeight: "bold",
-            }}
-          >
-            Contáctanos
-          </a>
-          <span
-            onClick={() => navigate("/chat")}
-            style={{
-              color: "#0d47a1",
-              textDecoration: "none",
-              fontWeight: "bold",
-              cursor: "pointer",
-            }}
-          >
-            Chat
-          </span>
-        </div>
-
-        {/* Derecha: contactos + rueda */}
-        <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
           <button
             style={{
               background: "none",
@@ -180,23 +315,127 @@ function Chat() {
             👥 Mis Contactos
           </button>
 
-          <span
-            style={{
-              fontSize: "22px",
-              cursor: "pointer",
-              color: "#0d47a1",
-            }}
-          >
-            ⚙️
-          </span>
+          <div style={{ position: "relative" }} ref={menuRef}>
+            <span
+              onClick={() => setMenuVisible(!menuVisible)}
+              style={{
+                fontSize: "22px",
+                cursor: "pointer",
+                color: "#0d47a1",
+              }}
+            >
+              ⚙️
+            </span>
+
+            {menuVisible && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: "35px",
+                  right: 0,
+                  backgroundColor: "white",
+                  borderRadius: "8px",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+                  width: "220px",
+                  zIndex: 2000,
+                  padding: "10px",
+                }}
+              >
+                <div
+                  style={{
+                    textAlign: "center",
+                    borderBottom: "1px solid #ddd",
+                    paddingBottom: "8px",
+                  }}
+                >
+                  <p
+                    style={{
+                      fontSize: "14px",
+                      color: "#555",
+                      margin: "8px 0",
+                    }}
+                  >
+                    {localStorage.getItem("email") ||
+                      "usuario@mybook.com"}
+                  </p>
+                </div>
+
+                <ul
+                  style={{
+                    listStyle: "none",
+                    padding: 0,
+                    margin: 0,
+                  }}
+                >
+                  <li
+                    style={{ padding: "8px", cursor: "pointer" }}
+                    onClick={() => navigate("/profile")}
+                  >
+                    Perfil
+                  </li>
+
+                  <li
+                    style={{ padding: "8px", cursor: "pointer" }}
+                    onClick={() => navigate("/contactanos")}
+                  >
+                    Contáctanos
+                  </li>
+
+                  <li
+                    style={{ padding: "8px", cursor: "pointer" }}
+                    onClick={() => navigate("/chat")}
+                  >
+                    Chat
+                  </li>
+
+                  <li
+                    style={{ padding: "8px", cursor: "pointer" }}
+                  >
+                    Configuración
+                  </li>
+
+                  <li
+                    style={{ padding: "8px", cursor: "pointer" }}
+                  >
+                    Ayuda
+                  </li>
+
+                  <li
+                    onClick={() => {
+                      localStorage.removeItem("token");
+                      navigate("/");
+                    }}
+                    style={{
+                      padding: "8px",
+                      color: "red",
+                      cursor: "pointer",
+                      borderTop: "1px solid #ddd",
+                    }}
+                  >
+                    Salir
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
+      {/* 🔹 Animación del libro */}
+      <style>
+        {`@keyframes floatBook {
+          0% { transform: translateY(0); }
+          50% { transform: translateY(-6px); }
+          100% { transform: translateY(0); }
+        }`}
+      </style>
+
       {/* 🔹 BARRA LATERAL FIJA CON ICONOS */}
       <div
+        ref={sidebarRef}
         style={{
           position: "fixed",
-          top: "60px", // debajo de la barra superior
+          top: "60px",
           left: 0,
           width: "65px",
           height: "100vh",
@@ -212,12 +451,36 @@ function Chat() {
         }}
       >
         {[
-          { icon: "🌐", url: "https://www.google.com", title: "Google" },
-          { icon: "🎬", url: "https://www.youtube.com", title: "YouTube" },
-          { icon: "🎵", url: "https://open.spotify.com", title: "Spotify" },
-          { icon: "📰", url: "https://news.google.com", title: "Noticias" },
-          { icon: "☁️", url: "https://weather.com", title: "Clima" },
-          { icon: "🕹️", url: "https://poki.com/es", title: "Juegos" },
+          {
+            icon: "🌐",
+            url: "https://www.google.com",
+            title: "Google",
+          },
+          {
+            icon: "🎬",
+            url: "https://www.youtube.com",
+            title: "YouTube",
+          },
+          {
+            icon: "🎵",
+            url: "https://open.spotify.com",
+            title: "Spotify",
+          },
+          {
+            icon: "📰",
+            url: "https://news.google.com",
+            title: "Noticias",
+          },
+          {
+            icon: "☁️",
+            url: "https://weather.com",
+            title: "Clima",
+          },
+          {
+            icon: "🕹️",
+            url: "https://poki.com/es",
+            title: "Juegos",
+          },
         ].map((item, i) => (
           <a
             key={i}
@@ -230,15 +493,16 @@ function Chat() {
               fontSize: "24px",
               textDecoration: "none",
               color: "white",
-              transition: "transform 0.3s ease, text-shadow 0.3s ease",
+              transition:
+                "transform 0.3s ease, text-shadow 0.3s ease",
             }}
             onMouseEnter={(e) => {
-              e.target.style.transform = "scale(1.4)";
-              e.target.style.textShadow = "0 0 8px white";
+              e.currentTarget.style.transform = "scale(1.4)";
+              e.currentTarget.style.textShadow = "0 0 8px white";
             }}
             onMouseLeave={(e) => {
-              e.target.style.transform = "scale(1)";
-              e.target.style.textShadow = "none";
+              e.currentTarget.style.transform = "scale(1)";
+              e.currentTarget.style.textShadow = "none";
             }}
           >
             {item.icon}
@@ -289,8 +553,11 @@ function Chat() {
         >
           <h3>Usuarios conectados</h3>
           {usuarios.length === 0 && (
-            <p style={{ color: "#777" }}>No hay otros usuarios aún</p>
+            <p style={{ color: "#777" }}>
+              No hay otros usuarios aún
+            </p>
           )}
+
           {usuarios.map((u) => (
             <div
               key={u.id}
@@ -301,9 +568,13 @@ function Chat() {
                 borderRadius: "6px",
                 cursor: "pointer",
                 backgroundColor:
-                  usuarioSeleccionado?.id === u.id ? "#007bff" : "#fff",
+                  usuarioSeleccionado?.id === u.id
+                    ? "#007bff"
+                    : "#fff",
                 color:
-                  usuarioSeleccionado?.id === u.id ? "white" : "black",
+                  usuarioSeleccionado?.id === u.id
+                    ? "white"
+                    : "black",
               }}
             >
               {u.name}
@@ -332,11 +603,13 @@ function Chat() {
                   {usuarioSeleccionado.name}
                 </span>
               </h3>
+
               {mensajes
                 .filter(
                   (m) =>
                     (m.autor === chatName &&
-                      m.receptor === usuarioSeleccionado.name) ||
+                      m.receptor ===
+                        usuarioSeleccionado.name) ||
                     (m.autor === usuarioSeleccionado.name &&
                       m.receptor === chatName)
                 )
@@ -356,7 +629,9 @@ function Chat() {
                         backgroundColor: msg.recibido
                           ? "#e0e0e0"
                           : "#007bff",
-                        color: msg.recibido ? "black" : "white",
+                        color: msg.recibido
+                          ? "black"
+                          : "white",
                         padding: "10px",
                         borderRadius: "12px",
                         maxWidth: "70%",
@@ -368,7 +643,12 @@ function Chat() {
                 ))}
             </>
           ) : (
-            <p style={{ color: "#777", textAlign: "center" }}>
+            <p
+              style={{
+                color: "#777",
+                textAlign: "center",
+              }}
+            >
               Selecciona un usuario para comenzar el chat 👆
             </p>
           )}
@@ -385,13 +665,18 @@ function Chat() {
           style={{ width: "60%", padding: "8px" }}
           disabled={!usuarioSeleccionado}
         />
+
         <button
           onClick={handleEnviar}
           style={{
             marginLeft: "10px",
             padding: "8px 16px",
-            cursor: usuarioSeleccionado ? "pointer" : "not-allowed",
-            backgroundColor: usuarioSeleccionado ? "blue" : "gray",
+            cursor: usuarioSeleccionado
+              ? "pointer"
+              : "not-allowed",
+            backgroundColor: usuarioSeleccionado
+              ? "blue"
+              : "gray",
             color: "white",
             border: "none",
             borderRadius: "5px",
