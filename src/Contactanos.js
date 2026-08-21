@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import { enviarContacto } from "./api";
 import { useNavigate } from "react-router-dom";
 
@@ -11,14 +11,7 @@ function Contactanos() {
   const [mensaje, setMensaje] = useState("");
   const [status, setStatus] = useState("");
 
-  // 🔵 Estados de la barra superior
-  const [menuVisible, setMenuVisible] = useState(false);
   const [showBook, setShowBook] = useState(false);
-  const [expanded, setExpanded] = useState(false);
-  const [bookPos, setBookPos] = useState({ x: -70, y: 0 });
-
-  const menuRef = useRef(null);
-  const logoRef = useRef(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -45,38 +38,8 @@ function Contactanos() {
   };
 
   const logoClick = () => {
-    const tokenStored = localStorage.getItem("token");
-    navigate(tokenStored ? "/muro" : "/");
+    navigate(token ? "/muro" : "/");
   };
-
-  // 🔵 Cerrar menú al hacer clic fuera
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setMenuVisible(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  // 📖 Movimiento del libro cuando aparece
-  useEffect(() => {
-    if (!showBook) return;
-
-    const interval = setInterval(() => {
-      setBookPos({
-        x: Math.floor(Math.random() * 180) - 90,
-        y: Math.floor(Math.random() * 80) - 40,
-      });
-    }, 700);
-
-    return () => clearInterval(interval);
-  }, [showBook]);
 
   return (
     <div style={{ textAlign: "center", marginTop: "70px", marginLeft: "80px" }}>
@@ -113,7 +76,6 @@ function Contactanos() {
       >
         {/* 🔹 Izquierda: LOGO M + libro animado */}
         <div
-          ref={logoRef}
           style={{
             position: "relative",
             display: "flex",
@@ -121,31 +83,24 @@ function Contactanos() {
           }}
         >
           <div
-            onClick={() => {
-              setExpanded(!expanded);
-              logoClick();
-            }}
-            onMouseEnter={() => setShowBook(true)}
-            onMouseLeave={() => setShowBook(false)}
+            onClick={logoClick}
             style={{
               backgroundColor: "blue",
               color: "white",
               borderRadius: "50%",
-              width: expanded ? "46px" : "40px",
-              height: expanded ? "46px" : "40px",
+              width: "40px",
+              height: "40px",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               fontWeight: "bold",
-              fontSize: expanded ? "25px" : "22px",
+              fontSize: "22px",
               cursor: "pointer",
               position: "relative",
               zIndex: 2,
-              transition: "all 0.3s ease",
-              boxShadow: expanded
-                ? "0 0 12px rgba(0, 102, 255, 0.7)"
-                : "none",
             }}
+            onMouseEnter={() => setShowBook(true)}
+            onMouseLeave={() => setShowBook(false)}
           >
             M
           </div>
@@ -154,16 +109,13 @@ function Contactanos() {
             <div
               style={{
                 position: "absolute",
-                left: `${bookPos.x}px`,
-                top: `${bookPos.y}px`,
+                left: "-70px",
+                top: "0px",
                 width: "50px",
                 height: "50px",
                 animation: "floatBook 1.5s ease-in-out infinite",
                 filter: "drop-shadow(0px 0px 8px #3f8cff)",
                 opacity: 1,
-                zIndex: 1,
-                pointerEvents: "none",
-                transition: "left 0.7s ease, top 0.7s ease",
               }}
             >
               <img
@@ -180,6 +132,43 @@ function Contactanos() {
 
         <div></div>
 
+        {/* 🔹 Centro: enlaces */}
+        <div style={{ display: "flex", gap: "20px" }}>
+          <a
+            href="/profile"
+            style={{
+              color: "#0d47a1",
+              textDecoration: "none",
+              fontWeight: "bold",
+            }}
+          >
+            Perfil
+          </a>
+
+          <a
+            href="/contactanos"
+            style={{
+              color: "#0d47a1",
+              textDecoration: "none",
+              fontWeight: "bold",
+            }}
+          >
+            Contáctanos
+          </a>
+
+          <span
+            onClick={() => navigate("/chat")}
+            style={{
+              color: "#0d47a1",
+              textDecoration: "none",
+              fontWeight: "bold",
+              cursor: "pointer",
+            }}
+          >
+            Chat
+          </span>
+        </div>
+
         {/* 🔹 Derecha */}
         <div
           style={{
@@ -189,29 +178,17 @@ function Contactanos() {
             marginRight: "40px",
           }}
         >
-          {/* 🔍 Lupa */}
           <div
-            onClick={() => navigate("/muro")}
             style={{
               fontSize: "26px",
               cursor: "pointer",
               color: "#0d47a1",
-              transition: "transform 0.2s ease",
             }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "scale(1.2)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "scale(1)";
-            }}
-            title="Buscar"
           >
             🔍
           </div>
 
-          {/* 👥 Mis Contactos */}
           <button
-            onClick={() => navigate("/contactos")}
             style={{
               background: "none",
               border: "none",
@@ -223,139 +200,15 @@ function Contactanos() {
             👥 Mis Contactos
           </button>
 
-          {/* ⚙️ Menú */}
-          <div style={{ position: "relative" }} ref={menuRef}>
-            <span
-              onClick={() => setMenuVisible(!menuVisible)}
-              style={{
-                fontSize: "22px",
-                cursor: "pointer",
-                color: "#0d47a1",
-                display: "inline-block",
-                transition: "transform 0.3s ease",
-                transform: menuVisible ? "rotate(90deg)" : "rotate(0deg)",
-              }}
-              title="Configuración"
-            >
-              ⚙️
-            </span>
-
-            {menuVisible && (
-              <div
-                style={{
-                  position: "absolute",
-                  top: "35px",
-                  right: 0,
-                  backgroundColor: "white",
-                  borderRadius: "8px",
-                  boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
-                  width: "220px",
-                  zIndex: 2000,
-                  padding: "10px",
-                }}
-              >
-                <div
-                  style={{
-                    textAlign: "center",
-                    borderBottom: "1px solid #ddd",
-                    paddingBottom: "8px",
-                  }}
-                >
-                  <p
-                    style={{
-                      fontSize: "14px",
-                      color: "#555",
-                      margin: "8px 0",
-                    }}
-                  >
-                    {localStorage.getItem("email") ||
-                      "usuario@mybook.com"}
-                  </p>
-                </div>
-
-                <ul
-                  style={{
-                    listStyle: "none",
-                    padding: 0,
-                    margin: 0,
-                  }}
-                >
-                  <li
-                    style={{
-                      padding: "8px",
-                      cursor: "pointer",
-                    }}
-                    onClick={() => {
-                      setMenuVisible(false);
-                      navigate("/profile");
-                    }}
-                  >
-                    Perfil
-                  </li>
-
-                  <li
-                    style={{
-                      padding: "8px",
-                      cursor: "pointer",
-                    }}
-                    onClick={() => {
-                      setMenuVisible(false);
-                      navigate("/contactanos");
-                    }}
-                  >
-                    Contáctanos
-                  </li>
-
-                  <li
-                    style={{
-                      padding: "8px",
-                      cursor: "pointer",
-                    }}
-                    onClick={() => {
-                      setMenuVisible(false);
-                      navigate("/chat");
-                    }}
-                  >
-                    Chat
-                  </li>
-
-                  <li
-                    style={{
-                      padding: "8px",
-                      cursor: "pointer",
-                    }}
-                  >
-                    Configuración
-                  </li>
-
-                  <li
-                    style={{
-                      padding: "8px",
-                      cursor: "pointer",
-                    }}
-                  >
-                    Ayuda
-                  </li>
-
-                  <li
-                    onClick={() => {
-                      localStorage.removeItem("token");
-                      setMenuVisible(false);
-                      navigate("/");
-                    }}
-                    style={{
-                      padding: "8px",
-                      color: "red",
-                      cursor: "pointer",
-                      borderTop: "1px solid #ddd",
-                    }}
-                  >
-                    Salir
-                  </li>
-                </ul>
-              </div>
-            )}
-          </div>
+          <span
+            style={{
+              fontSize: "22px",
+              cursor: "pointer",
+              color: "#0d47a1",
+            }}
+          >
+            ⚙️
+          </span>
         </div>
       </div>
 
@@ -390,31 +243,11 @@ function Contactanos() {
       >
         {[
           { icon: "🌐", url: "https://www.google.com", title: "Google" },
-          {
-            icon: "🎬",
-            url: "https://www.youtube.com",
-            title: "YouTube",
-          },
-          {
-            icon: "🎵",
-            url: "https://open.spotify.com",
-            title: "Spotify",
-          },
-          {
-            icon: "📰",
-            url: "https://news.google.com",
-            title: "Noticias",
-          },
-          {
-            icon: "☁️",
-            url: "https://weather.com",
-            title: "Clima",
-          },
-          {
-            icon: "🕹️",
-            url: "https://poki.com/es",
-            title: "Juegos",
-          },
+          { icon: "🎬", url: "https://www.youtube.com", title: "YouTube" },
+          { icon: "🎵", url: "https://open.spotify.com", title: "Spotify" },
+          { icon: "📰", url: "https://news.google.com", title: "Noticias" },
+          { icon: "☁️", url: "https://weather.com", title: "Clima" },
+          { icon: "🕹️", url: "https://poki.com/es", title: "Juegos" },
         ].map((item, i) => (
           <a
             key={i}
