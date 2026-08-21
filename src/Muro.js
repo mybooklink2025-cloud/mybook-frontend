@@ -164,7 +164,7 @@ function Muro() {
             style={{
               display: "flex",
               alignItems: "left",
-              justifyContent: "center",
+              justifyContent: "flex-start",
               position: "relative",
               // Layout del contenedor expandible: por defecto 40px (círculo). Cuando expanded=true, se vuelve más ancho
               width: expanded ? 140 : 40,
@@ -204,6 +204,8 @@ function Muro() {
               style={{
                 display: "flex",
                 alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
                 height: "100%",
                 paddingLeft: 4,
                 paddingRight: 8,
