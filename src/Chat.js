@@ -11,11 +11,14 @@ function Chat() {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const chatName = localStorage.getItem("chatName") || "Usuario Actual";
+  const email = localStorage.getItem("email") || "";
+  const BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
   const [usuarios, setUsuarios] = useState([]);
   const [usuarioSeleccionado, setUsuarioSeleccionado] = useState(null);
   const [mensaje, setMensaje] = useState("");
   const [mensajes, setMensajes] = useState([]);
+  const [profilePicture, setProfilePicture] = useState("");
 
   const [menuVisible, setMenuVisible] = useState(false);
   const [sidebarVisible, setSidebarVisible] = useState(false);
@@ -34,6 +37,14 @@ function Chat() {
   useEffect(() => {
     if (!token) navigate("/");
   }, [token, navigate]);
+
+  // Cargar foto de perfil
+  useEffect(() => {
+    if (email) {
+      const savedPicture = localStorage.getItem(`profilePicture_${email}`);
+      if (savedPicture) setProfilePicture(savedPicture);
+    }
+  }, [email]);
 
   // Conexión inicial
   useEffect(() => {
@@ -348,6 +359,21 @@ function Chat() {
                     paddingBottom: "8px",
                   }}
                 >
+                  {profilePicture && (
+                    <img
+                      src={`${BASE_URL}/uploads/${profilePicture}`}
+                      alt="Perfil"
+                      style={{
+                        width: "50px",
+                        height: "50px",
+                        borderRadius: "50%",
+                        objectFit: "cover",
+                        display: "block",
+                        margin: "0 auto 8px",
+                      }}
+                    />
+                  )}
+
                   <p
                     style={{
                       fontSize: "14px",
