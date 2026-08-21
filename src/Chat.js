@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 
-const socket = io("https://mybook-7a9s.onrender.com", {
+const socket = io("[https://mybook-7a9s.onrender.com](https://mybook-7a9s.onrender.com)", {
   transports: ["websocket"],
   withCredentials: true,
 });
@@ -268,7 +268,7 @@ function Chat() {
               }}
             >
               <img
-                src="https://cdn-icons-png.flaticon.com/512/29/29302.png"
+                src="[https://cdn-icons-png.flaticon.com/512/29/29302.png](https://cdn-icons-png.flaticon.com/512/29/29302.png)"
                 alt="Libro animado"
                 style={{
                   width: "100%",
@@ -453,32 +453,32 @@ function Chat() {
         {[
           {
             icon: "🌐",
-            url: "https://www.google.com",
+            url: "[https://www.google.com](https://www.google.com)",
             title: "Google",
           },
           {
             icon: "🎬",
-            url: "https://www.youtube.com",
+            url: "[https://www.youtube.com](https://www.youtube.com)",
             title: "YouTube",
           },
           {
             icon: "🎵",
-            url: "https://open.spotify.com",
+            url: "[https://open.spotify.com](https://open.spotify.com)",
             title: "Spotify",
           },
           {
             icon: "📰",
-            url: "https://news.google.com",
+            url: "[https://news.google.com](https://news.google.com)",
             title: "Noticias",
           },
           {
             icon: "☁️",
-            url: "https://weather.com",
+            url: "[https://weather.com](https://weather.com)",
             title: "Clima",
           },
           {
             icon: "🕹️",
-            url: "https://poki.com/es",
+            url: "[https://poki.com/es](https://poki.com/es)",
             title: "Juegos",
           },
         ].map((item, i) => (
