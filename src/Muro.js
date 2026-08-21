@@ -132,7 +132,6 @@ function Muro() {
         }}
       ></div>
 
-
       {/* 🔵 BARRA SUPERIOR FIJA */}
       <div
         ref={topBarRef}
@@ -181,22 +180,23 @@ function Muro() {
               zIndex: 2,
             }}
           >
-            {/* La M fija a la izquierda: mantiene tamaño y forma */}
-            <div
-              style={{
-                width: 40,
-                height: 40,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontWeight: "bold",
-                fontSize: 22,
-                userSelect: "none",
-                flex: "0 0 40px",
-              }}
-            >
-              M
-            </div>
+            {!expanded && (
+              <div
+                style={{
+                  width: 40,
+                  height: 40,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontWeight: "bold",
+                  fontSize: 22,
+                  userSelect: "none",
+                  flex: "0 0 40px",
+                }}
+              >
+                M
+              </div>
+            )}
 
             {/* Texto "MyBook" — sólo visible cuando expanded === true. Lo centramos verticalmente
                 y usamos la misma familia de color/estilo para que parezca parte del logo. */}
@@ -374,7 +374,6 @@ function Muro() {
         `}
       </style>
 
-
       {/* 🔹 Contenido principal (mantenido como estaba) */}
       <div style={{ marginTop: "80px" }}>
 
@@ -443,7 +442,6 @@ function Muro() {
             </a>
           ))}
         </div>
-
 
         {/* 🧱 CONTENIDO CENTRAL */}
         <div
