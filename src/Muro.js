@@ -153,7 +153,7 @@ function Muro() {
       >
 
         {/* 🔹 Izquierda: LOGO M + texto extendido (dentro del mismo fondo azul) */}
-        <div style={{ position: "relative", display: "flex", alignItems: "left" }}>
+        <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
 
           {/* Contenedor que mantiene el círculo exactamente igual por defecto, y se "extiende" sin cambiar la apariencia
               interna de la M (la M siempre se coloca al borde izquierdo). */}
@@ -163,7 +163,7 @@ function Muro() {
             onMouseEnter={activateLogo} // cuando el mouse entra se activa (y deja expandido)
             style={{
               display: "flex",
-              alignItems: "left",
+              alignItems: "center",
               justifyContent: "flex-start",
               position: "relative",
               // Layout del contenedor expandible: por defecto 40px (círculo). Cuando expanded=true, se vuelve más ancho
