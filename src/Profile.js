@@ -32,7 +32,11 @@ function Profile({ token }) {
     const decoded = parseJwt(token);
     if (decoded.email) {
       setEmail(decoded.email);
-      const savedPicture = localStorage.getItem(`profilePicture_${decoded.email}`);
+
+      const savedPicture =
+        localStorage.getItem(`profilePicture_${decoded.email}`) ||
+        localStorage.getItem("profilePicture");
+
       if (savedPicture) setProfilePicture(savedPicture);
     }
   }, [token]);
@@ -58,7 +62,9 @@ function Profile({ token }) {
       if (res.ok) {
         setMessage("✅ Foto subida correctamente");
         setProfilePicture(data.filename);
+
         localStorage.setItem(`profilePicture_${email}`, data.filename);
+        localStorage.setItem("profilePicture", data.filename);
       } else {
         setMessage(`❌ ${data.message}`);
       }
@@ -381,8 +387,25 @@ function Profile({ token }) {
                     paddingBottom: "8px",
                   }}
                 >
+                  {profilePicture && (
+                    <img
+                      src={`${BASE_URL}/uploads/${profilePicture}`}
+                      alt="Usuario"
+                      style={{
+                        width: "50px",
+                        height: "50px",
+                        borderRadius: "50%",
+                        objectFit: "cover",
+                        display: "block",
+                        margin: "0 auto 8px",
+                      }}
+                    />
+                  )}
+
                   <p style={{ fontSize: "14px", color: "#555" }}>
-                    {localStorage.getItem("email") || "usuario@mybook.com"}
+                    {localStorage.getItem("email") ||
+                      email ||
+                      "usuario@mybook.com"}
                   </p>
                 </div>
 
