@@ -82,7 +82,7 @@ function Muro() {
     const logoRect = logoRef.current.getBoundingClientRect();
 
     // Posición inicial: al lado derecho del área del logo, dentro de la barra
-    const left = logoRect.right - barRect.left + 8; // 8px de separación
+    const left = logoRect.right - barRect.left + 12; // 12px de separación
     const top = (barRect.height - 48) / 2; // centrar libro (asumiendo 48px altura libro)
 
     setExpanded(true);
@@ -153,7 +153,7 @@ function Muro() {
       >
 
         {/* 🔹 Izquierda: LOGO M + texto extendido (dentro del mismo fondo azul) */}
-        <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
+        <div style={{ position: "relative", display: "flex", alignItems: "left" }}>
 
           {/* Contenedor que mantiene el círculo exactamente igual por defecto, y se "extiende" sin cambiar la apariencia
               interna de la M (la M siempre se coloca al borde izquierdo). */}
@@ -163,8 +163,8 @@ function Muro() {
             onMouseEnter={activateLogo} // cuando el mouse entra se activa (y deja expandido)
             style={{
               display: "flex",
-              alignItems: "center",
-              justifyContent: "flex-start",
+              alignItems: "left",
+              justifyContent: "center",
               position: "relative",
               // Layout del contenedor expandible: por defecto 40px (círculo). Cuando expanded=true, se vuelve más ancho
               width: expanded ? 140 : 40,
@@ -205,8 +205,8 @@ function Muro() {
                 display: "flex",
                 alignItems: "center",
                 height: "100%",
-                paddingLeft: 8,
-                paddingRight: 4,
+                paddingLeft: 4,
+                paddingRight: 8,
                 whiteSpace: "nowrap",
                 color: "white",
                 fontWeight: "bold",
