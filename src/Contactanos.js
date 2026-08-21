@@ -415,53 +415,71 @@ function Contactanos() {
         }}
       >
         {[
-          { icon: "🌐", url: "https://www.google.com", title: "Google" },
-          { icon: "🎬", url: "https://www.youtube.com", title: "YouTube" },
           {
-            icon: "🎵",
-            url: "https://open.spotify.com",
+            title: "Google",
+            url: "https://www.google.com",
+            icon: "https://www.google.com/favicon.ico",
+          },
+          {
+            title: "YouTube",
+            url: "https://www.youtube.com",
+            icon: "https://cdn-icons-png.flaticon.com/512/1384/1384060.png",
+          },
+          {
             title: "Spotify",
+            url: "https://open.spotify.com",
+            icon: "https://cdn-icons-png.flaticon.com/512/174/174872.png",
           },
           {
-            icon: "📰",
-            url: "https://news.google.com",
             title: "Noticias",
+            url: "https://news.google.com",
+            icon: "https://cdn-icons-png.flaticon.com/512/2965/2965879.png",
           },
           {
-            icon: "☁️",
-            url: "https://weather.com",
             title: "Clima",
+            url: "https://weather.com",
+            icon: "https://cdn-icons-png.flaticon.com/512/1163/1163661.png",
           },
           {
-            icon: "🕹️",
+            title: "Juegos (Poki)",
             url: "https://poki.com/es",
-            title: "Juegos",
+            icon: "https://cdn-icons-png.flaticon.com/512/1048/1048953.png",
           },
-        ].map((item, i) => (
+        ].map((item, index) => (
           <a
-            key={i}
+            key={index}
             href={item.url}
             target="_blank"
             rel="noopener noreferrer"
             title={item.title}
             style={{
+              width: "40px",
+              height: "40px",
               marginBottom: "25px",
-              fontSize: "24px",
-              textDecoration: "none",
-              color: "white",
-              transition:
-                "transform 0.3s ease, text-shadow 0.3s ease",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              transition: "transform 0.3s ease, filter 0.3s ease",
             }}
             onMouseEnter={(e) => {
-              e.target.style.transform = "scale(1.4)";
-              e.target.style.textShadow = "0 0 8px white";
+              e.currentTarget.style.transform = "scale(1.3)";
+              e.currentTarget.style.filter = "drop-shadow(0 0 6px white)";
             }}
             onMouseLeave={(e) => {
-              e.target.style.transform = "scale(1)";
-              e.target.style.textShadow = "none";
+              e.currentTarget.style.transform = "scale(1)";
+              e.currentTarget.style.filter = "none";
             }}
           >
-            {item.icon}
+            <img
+              src={item.icon}
+              alt={item.title}
+              style={{
+                width: "32px",
+                height: "32px",
+                borderRadius: "8px",
+                objectFit: "contain",
+              }}
+            />
           </a>
         ))}
       </div>
