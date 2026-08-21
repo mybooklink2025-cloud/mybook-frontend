@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 
-const socket = io("[https://mybook-7a9s.onrender.com](https://mybook-7a9s.onrender.com)", {
+const socket = io("https://mybook-7a9s.onrender.com", {
   transports: ["websocket"],
   withCredentials: true,
 });
@@ -268,7 +268,7 @@ function Chat() {
               }}
             >
               <img
-                src="[https://cdn-icons-png.flaticon.com/512/29/29302.png](https://cdn-icons-png.flaticon.com/512/29/29302.png)"
+                src="https://cdn-icons-png.flaticon.com/512/29/29302.png"
                 alt="Libro animado"
                 style={{
                   width: "100%",
@@ -452,60 +452,70 @@ function Chat() {
       >
         {[
           {
-            icon: "🌐",
-            url: "[https://www.google.com](https://www.google.com)",
             title: "Google",
+            url: "https://www.google.com",
+            icon: "https://www.google.com/favicon.ico",
           },
           {
-            icon: "🎬",
-            url: "[https://www.youtube.com](https://www.youtube.com)",
             title: "YouTube",
+            url: "https://www.youtube.com",
+            icon: "https://cdn-icons-png.flaticon.com/512/1384/1384060.png",
           },
           {
-            icon: "🎵",
-            url: "[https://open.spotify.com](https://open.spotify.com)",
             title: "Spotify",
+            url: "https://open.spotify.com",
+            icon: "https://cdn-icons-png.flaticon.com/512/174/174872.png",
           },
           {
-            icon: "📰",
-            url: "[https://news.google.com](https://news.google.com)",
             title: "Noticias",
+            url: "https://news.google.com",
+            icon: "https://cdn-icons-png.flaticon.com/512/2965/2965879.png",
           },
           {
-            icon: "☁️",
-            url: "[https://weather.com](https://weather.com)",
             title: "Clima",
+            url: "https://weather.com",
+            icon: "https://cdn-icons-png.flaticon.com/512/1163/1163661.png",
           },
           {
-            icon: "🕹️",
-            url: "[https://poki.com/es](https://poki.com/es)",
-            title: "Juegos",
+            title: "Juegos (Poki)",
+            url: "https://poki.com/es",
+            icon: "https://cdn-icons-png.flaticon.com/512/1048/1048953.png",
           },
-        ].map((item, i) => (
+        ].map((item, index) => (
           <a
-            key={i}
+            key={index}
             href={item.url}
             target="_blank"
             rel="noopener noreferrer"
             title={item.title}
             style={{
+              width: "40px",
+              height: "40px",
               marginBottom: "25px",
-              fontSize: "24px",
-              textDecoration: "none",
-              color: "white",
-              transition:
-                "transform 0.3s ease, text-shadow 0.3s ease",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              transition: "transform 0.3s ease, filter 0.3s ease",
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "scale(1.4)";
-              e.currentTarget.style.textShadow = "0 0 8px white";
+              e.currentTarget.style.transform = "scale(1.3)";
+              e.currentTarget.style.filter = "drop-shadow(0 0 6px white)";
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.transform = "scale(1)";
-              e.currentTarget.style.textShadow = "none";
+              e.currentTarget.style.filter = "none";
             }}
           >
-            {item.icon}
+            <img
+              src={item.icon}
+              alt={item.title}
+              style={{
+                width: "32px",
+                height: "32px",
+                borderRadius: "8px",
+                objectFit: "contain",
+              }}
+            />
           </a>
         ))}
       </div>
