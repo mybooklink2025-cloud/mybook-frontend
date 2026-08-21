@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { enviarContacto } from "./api";
 import { useNavigate } from "react-router-dom";
 
@@ -10,6 +10,7 @@ function Contactanos() {
   const [email, setEmail] = useState("");
   const [mensaje, setMensaje] = useState("");
   const [status, setStatus] = useState("");
+  const [profilePicture, setProfilePicture] = useState("");
 
   const [menuVisible, setMenuVisible] = useState(false);
   const [expanded, setExpanded] = useState(false);
@@ -21,10 +22,47 @@ function Contactanos() {
   const logoRef = useRef(null);
   const bookRef = useRef(null);
 
+  const BASE_URL = process.env.REACT_APP_BACKEND_URL;
+
+  useEffect(() => {
+    if (!token) return;
+
+    try {
+      const decoded = JSON.parse(atob(token.split(".")[1]));
+      const userEmail = decoded.email || decoded.sub || "";
+
+      if (userEmail) {
+        const savedPicture = localStorage.getItem(
+          `profilePicture_${userEmail}`
+        );
+
+        if (savedPicture) {
+          setProfilePicture(savedPicture);
+        }
+      }
+    } catch (error) {
+      console.error("Error leyendo token:", error);
+    }
+  }, [token]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuVisible(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () =>
+      document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const data = await enviarContacto({ nombre, email, mensaje });
+
       if (data && (data.message || data.error)) {
         if (data.message && data.message.includes("✅")) {
           setStatus(data.message);
@@ -75,6 +113,7 @@ function Contactanos() {
     const logoRect = logoRef.current.getBoundingClientRect();
 
     const minLeft = Math.max(logoRect.right - barRect.left + 8, 8);
+
     const maxLeft = Math.max(
       barRect.width - bookRect.width - 12,
       minLeft + 12
@@ -91,6 +130,25 @@ function Contactanos() {
   const handleBookMouseEnter = () => {
     escapeBook();
   };
+
+  const getStoredEmail = () => {
+    if (!token) return localStorage.getItem("email") || "";
+
+    try {
+      const decoded = JSON.parse(atob(token.split(".")[1]));
+      return (
+        decoded.email ||
+        decoded.sub ||
+        localStorage.getItem("email") ||
+        ""
+      );
+    } catch {
+      return localStorage.getItem("email") || "";
+    }
+  };
+
+  const currentEmail =
+    getStoredEmail() || "usuario@mybook.com";
 
   return (
     <div style={{ textAlign: "center", marginTop: "70px", marginLeft: "80px" }}>
@@ -299,6 +357,21 @@ function Contactanos() {
                     paddingBottom: "8px",
                   }}
                 >
+                  {profilePicture && (
+                    <img
+                      src={`${BASE_URL}/uploads/${profilePicture}`}
+                      alt="Usuario"
+                      style={{
+                        width: "50px",
+                        height: "50px",
+                        borderRadius: "50%",
+                        objectFit: "cover",
+                        display: "block",
+                        margin: "0 auto 8px",
+                      }}
+                    />
+                  )}
+
                   <p
                     style={{
                       fontSize: "14px",
@@ -306,8 +379,7 @@ function Contactanos() {
                       margin: 0,
                     }}
                   >
-                    {localStorage.getItem("email") ||
-                      "usuario@mybook.com"}
+                    {currentEmail}
                   </p>
                 </div>
 
