@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { enviarContacto } from "./api";
 import { useNavigate } from "react-router-dom";
 
@@ -11,7 +11,15 @@ function Contactanos() {
   const [mensaje, setMensaje] = useState("");
   const [status, setStatus] = useState("");
 
+  const [menuVisible, setMenuVisible] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const [showBook, setShowBook] = useState(false);
+  const [bookPos, setBookPos] = useState({ left: 0, top: 0 });
+
+  const menuRef = useRef(null);
+  const topBarRef = useRef(null);
+  const logoRef = useRef(null);
+  const bookRef = useRef(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -41,6 +49,49 @@ function Contactanos() {
     navigate(token ? "/muro" : "/");
   };
 
+  const activateLogo = () => {
+    if (!topBarRef.current || !logoRef.current) {
+      setExpanded(true);
+      setShowBook(true);
+      return;
+    }
+
+    const barRect = topBarRef.current.getBoundingClientRect();
+    const logoRect = logoRef.current.getBoundingClientRect();
+
+    const left = logoRect.right - barRect.left + 12;
+    const top = (barRect.height - 48) / 2;
+
+    setExpanded(true);
+    setShowBook(true);
+    setBookPos({ left, top });
+  };
+
+  const escapeBook = () => {
+    if (!topBarRef.current || !bookRef.current || !logoRef.current) return;
+
+    const barRect = topBarRef.current.getBoundingClientRect();
+    const bookRect = bookRef.current.getBoundingClientRect();
+    const logoRect = logoRef.current.getBoundingClientRect();
+
+    const minLeft = Math.max(logoRect.right - barRect.left + 8, 8);
+    const maxLeft = Math.max(
+      barRect.width - bookRect.width - 12,
+      minLeft + 12
+    );
+
+    const randomLeft =
+      Math.floor(Math.random() * (maxLeft - minLeft + 1)) + minLeft;
+
+    const top = (barRect.height - bookRect.height) / 2;
+
+    setBookPos({ left: randomLeft, top });
+  };
+
+  const handleBookMouseEnter = () => {
+    escapeBook();
+  };
+
   return (
     <div style={{ textAlign: "center", marginTop: "70px", marginLeft: "80px" }}>
       {/* 🌌 Fondo degradado sin polígonos */}
@@ -59,6 +110,7 @@ function Contactanos() {
 
       {/* 🔵 BARRA SUPERIOR FIJA */}
       <div
+        ref={topBarRef}
         style={{
           position: "fixed",
           top: 0,
@@ -72,58 +124,109 @@ function Contactanos() {
           padding: "0 20px",
           boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
           zIndex: 1000,
+          overflow: "visible",
         }}
       >
-        {/* 🔹 Izquierda: LOGO M + libro animado */}
+        {/* 🔹 Izquierda: LOGO M + texto extendido + libro animado */}
         <div
           style={{
             position: "relative",
             display: "flex",
-            alignItems: "center",
+            alignItems: "left",
           }}
         >
           <div
+            ref={logoRef}
             onClick={logoClick}
+            onMouseEnter={activateLogo}
             style={{
-              backgroundColor: "blue",
-              color: "white",
-              borderRadius: "50%",
-              width: "40px",
-              height: "40px",
               display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontWeight: "bold",
-              fontSize: "22px",
-              cursor: "pointer",
+              alignItems: "left",
+              justifyContent: "flex-start",
               position: "relative",
+              width: expanded ? 140 : 40,
+              height: 40,
+              transition: "width 280ms ease, border-radius 280ms ease",
+              borderRadius: expanded ? 20 : "50%",
+              backgroundColor: "#0d47a1",
+              color: "white",
+              cursor: "pointer",
+              overflow: "hidden",
+              paddingLeft: 0,
+              boxSizing: "border-box",
               zIndex: 2,
             }}
-            onMouseEnter={() => setShowBook(true)}
-            onMouseLeave={() => setShowBook(false)}
           >
-            M
+            {!expanded && (
+              <div
+                style={{
+                  width: 40,
+                  height: 40,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontWeight: "bold",
+                  fontSize: 22,
+                  userSelect: "none",
+                  flex: "0 0 40px",
+                }}
+              >
+                M
+              </div>
+            )}
+
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+                height: "100%",
+                paddingLeft: 4,
+                paddingRight: 8,
+                whiteSpace: "nowrap",
+                color: "white",
+                fontWeight: "bold",
+                fontSize: 18,
+                opacity: expanded ? 1 : 0,
+                transition: "opacity 220ms ease",
+                pointerEvents: "none",
+              }}
+            >
+              MyBook
+            </div>
           </div>
 
           {showBook && (
             <div
+              ref={bookRef}
+              onMouseEnter={handleBookMouseEnter}
               style={{
                 position: "absolute",
-                left: "-70px",
-                top: "0px",
-                width: "50px",
-                height: "50px",
-                animation: "floatBook 1.5s ease-in-out infinite",
-                filter: "drop-shadow(0px 0px 8px #3f8cff)",
-                opacity: 1,
+                left: bookPos.left,
+                top: bookPos.top,
+                width: 48,
+                height: 48,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                transition:
+                  "left 420ms cubic-bezier(.2,.9,.2,1), top 420ms cubic-bezier(.2,.9,.2,1)",
+                zIndex: 1500,
+                filter:
+                  "drop-shadow(0 6px 18px rgba(63,140,255,0.25))",
+                transform: "translateZ(0)",
               }}
             >
               <img
                 src="https://cdn-icons-png.flaticon.com/512/29/29302.png"
                 alt="Libro animado"
                 style={{
-                  width: "50px",
-                  height: "50px",
+                  width: "100%",
+                  height: "100%",
+                  pointerEvents: "auto",
+                  cursor: "pointer",
+                  animation: "floatBook 1.6s ease-in-out infinite",
                 }}
               />
             </div>
@@ -131,43 +234,6 @@ function Contactanos() {
         </div>
 
         <div></div>
-
-        {/* 🔹 Centro: enlaces */}
-        <div style={{ display: "flex", gap: "20px" }}>
-          <a
-            href="/profile"
-            style={{
-              color: "#0d47a1",
-              textDecoration: "none",
-              fontWeight: "bold",
-            }}
-          >
-            Perfil
-          </a>
-
-          <a
-            href="/contactanos"
-            style={{
-              color: "#0d47a1",
-              textDecoration: "none",
-              fontWeight: "bold",
-            }}
-          >
-            Contáctanos
-          </a>
-
-          <span
-            onClick={() => navigate("/chat")}
-            style={{
-              color: "#0d47a1",
-              textDecoration: "none",
-              fontWeight: "bold",
-              cursor: "pointer",
-            }}
-          >
-            Chat
-          </span>
-        </div>
 
         {/* 🔹 Derecha */}
         <div
@@ -200,26 +266,133 @@ function Contactanos() {
             👥 Mis Contactos
           </button>
 
-          <span
-            style={{
-              fontSize: "22px",
-              cursor: "pointer",
-              color: "#0d47a1",
-            }}
-          >
-            ⚙️
-          </span>
+          <div style={{ position: "relative" }} ref={menuRef}>
+            <span
+              onClick={() => setMenuVisible(!menuVisible)}
+              style={{
+                fontSize: "22px",
+                cursor: "pointer",
+                color: "#0d47a1",
+              }}
+            >
+              ⚙️
+            </span>
+
+            {menuVisible && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: "35px",
+                  right: 0,
+                  backgroundColor: "white",
+                  borderRadius: "8px",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+                  width: "220px",
+                  zIndex: 2000,
+                  padding: "10px",
+                }}
+              >
+                <div
+                  style={{
+                    textAlign: "center",
+                    borderBottom: "1px solid #ddd",
+                    paddingBottom: "8px",
+                  }}
+                >
+                  <p
+                    style={{
+                      fontSize: "14px",
+                      color: "#555",
+                      margin: 0,
+                    }}
+                  >
+                    {localStorage.getItem("email") ||
+                      "usuario@mybook.com"}
+                  </p>
+                </div>
+
+                <ul
+                  style={{
+                    listStyle: "none",
+                    padding: 0,
+                    margin: 0,
+                  }}
+                >
+                  <li
+                    style={{
+                      padding: "8px",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => navigate("/profile")}
+                  >
+                    Perfil
+                  </li>
+
+                  <li
+                    style={{
+                      padding: "8px",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => navigate("/contactanos")}
+                  >
+                    Contáctanos
+                  </li>
+
+                  <li
+                    style={{
+                      padding: "8px",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => navigate("/chat")}
+                  >
+                    Chat
+                  </li>
+
+                  <li
+                    style={{
+                      padding: "8px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Configuración
+                  </li>
+
+                  <li
+                    style={{
+                      padding: "8px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Ayuda
+                  </li>
+
+                  <li
+                    onClick={() => {
+                      localStorage.removeItem("token");
+                      navigate("/");
+                    }}
+                    style={{
+                      padding: "8px",
+                      color: "red",
+                      cursor: "pointer",
+                      borderTop: "1px solid #ddd",
+                    }}
+                  >
+                    Salir
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
       <style>
-        {`
-          @keyframes floatBook {
-            0% { transform: translateY(0); }
-            50% { transform: translateY(-6px); }
-            100% { transform: translateY(0); }
-          }
-        `}
+        {`@keyframes floatBook {
+          0% { transform: translateY(0); }
+          50% { transform: translateY(-6px); }
+          100% { transform: translateY(0); }
+        }`}
       </style>
 
       {/* 🔹 BARRA LATERAL FIJA CON ICONOS */}
@@ -244,10 +417,26 @@ function Contactanos() {
         {[
           { icon: "🌐", url: "https://www.google.com", title: "Google" },
           { icon: "🎬", url: "https://www.youtube.com", title: "YouTube" },
-          { icon: "🎵", url: "https://open.spotify.com", title: "Spotify" },
-          { icon: "📰", url: "https://news.google.com", title: "Noticias" },
-          { icon: "☁️", url: "https://weather.com", title: "Clima" },
-          { icon: "🕹️", url: "https://poki.com/es", title: "Juegos" },
+          {
+            icon: "🎵",
+            url: "https://open.spotify.com",
+            title: "Spotify",
+          },
+          {
+            icon: "📰",
+            url: "https://news.google.com",
+            title: "Noticias",
+          },
+          {
+            icon: "☁️",
+            url: "https://weather.com",
+            title: "Clima",
+          },
+          {
+            icon: "🕹️",
+            url: "https://poki.com/es",
+            title: "Juegos",
+          },
         ].map((item, i) => (
           <a
             key={i}
@@ -260,7 +449,8 @@ function Contactanos() {
               fontSize: "24px",
               textDecoration: "none",
               color: "white",
-              transition: "transform 0.3s ease, text-shadow 0.3s ease",
+              transition:
+                "transform 0.3s ease, text-shadow 0.3s ease",
             }}
             onMouseEnter={(e) => {
               e.target.style.transform = "scale(1.4)";
@@ -292,7 +482,11 @@ function Contactanos() {
 
       <form
         onSubmit={handleSubmit}
-        style={{ display: "inline-block", textAlign: "left", color: "white" }}
+        style={{
+          display: "inline-block",
+          textAlign: "left",
+          color: "white",
+        }}
       >
         <label>Nombre:</label>
         <br />
@@ -339,7 +533,10 @@ function Contactanos() {
           href="https://wa.me/573233694655"
           target="_blank"
           rel="noopener noreferrer"
-          style={{ color: "lightblue", textDecoration: "underline" }}
+          style={{
+            color: "lightblue",
+            textDecoration: "underline",
+          }}
         >
           Escríbenos por WhatsApp 📱
         </a>
