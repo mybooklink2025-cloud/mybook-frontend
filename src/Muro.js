@@ -82,7 +82,7 @@ function Muro() {
     const logoRect = logoRef.current.getBoundingClientRect();
 
     // Posición inicial: al lado derecho del área del logo, dentro de la barra
-    const left = logoRect.right - barRect.left + 12; // 12px de separación
+    const left = logoRect.right - barRect.left + 8; // 8px de separación
     const top = (barRect.height - 48) / 2; // centrar libro (asumiendo 48px altura libro)
 
     setExpanded(true);
