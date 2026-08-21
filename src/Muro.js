@@ -23,8 +23,8 @@ function Muro() {
   ]);
 
   const [nuevoPost, setNuevoPost] = useState("");
-  const [nombreUsuario] = useState("Usuario Actual");
-  const [fotoUsuario] = useState("https://cdn-icons-png.flaticon.com/512/847/847969.png");
+  const [nombreUsuario, setNombreUsuario] = useState("Usuario Actual");
+  const [fotoUsuario, setFotoUsuario] = useState("https://cdn-icons-png.flaticon.com/512/847/847969.png");
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
 
@@ -39,15 +39,44 @@ function Muro() {
   const logoRef = useRef(null);
   const bookRef = useRef(null);
 
+  const BASE_URL = process.env.REACT_APP_BACKEND_URL;
+
+  // Obtener usuario y foto desde el token/localStorage
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) return;
+
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      const email = payload.email || payload.emailAddress || "";
+
+      if (email) {
+        setNombreUsuario(email);
+        localStorage.setItem("email", email);
+
+        const savedPicture = localStorage.getItem(`profilePicture_${email}`);
+
+        if (savedPicture) {
+          setFotoUsuario(`${BASE_URL}/uploads/${savedPicture}`);
+        }
+      }
+    } catch (error) {
+      console.error("Error obteniendo datos del usuario:", error);
+    }
+  }, [BASE_URL]);
+
   const handlePublicar = (e) => {
     e.preventDefault();
     if (!nuevoPost.trim()) return;
+
     const nuevo = {
       id: publicaciones.length + 1,
       autor: nombreUsuario,
       texto: nuevoPost,
       foto: fotoUsuario,
     };
+
     setPublicaciones([nuevo, ...publicaciones]);
     setNuevoPost("");
   };
@@ -330,10 +359,15 @@ function Muro() {
                   <img
                     src={fotoUsuario}
                     alt="Usuario"
-                    style={{ width: "50px", height: "50px", borderRadius: "50%" }}
+                    style={{
+                      width: "50px",
+                      height: "50px",
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                    }}
                   />
-                  <p style={{ fontSize: "14px", color: "#555" }}>
-                    {localStorage.getItem("email") || "usuario@mybook.com"}
+                  <p style={{ fontSize: "14px", color: "#555", marginBottom: "4px" }}>
+                    {nombreUsuario}
                   </p>
                 </div>
 
