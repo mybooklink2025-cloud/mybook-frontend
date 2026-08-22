@@ -1,3 +1,4 @@
+```js
 const BASE_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000";
 
 export const registrarUsuario = async ({ email, password }) => {
@@ -26,3 +27,4 @@ export const enviarContacto = async ({ nombre, email, mensaje }) => {
   });
   return res.json();
 };
+```
