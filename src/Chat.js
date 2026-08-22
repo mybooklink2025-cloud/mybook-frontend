@@ -10,8 +10,11 @@ const socket = io("https://mybook-7a9s.onrender.com", {
 function Chat() {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
-  const chatName = localStorage.getItem("chatName") || "Usuario Actual";
   const email = localStorage.getItem("email") || "";
+  const chatName =
+    localStorage.getItem("chatName") ||
+    email ||
+    "Usuario Actual";
   const BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
   const [usuarios, setUsuarios] = useState([]);
@@ -51,7 +54,7 @@ function Chat() {
     socket.emit("usuarioConectado", chatName);
 
     socket.on("usuariosActivos", (lista) => {
-      setUsuarios(lista.filter((u) => u.name !== chatName)); // excluirme
+      setUsuarios(lista.filter((u) => u.name !== chatName));
     });
 
     socket.on("recibirMensaje", (data) => {
