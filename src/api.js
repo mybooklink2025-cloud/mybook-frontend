@@ -27,4 +27,3 @@ export const enviarContacto = async ({ nombre, email, mensaje }) => {
   });
   return res.json();
 };
-```
