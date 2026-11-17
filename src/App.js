@@ -7,6 +7,7 @@ import Profile from "./Profile";
 import Contactanos from "./Contactanos";
 import Muro from "./Muro";
 import Chat from "./Chat";
+import MyBookPlace from "./MyBookPlace";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token") || "");
