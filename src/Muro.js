@@ -323,6 +323,20 @@ function Muro() {
             👥 Mis Contactos
           </button>
 
+          <button
+            type="button"
+            onClick={() => navigate("/mybookplace")}
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              color: "#0d47a1",
+              fontWeight: "bold",
+            }}
+          >
+            🛍️ MyBookPlace
+          </button>
+
           <div style={{ position: "relative" }} ref={menuRef}>
             <span
               onClick={() => setMenuVisible(!menuVisible)}
