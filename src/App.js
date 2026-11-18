@@ -59,6 +59,12 @@ function App() {
             element={token ? <Muro /> : <Navigate to="/" />}
           />
 
+          {/* ✅ MyBookPlace protegido */}
+          <Route
+            path="/mybookplace"
+            element={token ? <MyBookPlace /> : <Navigate to="/" />}
+          />
+
           {/* ✅ Chat protegido */}
           <Route
             path="/chat"
