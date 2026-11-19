@@ -354,6 +354,20 @@ function Profile({ token }) {
             👥 Mis Contactos
           </button>
 
+          <button
+            type="button"
+            onClick={() => navigate("/mybookplace")}
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              color: "#0d47a1",
+              fontWeight: "bold",
+            }}
+          >
+            🛍️ MyBookPlace
+          </button>
+
           <div style={{ position: "relative" }} ref={menuRef}>
             <span
               onClick={() => setMenuVisible(!menuVisible)}
@@ -499,7 +513,7 @@ function Profile({ token }) {
           },
           {
             title: "Spotify",
-            url: "https://open.spotify.com",
+            url: "https://cdn-icons-png.flaticon.com/512/174/174872.png",
             icon: "https://cdn-icons-png.flaticon.com/512/174/174872.png",
           },
           {
