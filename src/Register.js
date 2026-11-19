@@ -8,6 +8,27 @@ function Register() {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+
+    if (password.length < 8) {
+      setMessage("❌ La contraseña debe tener mínimo 8 caracteres");
+      return;
+    }
+
+    if (!/[A-Z]/.test(password)) {
+      setMessage("❌ La contraseña debe contener al menos una mayúscula");
+      return;
+    }
+
+    if (!/[0-9]/.test(password)) {
+      setMessage("❌ La contraseña debe contener al menos un número");
+      return;
+    }
+
+    if (!/[^A-Za-z0-9]/.test(password)) {
+      setMessage("❌ La contraseña debe contener al menos un carácter especial");
+      return;
+    }
+
     try {
       const data = await registrarUsuario({ email, password });
       if (data.token || data.message === "Usuario registrado correctamente ✅") {
@@ -42,6 +63,19 @@ function Register() {
       <form onSubmit={handleRegister}>
         <input type="email" placeholder="Correo" value={email} onChange={e => setEmail(e.target.value)} required /><br />
         <input type="password" placeholder="Contraseña" value={password} onChange={e => setPassword(e.target.value)} required /><br />
+
+        <p style={{ color: "white", fontSize: "13px" }}>
+          La contraseña debe cumplir con estos requisitos:
+          <br />
+          • Mínimo 8 caracteres
+          <br />
+          • Al menos una letra mayúscula
+          <br />
+          • Al menos un número
+          <br />
+          • Al menos un carácter especial
+        </p>
+
         <button type="submit">Registrarse</button>
       </form>
       <p style={{ color: "blue" }}>{message}</p>
